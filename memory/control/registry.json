@@ -38612,7 +38612,7 @@
       "type": "CR",
       "severity": "P0",
       "risk": "HIGH",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_1_INTAKE_COMPLETE \u2014 ALL ODs LOCKED. Backend brief needed.",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Gyan",
@@ -38627,11 +38627,11 @@
       "intake_doc": "change_requests/CR-551_EDIT_VARIATIONS_AFTER_PLACE_INTAKE.md",
       "investigation_doc": "investigations/INV-CR-EDIT-VARIATIONS_AFTER_PLACE_2026_11_17.md",
       "open_decisions": [
-        "OD-551-01: Edit allowed before served only?",
-        "OD-551-02: Modified KOT to kitchen?",
-        "OD-551-03: Permission \u2014 edit_customization or order_edit?",
-        "OD-551-04: Recalculate tax+SC on price change?",
-        "OD-551-05: Qty in same modal or separate?"
+        "OD-551-01: LOCKED \u2014 Only before item is served",
+        "OD-551-02: LOCKED \u2014 No KOT on edit (KOT was sent at place time, edit is pre-serve adjustment)",
+        "OD-551-03: LOCKED \u2014 Use existing order_edit permission",
+        "OD-551-04: LOCKED \u2014 Yes, recalculate tax + service charge on price change",
+        "OD-551-05: LOCKED \u2014 Keep qty separate (existing pencil stays)"
       ],
       "description": "No backend API for editing variations/add-ons on placed items. EDIT_ORDER_ITEM in constants.js is TBD. PlacedItemRow has no customize button. Workaround: cancel + re-add. Backend endpoint needed first, then 7 FE files."
     },

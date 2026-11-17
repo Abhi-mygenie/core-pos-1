@@ -180,3 +180,22 @@ Assignee: Gyan (backend) → Abhishek (FE)
 Docs updated: change_requests/CR-551_EDIT_VARIATIONS_AFTER_PLACE_INTAKE.md
 Next: Owner answers 5 ODs → Backend brief to Gyan → Planning Gate 2
 ```
+
+---
+
+## 11. Owner Decisions — ALL LOCKED (2026-11-17)
+
+| # | Question | Answer | Rationale |
+|---|----------|--------|-----------|
+| OD-551-01 | When should editing be allowed? | **Only before item is served** | Edit blocked once served. Safest for kitchen. |
+| OD-551-02 | Should kitchen get a modified KOT? | **No KOT on edit** | KOT was already sent at place time. Edit happens before item is served — kitchen works from original KOT. No duplicate/modified KOT needed. |
+| OD-551-03 | Which permission gates the edit button? | **Use existing `order_edit` permission** | No new setting needed. Same permission that controls other order edits. |
+| OD-551-04 | Recalculate tax + service charge on price change? | **Yes, recalculate everything** | Tax, service charge, and total updated to match new item price. |
+| OD-551-05 | Qty in same modal or keep separate? | **Keep qty separate** | Existing qty pencil stays as-is. Customization modal only changes variations/add-ons/size. |
+
+### OD-551-02 Rationale (owner clarification):
+> "We edited before placing order so why KOT — KOT is when we placed order"
+
+The edit happens on a placed order but **before the item is served**. The original KOT was sent when the order was placed. Since the edit is a pre-serve adjustment (before kitchen completes the item), no modified KOT is needed. Kitchen continues working from the original KOT — the variation change is handled operationally (verbal communication or the item gets re-prepped if needed).
+
+**All 5 ODs locked. No open questions remain. Ready for backend brief.**
