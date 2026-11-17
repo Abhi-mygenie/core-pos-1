@@ -38587,7 +38587,7 @@
       "type": "BUG",
       "severity": "P0",
       "risk": "HIGH",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_1_INTAKE_COMPLETE \u2014 OD LOCKED. Backend brief needed.",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Gyan",
@@ -38602,7 +38602,7 @@
       "intake_doc": "change_requests/BUG-680_ORDER_DISCOUNT_NOT_ON_DASHBOARD_INTAKE.md",
       "investigation_doc": "investigations/INV-BUG-DISCOUNT_DASHBOARD_NOT_REFLECTING_2026_11_17.md",
       "open_decisions": [
-        "OD-680-01: Fix approach \u2014 Option A (FE) / B (backend) / C (utility)"
+        "OD-680-01: LOCKED \u2014 Option B (backend updates order_amount after discount)"
       ],
       "description": "order_amount in running-orders never includes discount. Dashboard tile, Order Entry Collect Bill button, and CartPanel all show pre-discount total. Only CollectPaymentPanel shows correct discounted amount."
     },
@@ -38641,7 +38641,7 @@
       "type": "BUG",
       "severity": "P0",
       "risk": "LOW",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "FAST_LANE_APPROVED \u2014 owner approved direct bug fix 2026-11-17",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Abhishek",
@@ -38664,7 +38664,7 @@
       "type": "BUG",
       "severity": "P0",
       "risk": "LOW",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "FAST_LANE_APPROVED \u2014 owner approved direct bug fix 2026-11-17",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Abhishek",
