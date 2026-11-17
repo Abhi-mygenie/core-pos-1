@@ -215,3 +215,30 @@ Retroactive candidates: NONE
 Investigation report: memory/investigations/INV-ROOM-TRANSFER-2026-11-16.md
 Evidence: memory/evidence/INV-ROOM-TRANSFER-2026-11-16/
 ```
+
+---
+
+## 10. Owner Decisions — ALL LOCKED (2026-11-17)
+
+| # | Question | Answer |
+|---|----------|--------|
+| OD-RT-01 | Which transfer behavior? | **Switch to V2 (whole order transfer)** — V2 is the go-forward path |
+| OD-RT-02 | Does V2 settle at transfer? | **Yes, V2 settles at transfer** |
+| OD-RT-03 | Empty rooms (check-in, no food order)? | **Yes, transfer should work** — V2 supports this natively |
+| OD-RT-04 | Was V1 switch intentional? | **Yes, V1 was intentional** at the time (backend directive), but owner now wants V2 going forward |
+
+### Owner note on OD-RT-02:
+> "How can we take order out of room? This functionality is already there, did you check?"
+
+**Answer:** Yes — CR-163 (Move Food Items from Room Order to Table) is at GATE_5B_QA_PASS. The reverse flow (room-to-table transfer) already exists and is implemented.
+
+### Implementation impact:
+Switching to V2 requires 4 FE file changes (see §8 Recommendations, "If owner wants V2"):
+1. `constants.js:97` — `/api/v1/` → `/api/v2/`
+2. `orderTransform.js:1820-1824` — rewrite `transferToRoom` to V2 contract
+3. `CollectPaymentPanel.jsx:259-261` — room filter: `isOccupied` → `isAssigned` (V2 supports rooms without orders)
+4. `CollectPaymentPanel.jsx:1360` — `roomOrderId` no longer needed
+
+**Risk:** HIGH — changes settlement flow. Need backend confirmation that V2 with `payment_status:"unpaid"` is valid, or if settlement is mandatory.
+
+**All 4 ODs locked. Ready for implementation planning (Gate 3 update for V2 switch).**

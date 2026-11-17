@@ -68,3 +68,40 @@ Append-only audit trail recording:
 - **OD-509-01:** Does the `get-single-order-new` endpoint (referenced in OrderDetailSheet L2) return all the fields needed (variations, add-ons, payment breakdown)?
 - **OD-509-02:** Does the `order-logs-report` endpoint return per-order activity history, or is it a different report format?
 - **OD-509-03:** Should Order Details and Activity Logs be separate tabs within the sheet, or separate buttons in Actions?
+
+---
+
+## 11. Owner Decisions (2026-11-17)
+
+| # | Question | Answer | Status |
+|---|----------|--------|--------|
+| OD-509-01 | Reuse OrderDetailSheet or build new? | **Reuse existing OrderDetailSheet** — import into Beta, wire row click | LOCKED |
+| OD-509-02 | How to access Details + Activity? | **Needs design mockup** — owner not sure, wants design suggestion | OPEN |
+| OD-509-03 | Plain English labels? | **Yes** — "Bill printed" not "bill print", "Payment collected" not "order bill payment" | LOCKED |
+
+### Owner Clarification — Lifecycle Coverage (OD-509-04, NEW):
+
+> "Complete lifecycle of order and item should be covered. Item horizontal movement, order vertical movement."
+
+**Interpretation:**
+
+- **Item = horizontal movement** — each item's journey across KDS stages:
+  `Punched → Preparing → Ready → Served → (Cancelled)`
+  Shown as a horizontal timeline/progress bar per item. Each stage with timestamp + actor.
+
+- **Order = vertical movement** — the order's lifecycle as a chronological vertical list:
+  `Created → Items added → Bill printed → Payment collected → Settled → (Made unpaid → Re-paid)`
+  Shown as a vertical timeline. Each event with timestamp + actor + amount changes.
+
+This maps to what OrderDetailSheet already has:
+- `ItemTimeline` component (L258+) = item horizontal movement ✅
+- `Activity Log` section (L804-852) = order vertical movement ✅
+
+The "revamp" is about:
+1. Plain English labels (OD-509-03 locked)
+2. Clear visual separation: items move horizontally, order events flow vertically
+3. Design mockup needed for the access pattern (OD-509-02)
+
+### Next:
+- Design mockup for OD-509-02 (how Details + Activity are accessed in Beta)
+- Then Gate 2 Impact Analysis
