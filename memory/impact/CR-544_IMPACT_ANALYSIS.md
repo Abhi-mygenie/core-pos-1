@@ -213,3 +213,31 @@ Next: Owner answers ODs → Gate 3 (Plan) once backend delivers ASK 4
 - **OD-544-04 (NEW):** LOCKED — Show money gap on re-pay
 
 ### Ref: `design/AUDIT_REPORT_DESIGN_DECISIONS_LOCKED_2026_11_17.md` (consolidated decisions)
+
+---
+
+## 11. SCOPE EXPANSION (Owner Review Round 2 — 2026-11-17)
+
+CR-544 scope expanded to cover the full "Leakage After Unpaid" card:
+
+### Original scope (v2):
+- `cancel_after_unpaid` events only
+
+### Expanded scope (v3):
+1. `cancel_after_unpaid` events (already delivered)
+2. `discount_apply_after_unpaid` events (NEW — same detection as CR-544 but for discounts)
+3. `discount_remove_after_unpaid` events (NEW — same detection)
+4. `repay_gap` event per order (NEW — ₹ breakdown: gap_from_cancellations + gap_from_discounts)
+5. `post_unpaid_edits_count` KPI (NEW — sum of all post-unpaid events)
+
+### New backend asks (3):
+- NEW-1: `discount_apply/remove_after_unpaid` — P0, same pattern as CR-546 but triggered by unpaid
+- NEW-2: `repay_gap` with reason breakdown (cancellation vs discount) — design+plan now, implement when backend ships
+- NEW-3: `post_unpaid_edits_count` KPI — P0, trivial sum
+
+### Owner decisions locked:
+- D14: Same count + ₹ loss pattern for discount events on both triggers (unpaid and print)
+- D15: Replace = 2 events (same as CR-546)
+- D16: Re-pay gap must show breakdown (₹ from cancels + ₹ from discounts)
+- D17: Don't block on re-pay gap — design now, implement when backend ships
+- D18: All new asks stay under CR-544 (no new CR)

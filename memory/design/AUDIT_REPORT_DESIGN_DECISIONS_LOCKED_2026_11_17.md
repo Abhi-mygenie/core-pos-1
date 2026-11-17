@@ -175,3 +175,37 @@ Every card headline: **count + ₹ total leakage**
 ---
 
 *End of consolidated design decisions.*
+
+---
+
+## 10. Additional Decisions (Owner Review Round 2 — 2026-11-17)
+
+| # | Decision | Answer | Date |
+|---|----------|--------|------|
+| D14 | Discount events (after-unpaid AND after-print): what to show? | Total count + ₹ revenue loss. Same pattern for both triggers. | 2026-11-17 |
+| D15 | Discount replace (A→B) after unpaid | YES — 2 events, same as CR-546 pattern | 2026-11-17 |
+| D16 | Re-pay gap: include reason breakdown? | YES — gap must show how much is from cancellations vs how much from discounts. No other reasons possible. | 2026-11-17 |
+| D17 | Re-pay gap: priority | Design + plan now. Implement when backend ships. Don't block. | 2026-11-17 |
+| D18 | New asks registration | Expand CR-544 scope (no new CR number) | 2026-11-17 |
+
+### D16 Detail — Re-pay Gap Breakdown
+
+When a customer paid ₹680, order was made unpaid, then items cancelled (₹149) and discount applied (₹68), and re-collected at ₹463:
+
+```json
+{
+  "type": "repay_gap",
+  "order_id": "000680",
+  "original_amount": 680.00,
+  "repaid_amount": 463.00,
+  "gap_amount": 217.00,
+  "gap_from_cancellations": 149.00,
+  "gap_from_discounts": 68.00,
+  "made_unpaid_at": "2026-11-10T21:08:00",
+  "repaid_at": "2026-11-13T10:00:00",
+  "unpaid_count": 3
+}
+```
+
+**Rule:** `gap_amount = gap_from_cancellations + gap_from_discounts` (always — no other leak sources exist).
+

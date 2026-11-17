@@ -140,3 +140,35 @@ Add `original_order_amount` and `current_order_amount` to each `cancel_after_unp
 ---
 
 *Awaiting owner approval to proceed with backend brief to Gyan.*
+
+---
+
+## Owner Answers to Approval Questions (2026-11-17)
+
+| # | Question | Owner Answer |
+|---|----------|-------------|
+| 1 | Discount replace after unpaid: 2 events? | YES — same pattern as CR-546 |
+| 2 | Re-pay gap format? | Option A (separate event) WITH reason breakdown: `gap_from_cancellations` + `gap_from_discounts` |
+| 3 | Re-pay gap priority? | Design + plan now. Implement when backend ships. Don't block other work. |
+| 4 | Registration? | Expand CR-544 scope. No new CR number. |
+
+### Revised Re-pay Gap Event Schema:
+
+```json
+{
+  "type": "repay_gap",
+  "order_id": "000680",
+  "original_amount": 680.00,
+  "repaid_amount": 463.00,
+  "gap_amount": 217.00,
+  "gap_from_cancellations": 149.00,
+  "gap_from_discounts": 68.00,
+  "made_unpaid_at": "2026-11-10T21:08:00",
+  "repaid_at": "2026-11-13T10:00:00",
+  "unpaid_count": 3
+}
+```
+
+**Invariant:** `gap_amount = gap_from_cancellations + gap_from_discounts` (no other leak sources).
+
+**STATUS: APPROVED — Ready to send to Gyan.**
