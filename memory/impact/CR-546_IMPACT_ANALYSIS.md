@@ -227,3 +227,26 @@ Owner decisions: ALL LOCKED (3/3)
 Docs: impact/CR-546_IMPACT_ANALYSIS.md
 Next: Gate 3 (Plan) once backend delivers
 ```
+
+---
+
+## 10. REVISED DESIGN DECISIONS (2026-11-17 Owner Review)
+
+**Supersedes §3 E3 (KPI cards) naming.**
+
+### Changes from original IA:
+1. **Card renamed:** "Discount Changes After Print" → **"Leakage After Print"** (combined card)
+2. **Card 3 now covers ALL post-print events**, not just discounts:
+   - Item cancel after print (CR-528)
+   - Order cancel after print (CR-528)
+   - Discount applied after print (CR-546)
+   - Discount removed after print (CR-546)
+3. **₹ Money leakage** shown on card: sum of cancel amounts + discount amounts on post-print orders.
+4. **Overlap Approach C:** Post-print events also appear in Card 1 (High Risk) if duration ≥ 5 min, or Card 2 (Leakage After Unpaid) if order was unpaid. Multi-category tags in drill-down.
+5. **KPI bar "Post-Print Edits":** Count of all post-print events (cancels + discounts combined).
+
+### Owner Decisions:
+- All 3 ODs remain LOCKED (no changes from original IA)
+- D7-D13 added in consolidated decisions doc
+
+### Ref: `design/AUDIT_REPORT_DESIGN_DECISIONS_LOCKED_2026_11_17.md` (consolidated decisions)

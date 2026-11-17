@@ -212,3 +212,18 @@ Owner decisions: LOCKED — 4-tier risk (OK/Doubt/Risk/High Risk), no settings
 Docs: impact/CR-543_IMPACT_ANALYSIS.md
 Next: Gate 3 (Plan) once backend delivers ASK 3
 ```
+
+---
+
+## 10. REVISED DESIGN DECISIONS (2026-11-17 Owner Review)
+
+**Supersedes §4 E3 (KPI strip) and §8 (Combined Evolution).**
+
+### Changes from original IA:
+1. **Card 1 shows FULL risk bar** — Doubt (5–15 min) + Risk (15–30 min) + High Risk (30+ min). Not just 30+.
+2. **₹ Money leakage** shown on card: sum of cancelled amounts where duration ≥ 5 min.
+3. **Card click → Cancellation Report** (`?filter=high_risk`) — timing tier details live there, NOT on Audit page.
+4. **Overlap Approach C:** Late cancel events also appear in Card 2 (Leakage After Unpaid) or Card 3 (Leakage After Print) if the same event matches those conditions. Each row gets multi-category tags in drill-down.
+5. **KPI bar:** No separate late-cancel KPI count in top bar. Card 1 is the risk view.
+
+### Ref: `design/AUDIT_REPORT_DESIGN_DECISIONS_LOCKED_2026_11_17.md` (consolidated decisions)

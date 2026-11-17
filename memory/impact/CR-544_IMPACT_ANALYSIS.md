@@ -185,3 +185,31 @@ Owner decisions: OD-544-01, OD-544-02 OPEN
 Docs: impact/CR-544_IMPACT_ANALYSIS.md
 Next: Owner answers ODs → Gate 3 (Plan) once backend delivers ASK 4
 ```
+
+---
+
+## 10. REVISED DESIGN DECISIONS (2026-11-17 Owner Review)
+
+**Supersedes §3 E1/E3 (type map / KPI card).**
+
+### Changes from original IA:
+1. **Card renamed:** "Cancel After Unpaid" → **"Leakage After Unpaid"**
+2. **Expanded scope:** Card 2 now covers the full unpaid fraud chain:
+   - Cancellations after unpaid (original CR-544)
+   - **Discounts applied after unpaid** (NEW — needs backend ask)
+   - **Money difference when re-paid** (NEW — gap = original amount − re-collected amount)
+3. **₹ Money leakage** shown on card: cancel amounts + discount amounts + re-pay gap.
+4. **Overlap Approach C:** Cancel-after-unpaid events also appear in Card 1 (High Risk) if duration ≥ 5 min, or Card 3 (Leakage After Print) if bill was printed. Multi-category tags in drill-down.
+5. **New KPI bar item:** "Post-Unpaid Edits" count (all edits after unpaid — cancels + discounts).
+6. **New backend requirements:**
+   - `discount_after_unpaid` events
+   - `original_amount`, `repaid_amount`, `gap_amount` on re-pay events
+   - `post_unpaid_edits_count` KPI
+
+### Owner Decisions updated:
+- OD-544-01: LOCKED — No time limit
+- OD-544-02: LOCKED — Flag ALL cancels after unpaid even if re-paid
+- **OD-544-03 (NEW):** LOCKED — Include discount-after-unpaid in same card
+- **OD-544-04 (NEW):** LOCKED — Show money gap on re-pay
+
+### Ref: `design/AUDIT_REPORT_DESIGN_DECISIONS_LOCKED_2026_11_17.md` (consolidated decisions)
