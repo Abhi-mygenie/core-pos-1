@@ -209,3 +209,13 @@ When a customer paid ₹680, order was made unpaid, then items cancelled (₹149
 
 **Rule:** `gap_amount = gap_from_cancellations + gap_from_discounts` (always — no other leak sources exist).
 
+
+## 11. Deferred to Phase 2
+
+| # | Item | Reason |
+|---|------|--------|
+| D19 | `post_unpaid_edits_count` KPI in top bar | Owner: not required now, move to phase 2 logs |
+
+**KPI bar stays at 4 items:** Total Events | Made Unpaid | Pay Method Changed | Post-Print Edits
+
+"Post-Unpaid Edits" count removed from KPI bar.

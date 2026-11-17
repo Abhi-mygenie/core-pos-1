@@ -172,3 +172,19 @@ Add `original_order_amount` and `current_order_amount` to each `cancel_after_unp
 **Invariant:** `gap_amount = gap_from_cancellations + gap_from_discounts` (no other leak sources).
 
 **STATUS: APPROVED — Ready to send to Gyan.**
+
+---
+
+## UPDATE: NEW-3 Deferred (Owner directive 2026-11-17)
+
+**`post_unpaid_edits_count` → DEFERRED to Phase 2 (logs).**
+
+Not required for current sprint. KPI bar stays at 4 items (no "Post-Unpaid Edits").
+
+Revised asks for Gyan:
+
+| # | Ask | Priority | Status |
+|---|-----|----------|--------|
+| NEW-1 | `discount_apply/remove_after_unpaid` events | P0 | ACTIVE |
+| NEW-2 | `repay_gap` with breakdown | Design now, ship later | ACTIVE |
+| ~~NEW-3~~ | ~~`post_unpaid_edits_count`~~ | ~~P0~~ | **DEFERRED — Phase 2** |
