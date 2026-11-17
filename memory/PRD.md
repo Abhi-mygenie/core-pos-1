@@ -1,30 +1,43 @@
-# MyGenie Core POS Frontend — Deployment Record
+# MyGenie Core POS Frontend — PRD
 
 ## Original Problem Statement
-Deploy the existing React frontend repo (https://github.com/Abhi-mygenie/core-pos-front-end-.git, branch: main) directly into `/app` and run it as-is with no code edits.
+Deploy existing React frontend repo (core-pos-front-end-, branch main) into /app. Run as-is, no code edits. Collect missing API keys. Push to GitHub.
 
 ## Architecture
-- **Frontend**: React (CRA + Craco) running on port 3000 via supervisor
-- **Backend**: FastAPI template (minimal, kept for supervisor compatibility) on port 8001
-- **Package Manager**: Yarn (locked)
-- **Key Libraries**: React 19, React Router 7, Firebase 13, Recharts, Shadcn/UI, Tailwind CSS, Socket.io, Framer Motion
+- **Frontend**: React 19 (CRA + CRACO) on port 3000 via supervisor
+- **Backend**: Laravel at preprod.mygenie.online (external)
+- **Socket**: presocket.mygenie.online
+- **Firebase**: Auth + notifications
+- **CRM**: crm.mygenie.online/api
 
-## What's Been Implemented
-- [2026-11-17] Fresh clone of repo into /app, platform files preserved
-- [2026-11-17] All env variables configured (Firebase, CRM, Google Maps, Socket, API base URL)
-- [2026-11-17] Missing secret keys (Firebase API Key, VAPID Key, CRM API Keys, Google Maps Key) collected via secure card
-- [2026-11-17] yarn install with locked dependencies, frontend compiles successfully
-- [2026-11-17] Memory directory fully synced with remote branch (70+ files)
+## What's Been Implemented (Session 5, 2026-11-17)
+- [2026-11-17] Environment deployed, secrets collected, GitHub PAT configured
+- [2026-11-17] Audit Report v3 design finalized — 3 cards, Approach C overlap, 19 decisions locked
+- [2026-11-17] CR-544 v3 addendum drafted (discount after unpaid + repay gap)
+- [2026-11-17] Backend tracker updated (ASK 6-7, design links)
+- [2026-11-17] 3 investigation bundles reviewed (5 items)
+- [2026-11-17] 4 new items registered: BUG-680, CR-551, BUG-681, BUG-682
+- [2026-11-17] ODs locked: CR-405 (V2 switch), CR-509 (lifecycle spec), CR-551 (all 5)
+- [2026-11-17] All pushed to origin/main
 
-## Environment Variables (frontend/.env)
-- REACT_APP_API_BASE_URL, REACT_APP_SOCKET_URL, REACT_APP_FIREBASE_* (all 7), REACT_APP_CRM_*, REACT_APP_GOOGLE_MAPS_KEY, REACT_APP_SHOW_AUDIT_TAB, CORS_ORIGINS, WDS_SOCKET_PORT, REACT_APP_BACKEND_URL (platform)
+## Prioritized Backlog
+### P0 — Immediate
+- BUG-681: Fast Lane fix (2 lines) — APPROVED
+- BUG-682: Fast Lane fix (4 lines) — APPROVED
+- BUG-680: Backend brief to Gyan (order_amount + discount)
+- CR-551: Backend brief to Gyan (edit-food-item endpoint)
 
-## Status
-- Frontend: Running, compiled with 1 lint warning (react-hooks/exhaustive-deps in reports modules — non-blocking)
-- Backend: Running (template server for platform compatibility)
-- No code modifications made — deployed as-is per requirements
+### P0 — This Sprint
+- Audit Report v3 implementation (CR-543+544+546)
+- CR-544 v3 addendum — send brief to Gyan
+- CR-405 V2 switch implementation
 
-## Next Tasks / Backlog
-- P0: Verify login flow works end-to-end with real credentials
-- P1: Production build & deploy
-- P2: Backend API integration if needed
+### P1 — Planning Needed
+- CR-509: Design mockup for activity log access pattern
+- CR-549: Dashboard 12-tile redesign (waiting on backend)
+- CR-548: Reprint history (waiting on backend)
+
+### P2 — Deferred
+- post_unpaid_edits_count KPI (Phase 2)
+- kds_stage_at_cancel (suggested, not registered)
+- CR-526 Print button (feature gap, not bug)

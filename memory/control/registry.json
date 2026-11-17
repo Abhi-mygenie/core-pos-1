@@ -36776,7 +36776,7 @@
       "id": "CR-509",
       "sprint_key": "TBD",
       "title": "Order Beta: Order Details Drill-Down + Activity Logs",
-      "status": "GATE_1_INTAKE_COMPLETE \u2014 ODs PARTIALLY LOCKED 2026-11-17. OD-509-02 needs design mockup.",
+      "status": "GATE_1_INTAKE_COMPLETE \u2014 3/4 ODs LOCKED. OD-509-02 needs design mockup. Lifecycle spec written.",
       "priority": "P1",
       "risk": "HIGH",
       "area": "Reports / Analytics",

@@ -105,3 +105,51 @@ The "revamp" is about:
 ### Next:
 - Design mockup for OD-509-02 (how Details + Activity are accessed in Beta)
 - Then Gate 2 Impact Analysis
+
+---
+
+## 12. Lifecycle Coverage Specification (2026-11-17 Owner Clarification)
+
+### Item Lifecycle — Horizontal Movement
+
+**KDS stages (happy path):** `Punched → Preparing → Ready → Served`
+
+**Cancel is context-dependent, not a single stage:**
+
+| Cancel Scenario | Risk | Flags |
+|----------------|------|-------|
+| Cancel before preparing (0-5 min) | OK | Time only |
+| Cancel during preparing (5-15 min) | Doubt | Time + KDS stage |
+| Cancel after ready (15-30 min) | Risk | Time + KDS stage |
+| Cancel after served (30+ min) | High Risk | Time + KDS stage |
+| Cancel after bill print | Fraud flag | `bill_printed_at` + gap |
+| Cancel after unpaid | Fraud flag | `made_unpaid_at` + gap |
+| Cancel after print AND unpaid | Multi-flag | All flags shown |
+
+**Display:** Horizontal timeline per item showing stage progression + cancel point with risk badge, time gap, and context flags (after-print, after-unpaid).
+
+**Suggested new backend field:** `kds_stage_at_cancel` — snapshot item's food_status when cancelled. Tells you food waste (was it cooked?) vs fraud risk (how long?). Currently NOT tracked.
+
+### Order Lifecycle — Vertical Movement
+
+**20 event types in chronological order:**
+1. Order Created → 2. Items Added → 3. Item Cancelled → 4. Discount Applied → 5. Discount Removed → 6. Discount Replaced → 7. Bill Printed → 8. Bill Reprinted → 9. Payment Collected → 10. Payment Method Changed → 11. Order Settled → 12. Made Unpaid → 13. Re-paid → 14. Transferred to Room → 15. Transferred from Room → 16. Order Cancelled → 17. Customer Linked/Unlinked → 18. Complimentary Applied → 19. Item Qty Changed → 20. Item Transferred
+
+**Display:** Vertical timeline with:
+- Running ₹ total on the left at each step
+- Amount diffs inline ("-₹80" in red)
+- Audit flags inline (🔴 High Risk / 🖨️ After Print / 🔓 After Unpaid)
+- Plain English labels (OD-509-03 locked)
+- Actor + timestamp per event
+
+### Design Principles (owner-approved):
+1. Items = horizontal movement (KDS stage progression)
+2. Order = vertical movement (chronological event timeline)
+3. Plain English labels
+4. Running total shows how final amount was reached
+5. Multi-flag events show all applicable badges (Approach C overlap)
+6. Net financial summary at bottom
+
+### Open Items for Next Agent:
+- OD-509-02: Access pattern (how sheet is opened in Beta) — needs design mockup
+- `kds_stage_at_cancel`: Suggested backend addition — not registered yet, owner to decide priority
