@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CR-544 v3 Addendum — Discount After Unpaid + Re-pay Gap — Backend Brief</title>
+<style>
+body{font-family:Georgia,serif;margin:32px;color:#1d1d1b;background:#faf8f3;max-width:900px}
+h1{font-size:22px;margin:0 0 4px;border-bottom:2px solid #1d1d1b;padding-bottom:6px}
+h2{font-size:18px;margin:28px 0 6px;border-bottom:1px solid #d6d2c4;padding-bottom:4px}
+h3{font-size:15px;margin:20px 0 4px}
+h4{font-size:13px;margin:16px 0 4px}
+p,li{font-size:13px;line-height:1.6}
+pre{background:#fff;border:1px solid #d6d2c4;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5}
+code{font-family:ui-monospace,monospace;font-size:12px;background:#efeadb;padding:1px 4px;border-radius:3px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;font-size:12px;background:#fff;margin:8px 0}
+th,td{border:1px solid #d6d2c4;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#efeadb}
+.s{font-weight:bold;font-size:11px;padding:2px 6px;border-radius:3px}
+.new{background:#ffe2c2;color:#92400E}
+.done{background:#cdeccf;color:#166534}
+.p1{background:#DBEAFE;color:#1E40AF}
+a{color:#b4471b}
+.dl{display:inline-block;margin:8px 0;padding:6px 14px;background:#b4471b;color:#fff;text-decoration:none;border-radius:4px;font-size:13px}
+.dl:hover{background:#8b3514}
+.meta{font-size:12px;color:#555;margin:2px 0 12px}
+</style>
+</head>
+<body>
+
+<h1>BACKEND_BRIEF_CR-544 — v3 Addendum</h1>
+<p class="meta">Discount After Unpaid + Re-pay Gap · Extends CR-544 v2 (cancel_after_unpaid — DELIVERED ✅) · 2026-11-17 · Assigned: Gyan</p>
+
+<p><a class="dl" href="/briefs/BACKEND_BRIEF_CR-544_v3_ADDENDUM_2026_11_17.md" download>⬇ Download .md file</a></p>
+
+<hr>
+
+<h2>Summary — What This Adds</h2>
+
+<table>
+<tr><th>Ask</th><th>Type</th><th>Priority</th><th>Events</th><th>KPIs</th></tr>
+<tr><td><b>NEW-1</b><br>Discount After Unpaid</td><td>2 new event types</td><td><span class="s new">P0</span></td><td><code>discount_apply_after_unpaid</code><br><code>discount_remove_after_unpaid</code></td><td><code>discount_apply_after_unpaid_count</code><br><code>discount_remove_after_unpaid_count</code></td></tr>
+<tr><td><b>NEW-2</b><br>Re-pay Gap</td><td>1 new event type</td><td><span class="s p1">P1</span></td><td><code>repay_gap</code></td><td><code>repay_gap_count</code><br><code>repay_gap_total</code> (₹)</td></tr>
+</table>
+
+<p><b>Endpoint:</b> <code>POST /api/v2/vendoremployee/report/insights-dashboard</code> → <code>audits.orders[]</code> (same as CR-543/544/546)</p>
+
+<hr>
+
+<h2>NEW-1: Discount After Unpaid Events</h2>
+
+<h3>Detection Rule</h3>
+<p>Same as <code>cancel_after_unpaid</code> (CR-544 v2), but for discount operations instead of cancellations:</p>
+<pre><code>For each order with make_unpaid history:
+  For each discount apply/remove/replace
+    WHERE discount_time > first_make_unpaid_at:
+      → Emit discount_apply_after_unpaid or discount_remove_after_unpaid
+
+Rules (same as CR-544):
+  - Re-payment does NOT close window
+  - Use FIRST make_unpaid_at
+  - No time limit
+  - Replace = 2 events (remove old + apply new), operation="replace"</code></pre>
+
+<h3>Three Discount Flows (same as CR-546)</h3>
+<table>
+<tr><th>#</th><th>Flow</th><th>Events Emitted</th></tr>
+<tr><td>1</td><td><b>Apply</b> (no prior discount → added)</td><td>1× <code>discount_apply_after_unpaid</code> with <code>operation: "apply"</code></td></tr>
+<tr><td>2</td><td><b>Remove</b> (discount → none)</td><td>1× <code>discount_remove_after_unpaid</code> with <code>operation: "remove"</code></td></tr>
+<tr><td>3</td><td><b>Replace</b> (A → B)</td><td>2× events: remove (old) + apply (new), both <code>operation: "replace"</code></td></tr>
+</table>
+
+<h3>Event Schema: <code>discount_apply_after_unpaid</code></h3>
+<pre><code>{
+  "type": "discount_apply_after_unpaid",
+  "order_id": "000680",
+  "amount": 680.00,
+  "discount_amount": 68.00,
+  "discount_type": "percent",
+  "discount_value": 10,
+  "by": "Manager",
+  "made_unpaid_at": "2026-11-10T21:08:00",
+  "discount_time": "2026-11-11T09:15:00",
+  "gap_minutes": 727,
+  "unpaid_count": 3,
+  "order_status_at_discount": "unpaid",
+  "operation": "apply"
+}</code></pre>
+
+<h3>Field Definitions</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>type</code></td><td>string</td><td>YES</td><td><code>"discount_apply_after_unpaid"</code> or <code>"discount_remove_after_unpaid"</code></td></tr>
+<tr><td><code>order_id</code></td><td>string</td><td>YES</td><td>Order ID (preserve leading zeros)</td></tr>
+<tr><td><code>amount</code></td><td>number</td><td>YES</td><td>Order total at time of event (₹)</td></tr>
+<tr><td><code>discount_amount</code></td><td>number</td><td>YES</td><td>Discount value in ₹</td></tr>
+<tr><td><code>discount_type</code></td><td>string</td><td>YES</td><td><code>"percent"</code> or <code>"fixed"</code></td></tr>
+<tr><td><code>discount_value</code></td><td>number</td><td>YES</td><td>Raw input: 10 for 10%, 50 for ₹50</td></tr>
+<tr><td><code>by</code></td><td>string</td><td>YES</td><td>Employee who changed discount</td></tr>
+<tr><td><code>made_unpaid_at</code></td><td>datetime</td><td>YES</td><td>FIRST make_unpaid timestamp</td></tr>
+<tr><td><code>discount_time</code></td><td>datetime</td><td>YES</td><td>When discount was changed</td></tr>
+<tr><td><code>gap_minutes</code></td><td>integer</td><td>YES</td><td>floor((discount_time − made_unpaid_at) / 60)</td></tr>
+<tr><td><code>unpaid_count</code></td><td>integer</td><td>YES</td><td>Total make_unpaid operations on this order</td></tr>
+<tr><td><code>order_status_at_discount</code></td><td>string</td><td>YES</td><td><code>"paid"</code> or <code>"unpaid"</code> at moment of change</td></tr>
+<tr><td><code>operation</code></td><td>string</td><td>YES</td><td><code>"apply"</code> / <code>"remove"</code> / <code>"replace"</code></td></tr>
+</table>
+
+<h3>Overlap with CR-546</h3>
+<p>A discount event can trigger BOTH <code>discount_*_after_print</code> (CR-546) AND <code>discount_*_after_unpaid</code> (this ask). Backend emits both independently. FE handles multi-category display (Approach C).</p>
+
+<hr>
+
+<h2>NEW-2: Re-pay Gap Event</h2>
+
+<h3>Detection Rule</h3>
+<pre><code>For each order where:
+  1. make_unpaid history exists AND
+  2. Order was subsequently re-paid AND
+  3. gap_amount = original_amount − repaid_amount > 0
+
+Compute breakdown:
+  gap_from_cancellations = sum of cancelled item ₹ (between unpaid and re-pay)
+  gap_from_discounts = net discount ₹ change (between unpaid and re-pay)
+
+Invariant: gap_amount = gap_from_cancellations + gap_from_discounts
+(no other reasons for gap — only cancellations and discounts change order total)</code></pre>
+
+<h3>Event Schema: <code>repay_gap</code></h3>
+<pre><code>{
+  "type": "repay_gap",
+  "order_id": "000680",
+  "original_amount": 680.00,
+  "repaid_amount": 463.00,
+  "gap_amount": 217.00,
+  "gap_from_cancellations": 149.00,
+  "gap_from_discounts": 68.00,
+  "made_unpaid_at": "2026-11-10T21:08:00",
+  "repaid_at": "2026-11-13T10:00:00",
+  "unpaid_count": 3
+}</code></pre>
+
+<h3>Field Definitions</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>type</code></td><td>string</td><td>YES</td><td>Always <code>"repay_gap"</code></td></tr>
+<tr><td><code>order_id</code></td><td>string</td><td>YES</td><td>Order ID</td></tr>
+<tr><td><code>original_amount</code></td><td>number</td><td>YES</td><td>Order total at time of first make_unpaid (₹)</td></tr>
+<tr><td><code>repaid_amount</code></td><td>number</td><td>YES</td><td>Order total at time of re-payment (₹)</td></tr>
+<tr><td><code>gap_amount</code></td><td>number</td><td>YES</td><td>original − repaid (₹ leaked)</td></tr>
+<tr><td><code>gap_from_cancellations</code></td><td>number</td><td>YES</td><td>₹ portion from item cancellations</td></tr>
+<tr><td><code>gap_from_discounts</code></td><td>number</td><td>YES</td><td>₹ portion from discount changes</td></tr>
+<tr><td><code>made_unpaid_at</code></td><td>datetime</td><td>YES</td><td>FIRST make_unpaid timestamp</td></tr>
+<tr><td><code>repaid_at</code></td><td>datetime</td><td>YES</td><td>Re-payment timestamp</td></tr>
+<tr><td><code>unpaid_count</code></td><td>integer</td><td>YES</td><td>Total make_unpaid count</td></tr>
+</table>
+
+<h3>Edge Cases</h3>
+<table>
+<tr><th>Scenario</th><th>Handling</th></tr>
+<tr><td>Order made unpaid but never re-paid</td><td>No event</td></tr>
+<tr><td>Re-paid at same or higher amount</td><td>No event (gap ≤ 0)</td></tr>
+<tr><td>Multiple unpaid/re-pay cycles</td><td>FIRST unpaid → LAST re-pay window</td></tr>
+<tr><td>Entirely cancelled, never re-paid</td><td>No event (covered by cancel_after_unpaid)</td></tr>
+</table>
+
+<hr>
+
+<h2>Combined KPI Counts — Full CR-544 Scope</h2>
+<table>
+<tr><th>Field</th><th>Source</th><th>Status</th></tr>
+<tr><td><code>cancel_after_unpaid_count</code></td><td>v2 (original)</td><td><span class="s done">DELIVERED</span></td></tr>
+<tr><td><code>discount_apply_after_unpaid_count</code></td><td>v3 NEW-1</td><td><span class="s new">NEW</span></td></tr>
+<tr><td><code>discount_remove_after_unpaid_count</code></td><td>v3 NEW-1</td><td><span class="s new">NEW</span></td></tr>
+<tr><td><code>repay_gap_count</code></td><td>v3 NEW-2</td><td><span class="s new">NEW</span></td></tr>
+<tr><td><code>repay_gap_total</code> (₹)</td><td>v3 NEW-2</td><td><span class="s new">NEW</span></td></tr>
+</table>
+
+<hr>
+
+<h2>Validation Checklists</h2>
+
+<h3>NEW-1: Discount After Unpaid</h3>
+<pre><code>□ Detection uses FIRST make_unpaid_at
+□ Re-payment does NOT close the window
+□ No time limit on gap
+□ All 3 discount flows: apply, remove, replace
+□ Replace = 2 events, both operation="replace"
+□ discount_type: "percent" or "fixed" only
+□ discount_amount = actual ₹, discount_value = raw input
+□ gap_minutes = floor((discount_time − made_unpaid_at) / 60)
+□ order_status_at_discount reflects status at moment of change
+□ KPI counts: replace increments BOTH
+□ Overlap with CR-546 OK — emit both independently
+□ Existing cancel_after_unpaid unchanged</code></pre>
+
+<h3>NEW-2: Re-pay Gap</h3>
+<pre><code>□ Only emitted when gap_amount > 0
+□ original_amount = total at FIRST make_unpaid
+□ repaid_amount = total at re-payment
+□ gap_from_cancellations + gap_from_discounts = gap_amount
+□ Only counts changes in window (after unpaid, before re-pay)
+□ No event if never re-paid
+□ No event if re-paid at same/higher amount
+□ Multiple cycles: FIRST unpaid → LAST re-pay
+□ repay_gap_count + repay_gap_total KPIs returned</code></pre>
+
+<hr>
+<p style="font-size:11px;color:#555;text-align:center">CR-544 v3 Addendum · 2026-11-17 · Ref: AUDIT_REPORT_DESIGN_DECISIONS_LOCKED_2026_11_17.md, D14–D19</p>
+
+</body>
+</html>
