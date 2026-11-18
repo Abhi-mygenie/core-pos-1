@@ -38690,7 +38690,7 @@
       "title": "VAT Still Charged When VAT Switch Is OFF (App Never Reads VAT Switch)",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "GATE_1_INTAKE_COMPLETE 2026-11-18",
+      "status": "INVESTIGATION_COMPLETE 2026-11-18 — 9 gaps found across 5 files, all paths. HIGH confidence. Next: Planning Gate 2-3.",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -38702,10 +38702,15 @@
           "label": "Intake",
           "path": "memory/change_requests/BUG-683_VAT_SWITCH_NEVER_READ_INTAKE.md",
           "type": "intake"
+        },
+        {
+          "label": "Investigation Report",
+          "path": "memory/investigations/INV-BUG683-DEEP-DIVE-ALL-PATHS-2026-11-18.md",
+          "type": "investigation"
         }
       ],
       "files": "profileTransform.js, OrderEntry.jsx, CartPanel.jsx, CollectPaymentPanel.jsx, orderTransform.js",
-      "notes": "P0/CRITICAL. CODE_ERROR. profileTransform.js never extracts VAT switch from profile API (vat_info.status). restaurant.settings.vatEnabled is always undefined -> always true. 5 files, ~15 sites. FAST LANE: NOT eligible. Related: BUG-647, BUG-336. 2 ODs open (OD-683-01: vat_info shape, OD-683-02: test restaurant).",
+      "notes": "P0/CRITICAL. 9 gaps: (1) profileTransform missing vatStatus, (2-3) OE taxFlags+localTax wrong path (10 sites), (4) CartPanel inverted check, (5) CPP no VAT skip, (6) CPP SC GST no gstEnabled gate, (7) collectBillExisting discount ignores taxFlags, (8) collectBillExisting vat_tax pass-through, (9) BUG-678 SC prepaid. Root cause: profileTransform never reads vat_info.status.",
       "related": [
         "BUG-647",
         "BUG-336"
