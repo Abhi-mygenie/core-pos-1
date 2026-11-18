@@ -36,14 +36,14 @@ _raw_id       = os.getenv('GOOGLE_SHEET_ID',           '').strip().strip('"').st
 SHEET_ID      = _raw_id.split('/')[0]
 TT_SHEET_ID   = os.getenv('TECH_TASKS_SHEET_ID', '').strip().strip('"').strip("'")  # CR-442
 
-# ── Contract v1.5 columns — 22 cols A–V on every tab ──────────────────────
+# ── Contract v1.6 columns — 23 cols A–W on every tab ──────────────────────
 CONTRACT_COLS = [
     'Project', 'ID', 'Type', 'Title', 'Status', 'Status note',
     'Priority', 'Risk', 'Area', 'Sprint', 'Blocked on', 'Owner action',
     'Assignee', 'Registered', 'Last updated', 'Closed',
     'Related', 'Artefacts', 'Code markers', 'Files', 'Notes', 'Money path',
+    'Release date',  # W — contract v1.6 (YYYY-MM-DD); agent reads+writes; Abhishek's value wins
 ]
-# Col W = Release week — owner/dashboard only; agents never read/write/clear it
 
 # ── Tabs — contract §2, exact names, exact order ──────────────────────────
 TABS = [
@@ -88,8 +88,8 @@ _MONEY_AREAS = {  # CR-428: updated to 13-module names
 # PENDING → owner approves → applied to registry
 # All other agent-owned cols diffed too but logged as REJECTED (not editable in Phase 1)
 # Excluded from diff entirely (§5.6): Release week
-_PHASE1_ACCEPTED  = {'Status', 'Registered', 'Closed', 'Priority', 'Blocked on', 'Assignee'}  # BUG-541 + owner brief 2026-11-06
-_EXCLUDED_FROM_DIFF = {'Release week', 'Last updated'}                  # BUG-541 — Last updated is agent-computed-only (§5)
+_PHASE1_ACCEPTED    = {'Registered', 'Closed', 'Priority', 'Blocked on', 'Assignee', 'Release date'}  # v1.6: Status NOT pulled (registry is source)
+_EXCLUDED_FROM_DIFF = {'Last updated'}  # v1.6: Release date now tracked; Last updated is agent-computed-only
 _ALLOWED_ASSIGNEES = {'Abhishek', 'Avinash', 'Gyan', 'Parth', 'Piyush', ''}  # owner brief 2026-11-06
 
 # ── Status → stage tab ────────────────────────────────────────────────────
@@ -566,6 +566,7 @@ def to_contract_row(item):
         files[:300],
         notes[:500],
         money_path,
+        str(item.get('release_date', '') or ''),  # W — Release date, contract v1.6 (YYYY-MM-DD)
     ]
 
 
@@ -825,10 +826,10 @@ def sync_tabs(token, meta, dry_run=False):
     print(f"  ✅ Tab management done ({len(reqs)} operation(s))")
 
 
-# ── Stage / summary tab writer (clear A:V then write) ─────────────────────
+# ── Stage / summary tab writer (clear A:W then write) ─────────────────────
 def write_tab(token, tab_name, rows, dry_run=False):
     """Clear cols A–V of a stage/summary tab then write. Never touches W+."""
-    enc_clear = _range_url(tab_name, 'A1:V10000')
+    enc_clear = _range_url(tab_name, 'A1:W10000')
     enc_write = _range_url(tab_name, 'A1')
 
     if dry_run:
@@ -859,12 +860,12 @@ def write_tab(token, tab_name, rows, dry_run=False):
 def update_all_items_inplace(token, items, dry_run=False):
     """Update All Items in-place by ID. Never clears. Never writes col W+.
 
-    1. Read current A1:V  (22 cols — skip W entirely)
+    1. Read current A1:W  (23 cols — skip W entirely)
     2. id → sheet row number map  (ID = col B = index 1)
     3. For each registry item: update matched row OR queue append
     4. Batch-POST existing rows; append new rows
     """
-    enc_read = _range_url('All Items', 'A1:V10000')
+    enc_read = _range_url('All Items', 'A1:W10000')
     r = sheets_get(token, f'/values/{enc_read}')
     if r.status_code != 200:
         print(f"  ⚠  Could not read All Items ({r.status_code}) — skipping in-place update")
@@ -922,7 +923,7 @@ def update_all_items_inplace(token, items, dry_run=False):
             n = id_to_row[item_id]
             # Owner brief 2026-11-06: write full row A:V including col M (Assignee)
             update_data.append({
-                'range':  f"'All Items'!A{n}:V{n}",
+                'range':  f"'All Items'!A{n}:W{n}",
                 'values': [contract_row],
             })
         else:
@@ -966,7 +967,7 @@ def update_all_items_inplace(token, items, dry_run=False):
         for idx, row in enumerate(append_rows):
             n = next_row + idx
             # Owner brief 2026-11-06: write full row A:V including col M
-            append_data.append({'range': f"'All Items'!A{n}:V{n}", 'values': [row]})
+            append_data.append({'range': f"'All Items'!A{n}:W{n}", 'values': [row]})
         for i in range(0, len(append_data), BATCH):
             chunk = append_data[i:i + BATCH]
             r = sheets_post(token, '/values:batchUpdate',
@@ -1268,8 +1269,181 @@ def sync_assignees_from_sheet(token, items, dry_run=False):
     return cl_rows, report
 
 
+# ── contract v1.6: Pull Priority + Release date from sheet before push ─────
+def pull_priority_release(token, items, dry_run=False):
+    """Pull Priority (G) and Release date (W) from sheet into registry.
+    Abhishek's value wins. Blank sheet NEVER clears an agent-set release date.
+    Status is never pulled (registry is source of truth for Status)."""
+    enc = _range_url('All Items', 'A1:W10000')
+    r = sheets_get(token, f'/values/{enc}')
+    if r.status_code != 200:
+        return [], [f"⚠  Cannot read All Items for pull ({r.status_code})"]
+    rows = r.json().get('values', [])
+    if not rows:
+        return [], []
+
+    header = rows[0]
+    def col(name): return header.index(name) if name in header else -1
+    id_col      = col('ID') if col('ID') >= 0 else 1
+    prio_col    = col('Priority') if col('Priority') >= 0 else 6
+    release_col = col('Release date') if col('Release date') >= 0 else 22  # W
+
+    items_by_id = {i['id']: i for i in items}
+    now_str     = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
+    cl_rows, prio_changes, release_changes = [], [], []
+
+    for row in rows[1:]:
+        item_id = row[id_col].strip() if id_col < len(row) else ''
+        if not item_id or item_id not in items_by_id:
+            continue
+        item = items_by_id[item_id]
+
+        # Priority — take sheet value if non-blank (Abhishek's value wins)
+        sheet_prio = row[prio_col].strip() if prio_col < len(row) else ''
+        reg_prio   = str(item.get('priority', '') or '')
+        if sheet_prio and sheet_prio != reg_prio:
+            item['priority'] = sheet_prio
+            cl_rows.append([now_str, item_id, 'Priority', reg_prio, sheet_prio,
+                            'APPLIED', now_str, 'SOURCE=DASHBOARD, APPLIED (v1.6 pull)'])
+            prio_changes.append(f"{item_id}: {reg_prio} → {sheet_prio}")
+
+        # Release date — take sheet date only if non-blank (blank never clears agent date)
+        sheet_rel = row[release_col].strip() if release_col < len(row) else ''
+        reg_rel   = str(item.get('release_date', '') or '')
+        if sheet_rel and sheet_rel != reg_rel:
+            item['release_date'] = sheet_rel
+            cl_rows.append([now_str, item_id, 'Release date', reg_rel, sheet_rel,
+                            'APPLIED', now_str, 'SOURCE=DASHBOARD, APPLIED (v1.6 pull)'])
+            release_changes.append(f"{item_id}: {sheet_rel}")
+
+    report = []
+    if prio_changes:
+        report.append(f"Priority pulled ({len(prio_changes)}): " +
+                      ', '.join(prio_changes[:5]) +
+                      (f" … +{len(prio_changes)-5} more" if len(prio_changes) > 5 else ""))
+    if release_changes:
+        report.append(f"Release date pulled ({len(release_changes)} items set/changed)")
+    if not cl_rows:
+        report.append("Pull: no Priority or Release date changes on sheet")
+    return cl_rows, report
+
+
+def pre_push_validate(token, items):
+    """Mandatory pre-push checks. Returns (errors, warnings).
+    errors   → list of strings; push MUST stop if non-empty.
+    warnings → list of strings; push continues but agent must report.
+
+    Checks (brief-pos-agent-2026-11-17):
+    1. Area blank or invalid  — every item must have one of the 13 valid POS areas.
+    2. Registered blank       — new items (registered within 60 days or zero date) must have a date.
+    3. CLOSED/PARKED/SUBSUMED with no Closed date.
+    4. Blocked on not a valid party name or blank.
+    5. Release date not YYYY-MM-DD format or blank.
+    6. Registered, Closed, Area or Money path going filled → blank vs current sheet.
+    """
+    errors, warnings = [], []
+    DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+    VALID_PARTIES_UPPER = {'BACKEND','POS','CRM','SO','INV','INFRA','OWNER','OPS','INTERNAL',''}
+    CLOSE_KEYWORDS = ['CLOSED','SUBSUMED','MERGED','RETIRED','PARKED','DUPLICATE','ABSORBED',
+                      'SPLIT \u2192','SPLIT_']
+
+    # ── Read current sheet for filled→blank comparison ──
+    current_sheet = {}
+    try:
+        enc  = _range_url('All Items', 'A1:W10000')
+        resp = sheets_get(token, f'/values/{enc}')
+        if resp.status_code == 200:
+            srows = resp.json().get('values', [])
+            if srows:
+                hdr   = srows[0]
+                id_c  = hdr.index('ID')           if 'ID'           in hdr else 1
+                reg_c = hdr.index('Registered')   if 'Registered'   in hdr else 13
+                cl_c  = hdr.index('Closed')        if 'Closed'        in hdr else 15
+                ar_c  = hdr.index('Area')          if 'Area'          in hdr else 8
+                mp_c  = hdr.index('Money path')    if 'Money path'    in hdr else 21
+                for row in srows[1:]:
+                    iid = row[id_c].strip() if id_c < len(row) else ''
+                    if iid:
+                        current_sheet[iid] = {
+                            'registered': row[reg_c].strip() if reg_c < len(row) else '',
+                            'closed':     row[cl_c].strip()  if cl_c  < len(row) else '',
+                            'area':       row[ar_c].strip()  if ar_c  < len(row) else '',
+                            'money_path': row[mp_c].strip()  if mp_c  < len(row) else '',
+                        }
+    except Exception as exc:
+        warnings.append(f"Could not read current sheet for filled→blank check: {exc}")
+
+    items_map = {i['id']: i for i in items}
+
+    for item in items:
+        iid    = item['id']
+        status = str(item.get('status', '') or '').upper()
+        is_closed = any(k in status for k in CLOSE_KEYWORDS)
+        contract_row = to_contract_row(item)  # computed row we're about to push
+
+        # 1. Area blank or invalid
+        area = str(item.get('area', '') or '').strip()
+        if not area:
+            errors.append(f"[Area blank]      {iid}: area is empty")
+        elif normalise_area(area) not in POS_AREAS:
+            warnings.append(f"[Area invalid]    {iid}: '{area}' not in 13-module taxonomy")
+
+        # 2. Registered blank for items with no date
+        reg_val = contract_row[13] if len(contract_row) > 13 else ''  # col N = Registered
+        if not reg_val:
+            # Only error on non-closed, non-duplicate items — legacy items are warnings
+            if not is_closed and 'DUPLICATE' not in status:
+                warnings.append(f"[Reg missing]     {iid}: Registered is blank (fill in intake date)")
+
+        # 3. CLOSED/PARKED with no Closed date
+        if is_closed:
+            closed_val = contract_row[15] if len(contract_row) > 15 else ''  # col P = Closed
+            if not closed_val:
+                # Only error if: (a) item is new (not on sheet yet), or
+                # (b) item was NOT closed on sheet before (new closure in this push)
+                # Legacy items already CLOSED with no date on sheet → warning only
+                sheet_state = current_sheet.get(iid, {})
+                was_on_sheet = iid in current_sheet
+                sheet_closed_date = sheet_state.get('closed', '')
+
+                if not was_on_sheet:
+                    errors.append(f"[Closed no date]  {iid}: NEW item is closed/parked but has no Closed date")
+                elif not sheet_closed_date:
+                    # Pre-existing: was already closed with no date — warning, not error
+                    warnings.append(f"[Closed no date]  {iid}: legacy CLOSED item still has no Closed date (pre-existing)")
+                # else: had a date, still has a date — fine
+
+        # 4. Blocked on not a valid party
+        bo = str(item.get('blocked_on', '') or '').strip().upper()
+        if bo and bo not in VALID_PARTIES_UPPER:
+            errors.append(f"[Blocked on]      {iid}: '{item.get('blocked_on','')}' is not a valid party (BACKEND/OWNER/etc)")
+
+        # 5. Release date format
+        rd = str(item.get('release_date', '') or '').strip()
+        if rd and not DATE_RE.match(rd):
+            errors.append(f"[Release date]    {iid}: '{rd}' is not YYYY-MM-DD")
+
+        # 6. Filled → blank vs current sheet
+        if iid in current_sheet:
+            sh = current_sheet[iid]
+            new_reg = contract_row[13] if len(contract_row) > 13 else ''
+            new_cl  = contract_row[15] if len(contract_row) > 15 else ''
+            new_ar  = contract_row[8]  if len(contract_row) > 8  else ''
+            new_mp  = contract_row[21] if len(contract_row) > 21 else ''
+            if sh['registered'] and not new_reg:
+                errors.append(f"[Reg wiped]       {iid}: Registered '{sh['registered']}' → blank")
+            if sh['closed'] and not new_cl:
+                errors.append(f"[Closed wiped]    {iid}: Closed date '{sh['closed']}' → blank")
+            if sh['area'] and not new_ar:
+                errors.append(f"[Area wiped]      {iid}: Area '{sh['area']}' → blank")
+            if sh['money_path'] and sh['money_path'].lower() in ('yes','no') and not new_mp:
+                warnings.append(f"[Money wiped]     {iid}: Money path '{sh['money_path']}' → blank")
+
+    return errors, warnings
+
+
 # ── PUSH command ───────────────────────────────────────────────────────────
-def cmd_push(dry_run=False):
+def cmd_push(dry_run=False, force=False):
     print("\n── PUSH: registry.json → Google Sheets (contract v1.5) " + "─" * 18)
 
     registry = json.load(open(REGISTRY_PATH))
@@ -1284,6 +1458,34 @@ def cmd_push(dry_run=False):
     token = get_access_token()
     print("  ✅ Access token refreshed")
 
+    # ── contract v1.6: PULL Priority + Release date before push ──────────
+    pull_cl, pull_report = pull_priority_release(token, items, dry_run)
+    if pull_cl and not dry_run:
+        json.dump(registry, open(REGISTRY_PATH, 'w'), indent=2, ensure_ascii=False)
+        append_to_change_log(token, pull_cl, dry_run)
+        print(f"  ✅ Pull (Priority+Release date): {len(pull_cl)} change(s) applied → registry.json saved")
+    for line in pull_report:
+        print(f"  {line}")
+
+    # ── mandatory pre-push validation (brief-pos-agent-2026-11-17) ──────
+    print("  Running pre-push validation…", end=' ', flush=True)
+    p_errors, p_warnings = pre_push_validate(token, items)
+    print(f"{'FAIL' if p_errors else 'PASS'} ({len(p_errors)} error(s), {len(p_warnings)} warning(s))")
+    if p_warnings:
+        print("  ⚠  WARNINGS (push continues):")
+        for w in p_warnings[:20]:
+            print(f"    {w}")
+        if len(p_warnings) > 20:
+            print(f"    … +{len(p_warnings)-20} more warnings")
+    if p_errors:
+        print("  ❌ ERRORS — push STOPPED. Fix these before pushing:")
+        for e in p_errors[:30]:
+            print(f"    {e}")
+        if len(p_errors) > 30:
+            print(f"    … +{len(p_errors)-30} more errors")
+        print("  ℹ  To bypass (not recommended): run with --force flag")
+        if not dry_run and not force:
+            return
     # ── Owner brief 2026-11-06: Assignee seed + sync ──
     assignee_report = []
     needs_seed = not any(i.get('assignee') for i in items)
@@ -1314,7 +1516,7 @@ def cmd_push(dry_run=False):
     # All Items — in-place by ID, cols A–V including col M (Assignee)
     update_all_items_inplace(token, items, dry_run)
 
-    # Stage tabs — clear A:V + write (derived views, safe to clear)
+    # Stage tabs — clear A:W + write (derived views, safe to clear)
     for tab in ('Intake', 'Planning', 'Implemented', 'QA', 'Smoke', 'Closed'):
         rows = build_stage_tab_rows(items, tab)
         write_tab(token, tab, rows, dry_run)
@@ -1329,7 +1531,7 @@ def cmd_push(dry_run=False):
     pending = get_pending_cl_count(token) if not dry_run else 0
     all_items_data = None
     if not dry_run:
-        _enc = _range_url('All Items', 'A1:V10000')
+        _enc = _range_url('All Items', 'A1:W10000')
         _r = sheets_get(token, f'/values/{_enc}')
         if _r.status_code == 200:
             all_items_data = _r.json().get('values', [])
@@ -1427,7 +1629,7 @@ def cmd_diff_log(dry_run=False):
     """
     token = get_access_token()
 
-    enc = _range_url('All Items', 'A1:V10000')
+    enc = _range_url('All Items', 'A1:W10000')
     r = sheets_get(token, f'/values/{enc}')
     if r.status_code != 200:
         print(f"  ⚠  Could not read All Items for diff: {r.status_code}")
@@ -1524,6 +1726,8 @@ def main():
                              '[{id,status,note,registry_id?}] to the Tasks tab')
     parser.add_argument('--dry-run', action='store_true', dest='dry_run',
                         help='Validate or show diff only — no writes')
+    parser.add_argument('--force',   action='store_true',
+                        help='Bypass pre-push validation errors (not recommended)')
     args = parser.parse_args()
 
     if not any([args.push, args.pull, args.dry_run, args.tech_writeback]):
@@ -1568,7 +1772,7 @@ def main():
         return
 
     if args.push:
-        cmd_push(dry_run=args.dry_run)
+        cmd_push(dry_run=args.dry_run, force=getattr(args, 'force', False))
 
     if args.pull:
         # OD-419-04: --pull is only valid with --dry-run (SHEET DRIFT role).
