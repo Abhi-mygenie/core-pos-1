@@ -1307,14 +1307,14 @@ def pull_priority_release(token, items, dry_run=False):
                             'APPLIED', now_str, 'SOURCE=DASHBOARD, APPLIED (v1.6 pull)'])
             prio_changes.append(f"{item_id}: {reg_prio} → {sheet_prio}")
 
-        # Release date — take sheet date only if non-blank (blank never clears agent date)
+        # Release date — sheet is authoritative: blank means owner cleared it (2026-11-18 rule)
         sheet_rel = row[release_col].strip() if release_col < len(row) else ''
         reg_rel   = str(item.get('release_date', '') or '')
-        if sheet_rel and sheet_rel != reg_rel:
-            item['release_date'] = sheet_rel
-            cl_rows.append([now_str, item_id, 'Release date', reg_rel, sheet_rel,
+        if sheet_rel != reg_rel:
+            item['release_date'] = sheet_rel  # blank = accept cleared
+            cl_rows.append([now_str, item_id, 'Release date', reg_rel, sheet_rel or '(cleared)',
                             'APPLIED', now_str, 'SOURCE=DASHBOARD, APPLIED (v1.6 pull)'])
-            release_changes.append(f"{item_id}: {sheet_rel}")
+            release_changes.append(f"{item_id}: {reg_rel or '(blank)'} → {sheet_rel or '(cleared)'}")
 
     report = []
     if prio_changes:

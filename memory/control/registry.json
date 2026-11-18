@@ -18268,7 +18268,7 @@
       "type": "BUG",
       "severity": "P1",
       "risk": "N/A",
-      "status": "PLANNING — Wastage KPI backend endpoint not live. Code placeholders exist (InventoryIntelligencePanel.jsx). Demoted from GATE_6 per code reality check 2026-11-16.",
+      "status": "GATE_2 — Wastage KPI backend endpoint not live. Code placeholders exist (Inventory module, Waste Report).",
       "sprint_key": "pos_5_0",
       "source": "OWNER-REPORTED",
       "duplicate_check": "DISTINCT",
@@ -20756,7 +20756,7 @@
       "source": "OWNER-REPORTED",
       "duplicate_check": "DISTINCT",
       "assignee": "Piyush",
-      "release_date": "2026-11-18"
+      "release_date": ""
     },
     {
       "id": "BUG-320",
@@ -29292,7 +29292,7 @@
       "area": "Aggregator / Sockets",
       "assignee": "Parth",
       "priority": "P0",
-      "release_date": "2026-11-17"
+      "release_date": ""
     },
     {
       "id": "BUG-455",
@@ -35522,7 +35522,7 @@
       "open_decisions": [],
       "blocked_by": "BACKEND",
       "assignee": "Gyan",
-      "release_date": "2026-11-17"
+      "release_date": ""
     },
     {
       "id": "CR-479",
@@ -36009,7 +36009,7 @@
       "notes": "2026-11-04: Intake. Dup: RELATED. Code reality: NONE | ODs: OD-486-01 Model: same device switch-user vs two devices both active ; Note: BUG-454 | 2026-11-05 r4: owner answers at Gate 2. | 2026-11-05 r5 FROZEN tracking. | 2026-11-05: PRIORITY UPGRADE P1→P0 (owner directive).",
       "blocked_on": "BACKEND",
       "assignee": "Piyush",
-      "release_date": "2026-11-18"
+      "release_date": ""
     },
     {
       "id": "CR-487",
@@ -38587,7 +38587,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": "2026-11-17"
+      "release_date": ""
     },
     {
       "id": "CR-533",
@@ -38606,7 +38606,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": "2026-11-17"
+      "release_date": ""
     },
     {
       "id": "CR-534",
@@ -38625,7 +38625,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": "2026-11-17"
+      "release_date": ""
     },
     {
       "id": "CR-535",
@@ -38917,7 +38917,7 @@
           "type": "implementation_plan"
         }
       ],
-      "release_date": "2026-11-17",
+      "release_date": "",
       "registered_date": "2026-11-16"
     },
     {
@@ -39135,7 +39135,7 @@
       "type": "BUG",
       "severity": "P0",
       "risk": "LOW",
-      "status": "FAST_LANE_APPROVED — owner approved direct bug fix 2026-11-17",
+      "status": "GATE_4_GO — FAST LANE APPROVED — owner approved direct bug fix 2026-11-17",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Abhishek",
@@ -39161,7 +39161,7 @@
       "type": "BUG",
       "severity": "P0",
       "risk": "LOW",
-      "status": "FAST_LANE_APPROVED — owner approved direct bug fix 2026-11-17",
+      "status": "GATE_4_GO — FAST LANE APPROVED — owner approved direct bug fix 2026-11-17",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Abhishek",
@@ -39223,7 +39223,8 @@
       ],
       "completeness": "1/7",
       "category": "IN_PROGRESS",
-      "code_reality": "NONE"
+      "code_reality": "NONE",
+      "registered_date": "2026-11-18"
     },
     {
       "id": "BUG-684",
@@ -39255,7 +39256,8 @@
       ],
       "completeness": "1/7",
       "category": "IN_PROGRESS",
-      "code_reality": "NONE"
+      "code_reality": "NONE",
+      "registered_date": "2026-11-18"
     }
   ],
   "meta": {
