@@ -88,16 +88,16 @@ API: POST top-food%20sales-report
 
 ---
 
-## 7. Owner Decisions (open — needed before Gate 3)
+## 7. Owner Decisions — ALL LOCKED 2026-11-18
 
-| OD | Question | Options |
-|----|----------|---------|
-| **OD-630-01** | Net Sales KPI subtitle | **(a)** `after discount` · **(b)** `after discount, excl. tax` · **(c)** other |
-| **OD-630-02** | Gross Revenue subtitle update | **(a)** Change `"before disc"` → `"before discount"` · **(b)** Leave as-is |
-| **OD-630-03** | Date picker style (replace FROM/TO) | **(a)** Just calendar icons + dates + dash `📅 03/11 — 📅 18/11` · **(b)** Lowercase `from … to …` |
-| **OD-630-04** | Total Sales KPI subtitle | **(a)** `incl. tax` · **(b)** `billed amount` · **(c)** no subtitle |
-| **OD-630-05** | Tax KPI subtitle | **(a)** `GST + SC` · **(b)** `applied` · **(c)** no subtitle |
-| **OD-630-06** | Table column `Net Sales` — add `Total Sales` column too? | **(a)** Yes — both columns visible · **(b)** No — only Net Sales column (corrected value) |
+| OD | Question | Decision | Owner note |
+|----|----------|----------|-----------|
+| **OD-630-01** | Net Sales KPI subtitle | ✅ `"before taxes"` | Discount already deducted in Net Sales formula (Gross − Discount). "Before taxes" = after discount, before GST/VAT/SC. |
+| **OD-630-02** | Gross Revenue subtitle | ✅ No change — keep `"before disc"` | Owner: "there is nothing before discount" — subtitle is correct as-is. |
+| **OD-630-03** | Date picker FROM/TO labels | ✅ No change — keep as today | Owner: "same as today why change" — FROM/TO labels stay. Badge removal only. |
+| **OD-630-04** | Total Sales KPI subtitle | ✅ `"incl. tax"` | As recommended. |
+| **OD-630-05** | Tax KPI subtitle | ✅ `"GST + SC"` | As recommended. |
+| **OD-630-06** | Add Total Sales as table column | ✅ Yes — both Net Sales + Total Sales columns visible | Owner: "yes". |
 
 ---
 
@@ -109,8 +109,9 @@ API: POST top-food%20sales-report
 | V2 | Tax KPI value | Tax = Net Sales KPI diff from Total Sales KPI |
 | V3 | Total Sales KPI value | Matches previous "Net Sales" value (unchanged) |
 | V4 | Badge removed | No `"1 API call · any range"` text on page |
-| V5 | FROM/TO removed | Date picker shows no "FROM" / "TO" text labels |
+| V5 | FROM/TO labels — no change (OD-630-03 locked: keep as today) | Date picker unchanged |
 | V6 | Relationship check | Net Sales + Tax = Total Sales (browser console / network tab) |
+| V7 | Total Sales column in table | Table has both Net Sales + Total Sales columns visible |
 
 ---
 
