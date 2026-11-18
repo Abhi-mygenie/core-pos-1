@@ -1,0 +1,50 @@
+{
+  "summary": "Frontend-only E2E check of the Gate-4 QA Nov sprint fixes on https://genie-pos-front-2--37t4uxmo.preview.emergentagent.com (the URL from frontend/.env), logged in as owner@cafe103.com against preprod. PASS: login and logo (BUG-693), BUG-685, BUG-695, BUG-697, BUG-698, BUG-700 and BUG-691 (only checked against empty data). BUG-686 passes in a limited sense: cafe103 has 0 running orders, so a flash to 0 could not be seen, but the new guard log fired on every login. Found one new keyboard regression from the BUG-695 fix, plus a few minor issues. One login hit a transient preprod ERR_CONNECTION_RESET on Products; clicking Retry recovered it.",
+  "verified": {
+    "BUG-693_login_logo": "PASS. The login-logo IMG has src=/mygenie-logo.svg, naturalWidth=156, and renders visibly. Login reaches /dashboard.",
+    "BUG-685": "PASS. Table C1 opened Order Entry. Adding a plain item (Americano 116607) put a cart row in with no edit-item-btn. Adding a customizable item (Aloo Paratha 116593 with the Butter addon) showed edit-item-btn-116593. Clicking Edit opened item-customization-modal with the button label 'Save Changes'. Changing qty to 2 and saving updated the row in place: still one row, qty 2, Rs 180. Zero console errors or page errors, no onEdit ReferenceError. No order was placed.",
+    "BUG-686": "PARTIAL / PASS. Ran 3 logout-login cycles, sampling 8 times each: POS count was 0 every time, which is correct because the account has 0 running orders. So the 'flash to 0' symptom cannot be seen on this account. On every login the console showed '[OrderPolling] skip (mount-or-auth): in-flight' and then '[OrderPolling] BUG-686: skip reconcile — POS fetch rejected, retaining local orders', so the guard is active.",
+    "BUG-695": "PASS. No validateDOMNesting or 'descendant' console error. document.querySelectorAll('button button').length is 0, and audit-card1-toggle is a DIV. Click expands and collapses. Enter expands and Space collapses. Clicking audit-card1-link goes to /reports-module/cancellations without toggling the card.",
+    "BUG-697": "PASS. On first load the applied range was 2026-11-18 to 2026-11-18 and the highlighted chip was 'Today' only, not 7D.",
+    "BUG-698": "PASS. Clicking FY set the range to 2025-04-01 to 2026-03-31 and highlighted FY, with no crash. Insights Dashboard (/reports-module/dashboard, reached by client-side navigation) picked up reports-date-from=2025-04-01 and to=2026-03-31. Going back to Audit, FY was highlighted again. Note: I did not wait for the FY data fetch to finish. Iteration 1 found that FY times out at 60s on preprod.",
+    "BUG-691": "PASS (empty data only). Card 1 and Card 3 drill-downs have 0 events ('No events'), so the time-cell format could not be checked on real rows. No clipped 'YYYY-' cell anywhere. The fmtTime regex code looks correct.",
+    "BUG-700": "PASS. audit-card1-risk-bar is in the DOM with the text 'No high-risk cancellations'. audit-card1-table and audit-card3-table are in the DOM with the text 'No events' when expanded."
+  },
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "preprod Products load at login", "issue": "One login attempt failed at the Products step with net::ERR_CONNECTION_RESET ('Cannot reach server'). 'Retry Failed' recovered it. External, flaky."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AuditLogMockup Card 1 header (BUG-695 fix regression)", "issue": "Keyboard users cannot open the inner 'Cancellation Report' link. If you focus audit-card1-link and press Enter, the keydown event bubbles up to the parent div role=button. That onKeyDown calls e.preventDefault(), which cancels the button's native click, and then toggleCard('card1') runs. Result: the card toggles and there is no navigation. Reproduced: the URL stayed on /audit-log and the card expanded. Fix: in the div onKeyDown add `if (e.target !== e.currentTarget) return;`, or stop keydown propagation on the link.", "selector": "[data-testid='audit-card1-link']", "priority": "MEDIUM"},
+      {"component": "Insights Dashboard / Cancellations presets (same class as BUG-697)", "issue": "These pages still hard-code the highlighted preset. With a shared FY range, DashboardMockup showed 'Today' highlighted (useState('Today') at L67). With a shared Today range, CancellationsMockup showed '7D' highlighted. The highlighted chip does not match the inherited range. Reuse the matchPreset logic.", "selector": "[data-testid='reports-date-presets']", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Order polling on login (BUG-686 RCA)", "issue": "The 'mount-or-auth' POS fetch is aborted on every login. The interval effect depends on pollOnce, whose deps (permissions, reconcile, addOrder) change identity right after login. The effect cleanup aborts the in-flight request, and the re-run is skipped as 'in-flight' because isPollingRef is still true. So the first reconcile never runs at login; it only runs on the next interval tick. The new guard prevents the wipe, but the cause is still there. Also, a rejected POS fetch under Promise.allSettled resets failureCountRef to 0, so backoff never applies to POS failures.", "affected_selectors": []}
+    ],
+    "design_issues": [
+      {"screen": "All pages", "issues": ["A 'New version available — Update now' toast stays at bottom center on every screen and covers content. This is an environment artifact but should be checked."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix the Card 1 header onKeyDown so key events coming from child elements (the Cancellation Report link) are ignored: check e.target === e.currentTarget.",
+    "Optional: stabilise the pollOnce deps (or don't abort/skip on deps change) so the login mount poll actually reconciles, and count rejected POS fetches toward backoff.",
+    "Optional: apply the matchPreset highlight logic to the other Insights pages (DashboardMockup, CancellationsMockup) that inherit the shared range."
+  ],
+  "critical_code_review_comments": [
+    "AuditLogMockup.jsx L376: role=button div onKeyDown should guard e.target !== e.currentTarget (keyboard regression).",
+    "useOrderPollingReconciliation.js L321/L347: pollOnce deps cause effect teardown and abort of the mount fetch on login; the 'skip in-flight' then suppresses the re-kick.",
+    "useOrderPollingReconciliation.js L306: failureCountRef is reset to 0 even when posResult is rejected, so backoff is bypassed.",
+    "AuditLogMockup.jsx: at 1,000+ lines it is above the 700-line guideline. Consider splitting RiskBar, DrillDownTable and the cards into separate files."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend only)", "frontend": "~90% (8/8 targeted items pass; 1 new keyboard regression, 686 and 691 checked only partially because the account has no data)"},
+  "test_credentials": "owner@cafe103.com / Qplazm@10 (from the review request; /app/memory/test_credentials.md not found or empty)",
+  "seed_data_creation": "None. Cart items were added in Order Entry but no order was placed.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The audit page route is /reports-module/audit-log. Reach it with client-side navigation (history.pushState + popstate) from /dashboard after login, so the InsightsCacheProvider state is kept. Login can take 30-60s and may need a 'Retry Failed' click. Customizable item: menu-item-116593 (Aloo Paratha, addon-option-11257). Plain item: menu-item-116607 (Americano). Table: first [data-testid^=table-card-]. cafe103 has 0 running orders and 0 audit events, so BUG-686 and BUG-691 need an account with data for a full check."
+}

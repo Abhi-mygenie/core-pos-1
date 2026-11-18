@@ -373,7 +373,7 @@ const AuditReportPage = () => {
                   {/* Card 1 — High Risk Cancellations (CR-543) */}
                   <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden" data-testid="audit-card1">
                     {/* BUG-695: outer toggle is a div (role=button) so the inner "Cancellation Report" <button> is not nested inside a <button> (invalid HTML) */}
-                    <div role="button" tabIndex={0} onClick={() => toggleCard('card1')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCard('card1'); } }} className="w-full flex items-center justify-between px-6 py-4 hover:bg-zinc-50/50 transition-colors cursor-pointer text-left" data-testid="audit-card1-toggle">
+                    <div role="button" tabIndex={0} onClick={() => toggleCard('card1')} onKeyDown={(e) => { if (e.target !== e.currentTarget) return; if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCard('card1'); } }} className="w-full flex items-center justify-between px-6 py-4 hover:bg-zinc-50/50 transition-colors cursor-pointer text-left" data-testid="audit-card1-toggle">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FEE2E2' }}>
                           <Clock className="w-5 h-5" style={{ color: '#991B1B' }} />
