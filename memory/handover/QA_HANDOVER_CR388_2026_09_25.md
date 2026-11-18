@@ -69,6 +69,6 @@ EXIT GATE: ALL 5 PASSED
 
 | | Value |
 |---|---|
-| Preview URL | https://build-preview-339--3oltfmkm.preview.emergentagent.com |
+| Preview URL | https://repo-build-8--5u3pk2yp.preview.emergentagent.com |
 | Account needed | Any account with inventory ingredients (base + small unit configured) |
 | Credentials | See `/app/memory/test_credentials.md` — QA_INV account if available |

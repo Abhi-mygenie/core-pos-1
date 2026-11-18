@@ -93,7 +93,7 @@ Approximate new positions (from original HEAD):
 |---------|-------|---------|
 | Owner (RID 69, The Goan Kitchen) | owner@thegoankitchen.com | Qplazm@10 |
 
-Preview URL: `https://build-preview-339--3oltfmkm.preview.emergentagent.com`
+Preview URL: `https://repo-build-8--5u3pk2yp.preview.emergentagent.com`
 Backend: `https://preprod.mygenie.online`
 
 ---

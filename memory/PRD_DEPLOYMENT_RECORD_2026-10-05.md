@@ -15,7 +15,7 @@
 
 ## Outcome
 - `webpack compiled with 1 warning` (only react-hooks/exhaustive-deps lint warnings, no errors)
-- App accessible at: https://build-preview-339--3oltfmkm.preview.emergentagent.com
+- App accessible at: https://repo-build-8--5u3pk2yp.preview.emergentagent.com
 - Login screen rendering: MyGenie POS — "Streamlined Hospitality. Exceptional Experience."
 - Port 3000 bound and responding
 
