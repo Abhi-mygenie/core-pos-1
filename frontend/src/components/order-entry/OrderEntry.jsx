@@ -14,6 +14,7 @@ import { lookupAddresses, addAddress, lookupCustomer } from "../../api/services/
 import { API_ENDPOINTS } from "../../api/constants";
 import { toAPI as tableToAPI } from "../../api/transforms/tableTransform";
 import { toAPI as orderToAPI, customItemFromAPI, fromAPI as orderFromAPI, calculateSelectedVariantsPrice } from "../../api/transforms/orderTransform";
+import { applyGrandTotalRoundOff } from '../../utils/roundOffUtils'; // BUG-684
 import { fetchSingleOrderForSocket, printOrder } from "../../api/services/orderService";
 // CR-008 #4 Phase A / Bucket D1 (May-2026): post-Collect-Bill stay-vs-redirect
 // preference. Read site for this flag is the success branch of
@@ -1151,7 +1152,8 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
     if (taxType === 'GST' && !restaurant?.tax?.gstStatus) return sum;
     if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return sum; // BUG-683
     const isInclusive = item.tax?.calculation === 'Inclusive';
-    return sum + (isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100));
+    const itemTax = isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100);
+    return sum + Math.round(itemTax * 100) / 100; // BUG-684: round per item (parity with buildCartItem toFixed(2))
   }, 0);
   const unplacedSubtotal = cartItems
     .filter(i => !i.placed && i.status !== 'cancelled' && !i.isCheckInMarker)
@@ -1166,7 +1168,8 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
     if (taxType === 'GST' && !restaurant?.tax?.gstStatus) return sum;
     if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return sum; // BUG-683
     const isInclusive = item.tax?.calculation === 'Inclusive';
-    return sum + (isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100));
+    const itemTax = isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100);
+    return sum + Math.round(itemTax * 100) / 100; // BUG-684: round per item (parity with buildCartItem toFixed(2))
   }, 0);
   // total = final amount including tax + round-off (for Collect Bill button)
   // CR-SC-COLLECT-BILL-BTN (2026-05-15): include item-level Service Charge + SC GST
@@ -1189,11 +1192,8 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
   const unplacedScGst         = Math.round(unplacedServiceCharge * localSCTaxRate * 100) / 100;
   const rawLocalTotal    = Math.round((localSubtotal    + localServiceCharge    + localScGst    + localTax)    * 100) / 100;
   const rawUnplacedTotal = Math.round((unplacedSubtotal + unplacedServiceCharge + unplacedScGst + unplacedTax) * 100) / 100;
-  const applyRoundOff = (raw) => {
-    const ceil = Math.ceil(raw);
-    const diff = Math.round((ceil - raw) * 100) / 100;
-    return diff >= 0.10 ? ceil : Math.floor(raw);
-  };
+  // BUG-684: replaced inverted local round-off with shared CR-170 helper (imported above)
+  const roundOffEnabled = restaurant?.totalRound !== false; // BUG-684 (parity with L1338, L1400, L1735)
   // CR-008 Sub-CR #1 Round-3 hotfix (May-2026): make `total` symmetric across
   // the placed/unplaced split so it ALWAYS includes the per-order delivery
   // charge for delivery orders. Round-2 (May-2026) folded delivery into
@@ -1222,9 +1222,9 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
     : 0;
   const total = hasPlacedItems
     ? (orderFinancials.amount || 0)
-      + (unplacedSubtotal > 0 ? applyRoundOff(rawUnplacedTotal) : 0)
+      + (unplacedSubtotal > 0 ? applyGrandTotalRoundOff(rawUnplacedTotal, roundOffEnabled) : 0) // BUG-684
       + placedDeliveryDelta
-    : applyRoundOff(rawLocalTotal) + deliveryAddOn;
+    : applyGrandTotalRoundOff(rawLocalTotal, roundOffEnabled) + deliveryAddOn; // BUG-684
 
   // CR POST_ACTION_NAVIGATION_ORDERENTRY (Jan-2026): single internal helper
   // that routes every OrderEntry-scoped success-path callsite through the

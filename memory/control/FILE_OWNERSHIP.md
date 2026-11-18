@@ -2369,6 +2369,7 @@ NOT touched: `DashboardPage.jsx` · `CartPanel.jsx` · `orderTransform.js` · an
 |------|---------|------|
 | `src/api/transforms/profileTransform.js` | E1a L79: +api.vat_info 5th arg. E1b L108: +vatInfo param. E1c L188: vatStatus: vatInfo?.status === true | BUG-683 E1 |
 | `src/components/order-entry/OrderEntry.jsx` | E2a-f: 6 taxFlags sites restaurant?.settings?.vatEnabled→restaurant?.tax?.vatStatus. E2g-h: L1152+L1167 localTax/unplacedTax inverted check fixed | BUG-683 E2 |
+| `src/components/order-entry/OrderEntry.jsx` | E1 L17: import applyGrandTotalRoundOff. E2 L1155-1156: localTax per-item rounding. E3 L1171-1172: unplacedTax per-item rounding. E4 L1193-1196: replaced local applyRoundOff with roundOffEnabled const. E5 L1225+1227: wired applyGrandTotalRoundOff(raw, roundOffEnabled) | BUG-684 2026-11-18 |
 | `src/components/order-entry/CartPanel.jsx` | E3a L434: VAT skip check fixed. E3b L455: useMemo dep fixed | BUG-683 E3 |
 | `src/components/order-entry/CollectPaymentPanel.jsx` | E4 L325: VAT skip check added. E7 L822-824: scGst/tipGst/deliveryGst gated on gstStatus. E8 L474: +!isPrepaid on serviceChargeEnabled | BUG-683 E4+E7 + BUG-678 E8 |
 | `src/api/transforms/orderTransform.js` | E5a L1317: gstEnabled/vatEnabled destructure. E5b-c L1352-1353: placeOrderWithPayment per-item gate. E6a-b L1684-1685: collectBillExisting per-item gate | BUG-683 E5+E6 |
