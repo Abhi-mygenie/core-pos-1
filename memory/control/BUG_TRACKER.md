@@ -1,3 +1,21 @@
+**CURRENT 2026-11-18 — INTAKE (QA Nov Sprint triage — 10 new defects registered from `HANDOVER_QA_NOV_SPRINT_2026_11_18`; QA/triage only, no code changed)**
+
+| ID | Title | Sev | Risk | Status | Doc |
+|---|---|---|---|---|---|
+| **BUG-685** | Add-to-cart crashes Order Entry — `ReferenceError: onEdit is not defined` (incomplete CR-551) | **P0** | **HIGH** | GATE_1_INTAKE_COMPLETE — QA BLOCKER-1; fix = add `onEdit` to CartPanel props (CartPanel.jsx ~L811/L1353) | `change_requests/BUG-685_ORDER_ENTRY_ADD_TO_CART_ONEDIT_CRASH_INTAKE.md` |
+| **BUG-686** | Dashboard drops ALL running orders after login (~60-70%) — rejected fetch treated as server=0 | **P1** | **HIGH** | GATE_1_INTAKE_COMPLETE — QA MAJOR-2; fix = skip reconcile on `posResult.status==='rejected'` (useOrderPollingReconciliation.js:275-281) | `change_requests/BUG-686_DASHBOARD_DROPS_RUNNING_ORDERS_ON_LOGIN_INTAKE.md` |
+| **BUG-687** | Audit Log report does not match CR-528 spec (renders CR-546 design) | **P2** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — SPEC-CR528; needs CR-528 vs CR-546 spec reconciliation before code | `change_requests/BUG-687_AUDIT_LOG_SPEC_MISMATCH_CR528_INTAKE.md` |
+| **BUG-688** | `join_restaurant` emitted twice after socket reconnect (double ack) | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-1 (noted vs BUG-677) | `change_requests/BUG-688_JOIN_RESTAURANT_DOUBLE_EMIT_RECONNECT_INTAKE.md` |
+| **BUG-689** | Auto-generated employee email gets an extra `.com` appended | **P2** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-2 (noted vs BUG-229) | `change_requests/BUG-689_AUTOGEN_EMPLOYEE_EMAIL_EXTRA_DOTCOM_INTAKE.md` |
+| **BUG-690** | Add-on list does not auto-refresh after creating an add-on | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-3 (noted vs BUG-669) | `change_requests/BUG-690_ADDON_LIST_NO_AUTO_REFRESH_INTAKE.md` |
+| **BUG-691** | Audit Log TIME cells clipped at `"2026-"` | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-4 (noted vs CR-528) | `change_requests/BUG-691_AUDIT_LOG_TIME_CELLS_CLIPPED_INTAKE.md` |
+| **BUG-692** | "New version available" banner shows on every page | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-5 (related BUG-661) | `change_requests/BUG-692_NEW_VERSION_BANNER_ON_EVERY_PAGE_INTAKE.md` |
+| **BUG-693** | Login-page logo renders blank | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-6 (env-dependent, unconfirmed) | `change_requests/BUG-693_LOGIN_PAGE_LOGO_BLANK_INTAKE.md` |
+| **BUG-694** | Direct URL after fresh login routes through `/loading` for >10s | **P2** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — QA MINOR-7 | `change_requests/BUG-694_POST_LOGIN_LOADING_ROUTE_SLOW_INTAKE.md` |
+
+---
+
+
 **CURRENT 2026-11-06 — CR-482 QA FINDINGS (P18-P24 keyboard navigation, 4 bugs registered + fixed)**
 
 | ID | Title | Sev | Risk | Status | Doc |
