@@ -38690,7 +38690,7 @@
       "title": "VAT Still Charged When VAT Switch Is OFF (App Never Reads VAT Switch)",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "INVESTIGATION_COMPLETE 2026-11-18 — 9 gaps found across 5 files, all paths. HIGH confidence. Next: Planning Gate 2-3.",
+      "status": "GATE_2_IA_COMPLETE 2026-11-18 — 7 edits across 5 files. Code Reality: PARTIAL. Risk: CRITICAL. ODs: 3 open.",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -38707,6 +38707,11 @@
           "label": "Investigation Report",
           "path": "memory/investigations/INV-BUG683-DEEP-DIVE-ALL-PATHS-2026-11-18.md",
           "type": "investigation"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/BUG-683_IMPACT_ANALYSIS.md",
+          "type": "impact_analysis"
         }
       ],
       "files": "profileTransform.js, OrderEntry.jsx, CartPanel.jsx, CollectPaymentPanel.jsx, orderTransform.js",
