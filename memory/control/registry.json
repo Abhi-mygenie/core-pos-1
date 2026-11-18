@@ -35510,7 +35510,7 @@
       "title": "Item Sales Ledger 'Net Sales' definition wrong \u2014 includes GST/VAT/SC, should be after discount only (backend sends wrong total_sales)",
       "type": "BUG",
       "priority": "P0",
-      "status": "GATE_3_PLAN_COMPLETE",
+      "status": "GATE_5A_IMPLEMENTED",
       "area": "Reports",
       "sprint_key": "nov_cr_batch",
       "risk": "MEDIUM",

@@ -71,14 +71,16 @@ const COLUMNS = [
   { key: 'addonPrice',    label: 'Addon',      align: 'right',  sortable: true,  numericExport: true  },
   { key: 'discount',      label: 'Discount',   align: 'right',  sortable: true,  numericExport: true  },
   { key: 'gst',           label: 'GST',        align: 'right',  sortable: true,  numericExport: true  },
-  { key: 'netSales',      label: 'Net Sales',  align: 'right',  sortable: true,  numericExport: true  },
-  { key: 'pctOfTotal',    label: '% of Total', align: 'right',  sortable: true,  numericExport: false },
+  { key: 'netSales',   label: 'Net Sales',   align: 'right', sortable: true, numericExport: true  },
+  { key: 'totalSales', label: 'Total Sales', align: 'right', sortable: true, numericExport: true  }, // BUG-630 OD-630-06
+  { key: 'pctOfTotal', label: '% of Total',  align: 'right', sortable: true, numericExport: false },
 ];
 
 const DEFAULT_VISIBLE = new Set([
   'rank', 'foodItem', 'categoryName', 'stationName', 'totalQuantity',
-  'variationPrice', 'addonPrice',   // visible by default — endpoint computes these in total_sales
+  'variationPrice', 'addonPrice',
   'netSales',
+  'totalSales',  // BUG-630 OD-630-06
 ]);
 const COL_STORAGE_KEY = 'cr136.columnVisibility.v1';
 
@@ -272,9 +274,10 @@ const ItemSalesLedgerMockup = () => {
     return {
       uniqueItems:  src.length,
       totalQty:     src.reduce((s, r) => s + r.totalQuantity, 0),
-      gross:        src.reduce((s, r) => s + r.grossRevenue, 0),
       discount:     src.reduce((s, r) => s + r.discount, 0),
       netSales:     src.reduce((s, r) => s + r.netSales, 0),
+      tax:          src.reduce((s, r) => s + r.tax, 0),         // BUG-630
+      totalSales:   src.reduce((s, r) => s + r.totalSales, 0),  // BUG-630
     };
   }, [rowsWithPct, activeTab]);
 
@@ -313,11 +316,12 @@ const ItemSalesLedgerMockup = () => {
     return {
       title: 'Item Sales', dateRange: { from: appliedFrom, to: appliedTo },
       kpis: [
-        { label: 'Unique Items',  value: allRows.length,                                    format: 'text'    },
-        { label: 'Total Qty',     value: allRows.reduce((s,r)=>s+r.totalQuantity,0),        format: 'text'    },
-        { label: 'Gross Revenue', value: allRows.reduce((s,r)=>s+r.grossRevenue,0),         format: 'inr'     },
-        { label: 'Discount',      value: allRows.reduce((s,r)=>s+r.discount,0),              format: 'inr'     },
-        { label: 'Net Sales',     value: grandTotal,                                        format: 'inr', tone: 'primary' },
+        { label: 'Unique Items',  value: allRows.length,                                   format: 'text'              },
+        { label: 'Total Qty',     value: allRows.reduce((s,r)=>s+r.totalQuantity,0),       format: 'text'              },
+        { label: 'Discount',      value: allRows.reduce((s,r)=>s+r.discount,0),            format: 'inr'               }, // BUG-630: Gross Revenue removed OD-630-08
+        { label: 'Net Sales',     value: grandTotal,                                       format: 'inr', tone: 'primary' },
+        { label: 'Tax',           value: allRows.reduce((s,r)=>s+r.tax,0),                format: 'inr'               }, // BUG-630
+        { label: 'Total Sales',   value: allRows.reduce((s,r)=>s+r.totalSales,0),         format: 'inr'               }, // BUG-630
       ],
       sheets: [
         { name: 'All Items',   columns: exportCols, rows: sortedRows,             totals: makeTotals(sortedRows)             },
@@ -380,7 +384,7 @@ const ItemSalesLedgerMockup = () => {
               <ArrowLeft className="w-5 h-5 text-zinc-600" />
             </button>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">Item Sales</h1>
-            <span className="text-[11px] font-semibold bg-[#fff0eb] text-[#F26B33] border border-[#fed7bc] px-2.5 py-0.5 rounded-full">1 API call · any range</span>
+            <span className="text-[11px] font-semibold bg-[#fff0eb] text-[#F26B33] border border-[#fed7bc] px-2.5 py-0.5 rounded-full">Net Sales · Total Sales</span>{/* BUG-630 OD-630-07 */}
           </div>
 
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -462,13 +466,14 @@ const ItemSalesLedgerMockup = () => {
 
         {/* ── KPI Strip ───────────────────────────────────────────────── */}
         <div className="px-8 pt-4 pb-0 bg-white border-b border-zinc-100 shrink-0" data-testid="item-sales-kpi-strip">
-          <div className="grid grid-cols-5 gap-3 pb-4">
+          <div className="grid grid-cols-6 gap-3 pb-4">{/* BUG-630: removed Gross Revenue, added Tax + Total Sales */}
             {[
-              { label: 'Unique Items',  value: kpis.uniqueItems, sub: 'dishes',      icon: ShoppingBag,  fmt: 'count', testId: 'kpi-unique-items'  },
-              { label: 'Units Sold',    value: kpis.totalQty,    sub: 'servings',     icon: Tag,          fmt: 'count', testId: 'kpi-units-sold'    },
-              { label: 'Gross Revenue', value: kpis.gross,       sub: 'before disc',  icon: Receipt,      fmt: 'inr',   testId: 'kpi-gross'         },
-              { label: 'Discount',      value: kpis.discount,    sub: 'applied',      icon: Percent,      fmt: 'inr',   testId: 'kpi-discount'      },
-              { label: 'Net Sales',     value: kpis.netSales,    sub: 'after disc+GST',icon: IndianRupee, fmt: 'inr',   testId: 'kpi-net-sales', accent: true },
+              { label: 'Unique Items',  value: kpis.uniqueItems, sub: 'dishes',       icon: ShoppingBag,  fmt: 'count', testId: 'kpi-unique-items'                },
+              { label: 'Units Sold',    value: kpis.totalQty,    sub: 'servings',      icon: Tag,          fmt: 'count', testId: 'kpi-units-sold'                  },
+              { label: 'Discount',      value: kpis.discount,    sub: 'applied',       icon: Percent,      fmt: 'inr',   testId: 'kpi-discount'                    },
+              { label: 'Net Sales',     value: kpis.netSales,    sub: 'before taxes',  icon: IndianRupee,  fmt: 'inr',   testId: 'kpi-net-sales',  accent: true    }, // BUG-630 OD-630-01
+              { label: 'Tax',           value: kpis.tax,         sub: 'GST + SC',      icon: Receipt,      fmt: 'inr',   testId: 'kpi-tax'                         }, // BUG-630 OD-630-05
+              { label: 'Total Sales',   value: kpis.totalSales,  sub: 'incl. tax',     icon: IndianRupee,  fmt: 'inr',   testId: 'kpi-total-sales'                 }, // BUG-630 OD-630-04
             ].map(({ label, value, sub, icon: Icon, fmt, testId, accent }) => (
               <div key={label}
                 className={`rounded-xl px-4 py-3 border ${accent ? 'bg-[#fff7f3] border-[#fed7bc]' : 'bg-white border-zinc-200'}`}

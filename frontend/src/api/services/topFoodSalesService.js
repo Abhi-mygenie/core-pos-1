@@ -25,11 +25,13 @@ export const parseTopFoodSalesRow = (r, index) => {
   const serviceCharge   = parseFloat(r.service_charge)      || 0;
   const discount        = parseFloat(r.discount)            || 0;
   const compPrice       = parseFloat(r.complementary_price) || 0;
-  const netSales        = parseFloat(r.total_sales)         || 0;
+  const netSales        = parseFloat(r.total_sales)         || 0;  // BUG-630 Phase A: keep r.total_sales until BB-14 delivers r.net_sales
+  const totalSales      = parseFloat(r.total_sales)         || 0;  // BUG-630: Total Billed = Net Sales + Tax
   const totalQuantity   = parseFloat(r.total_quantity)      || 0;
 
   const grossRevenue    = basePrice + variationPrice + addonPrice;  // derived
   const subTotal        = grossRevenue - discount;                   // derived
+  const tax             = gst + vat + serviceCharge;                 // BUG-630: derived — FE sum of existing API fields
 
   return {
     rank:            index + 1,                                      // 1-based, highest netSales first
@@ -49,6 +51,8 @@ export const parseTopFoodSalesRow = (r, index) => {
     serviceCharge,
     compPrice,
     netSales,
+    totalSales,      // BUG-630: Total Billed (r.total_sales)
+    tax,             // BUG-630: gst + vat + serviceCharge
     pctOfTotal: 0,   // injected by component once grandTotal is known
   };
 };

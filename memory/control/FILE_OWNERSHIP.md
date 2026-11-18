@@ -1,7 +1,14 @@
 # Layer 7 — File Ownership Map
 
 
-## FILE_OWNERSHIP — BUG-663 FAST LANE (2026-11-09) — marker `// BUG-663`
+## FILE_OWNERSHIP — BUG-630 IMPL Phase A (2026-11-18) — marker `// BUG-630`
+
+| File | Changes | Agent |
+|------|---------|-------|
+| `src/api/services/topFoodSalesService.js` | Added `totalSales` + `tax` fields to transform. Phase A: netSales still reads r.total_sales (Phase B on BB-14). | BUG-630 IMPL 2026-11-18 |
+| `src/pages/reports-module/ItemSalesLedgerMockup.jsx` | Badge updated, Gross Revenue KPI removed, Tax + Total Sales KPIs added, Total Sales column added, kpis aggregation updated, export kpis updated. | BUG-630 IMPL 2026-11-18 |
+
+
 
 ## FILE_OWNERSHIP — BUG-666 IMPL (2026-11-10) — marker `// BUG-666`
 | `frontend/src/components/order-entry/CollectPaymentPanel.jsx` | E1a L282: `let gstAcc=0,dGstAcc=0` declarations. E1b L302: `gstAcc+=taxAmt; if(isDiscountable) dGstAcc+=taxAmt` inside GST branch. E1c L318-319: `gstTotal`+`dGstTotal` added to taxTotals return. E2 L784-787: `itemGstPostDiscount` uses `taxTotals.dGstTotal*(1-ratio)+(gstTotal-dGstTotal)`. Existing `sgst/cgst/dSgst/dCgst` unchanged. | BUG-666 E1a+E1b+E1c+E2 |
