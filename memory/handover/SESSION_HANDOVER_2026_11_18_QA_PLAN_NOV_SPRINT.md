@@ -38,6 +38,7 @@
 | Account | Email | Password | Role | Use for |
 |---------|-------|----------|------|---------|
 | **Primary (owner)** | `owner@woko.com` | `Qplazm@10` | Owner | All batches — primary account |
+| **Palm House (rooms)** | `owner@palmhouse.com` | `Qplazm@10` | Owner | Batch 6 — CR-405 (Room Folio discount) |
 | **Woko waiter** | TBD (ask owner) | TBD | Waiter | Batch 6 — rights testing (CR-515, CR-492) |
 | **cafe103** | TBD (ask owner) | TBD | Owner/Manager | Batch 1 — cancel note mandatory setting |
 
@@ -198,7 +199,7 @@
 
 ### BATCH 6 — Staff Rights, Setup & Admin *(12 items)*
 **Area:** Routes, rights, Order Beta, employee setup, menu setup
-**Credentials:** `owner@woko.com` + waiter account (need from owner)
+**Credentials:** `owner@woko.com` + waiter account (need from owner). CR-405 uses `owner@palmhouse.com / Qplazm@10`
 **Parallelisable:** YES — but largest batch, needs waiter account
 
 | ID | QA Handover | Key test |
@@ -214,7 +215,7 @@
 | BUG-667 | ❌ Derive | Long restaurant name in sidebar → truncated/ellipsis, no overflow |
 | BUG-669 | ❌ Derive | Add-on: submit with ₹0 price → succeeds (not blocked) |
 | BUG-673 | ❌ Derive | Keyboard shortcut → type code → no auto-selection of first food item |
-| CR-405 | Old handover | Room Folio: discount at check-in + checkout apply correctly |
+| CR-405 | Old handover | Room Folio: discount at check-in + checkout apply correctly — **use `owner@palmhouse.com / Qplazm@10`** |
 
 ---
 
