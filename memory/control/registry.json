@@ -38451,7 +38451,7 @@
       "title": "Service Charge in API Payload Despite UI Toggle OFF (Prepaid)",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "GATE_5A_IMPLEMENTED — SMOKE FAIL 2026-11-18. Re-investigation found incomplete fix: CPP serviceChargeEnabled init does not check isPrepaid. See investigations/INV-BUG647-BUG678-REINVESTIGATION-2026-11-18.md",
+      "status": "GATE_3_PLAN_COMPLETE 2026-11-18 — Edit 8 in joint plan BUG-683+BUG-678. 1 line change in CPP L470-474. Awaiting Gate 4 GO.",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -38467,6 +38467,11 @@
         {
           "label": "Implementation Plan",
           "path": "memory/plans/BUG-678_IMPLEMENTATION_PLAN.md",
+          "type": "implementation_plan"
+        },
+        {
+          "label": "Joint Implementation Plan",
+          "path": "memory/plans/BUG-683_BUG-678_IMPLEMENTATION_PLAN.md",
           "type": "implementation_plan"
         }
       ],
@@ -38690,7 +38695,7 @@
       "title": "VAT Still Charged When VAT Switch Is OFF (App Never Reads VAT Switch)",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "GATE_2_IA_COMPLETE 2026-11-18 — 7 edits across 5 files. Code Reality: PARTIAL. Risk: CRITICAL. ODs: 3 open.",
+      "status": "GATE_3_PLAN_COMPLETE 2026-11-18 — 8 edits (22 line changes) across 5 files. OD-683-01 RESOLVED (vat_info.status boolean at top level). Awaiting Gate 4 GO.",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -38712,6 +38717,11 @@
           "label": "Impact Analysis",
           "path": "memory/impact/BUG-683_IMPACT_ANALYSIS.md",
           "type": "impact_analysis"
+        },
+        {
+          "label": "Implementation Plan",
+          "path": "memory/plans/BUG-683_BUG-678_IMPLEMENTATION_PLAN.md",
+          "type": "implementation_plan"
         }
       ],
       "files": "profileTransform.js, OrderEntry.jsx, CartPanel.jsx, CollectPaymentPanel.jsx, orderTransform.js",
