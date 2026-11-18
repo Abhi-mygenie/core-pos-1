@@ -1,3 +1,15 @@
+**CURRENT 2026-11-18 — INTAKE (CR-528/CR-546 QA follow-up — 4 MINOR Audit Report defects registered; QA/triage only, no code changed)**
+
+| ID | Title | Sev | Risk | Status | Doc |
+|---|---|---|---|---|---|
+| **BUG-697** | Audit Report — active preset highlight ("7D") does not match applied/shared range on first load | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR | `change_requests/BUG-697_AUDIT_REPORT_ACTIVE_PRESET_MISMATCH_INTAKE.md` |
+| **BUG-698** | Audit Report — FY preset does not share range and returns previous completed FY | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR (OD-698-01: FY current vs previous?) | `change_requests/BUG-698_AUDIT_REPORT_FY_PRESET_NO_SHARE_INTAKE.md` |
+| **BUG-699** | Audit Report — stale data remains under the error shield after a timeout | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR (related BUG-696) | `change_requests/BUG-699_AUDIT_REPORT_STALE_DATA_UNDER_ERROR_INTAKE.md` |
+| **BUG-700** | Audit Report — empty-state RiskBar and DrillDownTable lack their data-testids | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR (testability) | `change_requests/BUG-700_AUDIT_REPORT_EMPTY_STATE_MISSING_TESTIDS_INTAKE.md` |
+
+---
+
+
 **CURRENT 2026-11-18 — QA (CR-528 + CR-546 Audit Report v3 — 2 defects filed; QA/triage only, no code changed)**
 
 | ID | Title | Sev | Risk | Status | Doc |

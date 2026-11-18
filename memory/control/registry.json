@@ -39890,18 +39890,170 @@
           "type": "qa_report"
         }
       ]
+    },
+    {
+      "id": "BUG-697",
+      "type": "BUG",
+      "title": "Audit Report \u2014 active preset highlight (\"7D\") does not match applied/shared range on first load",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P3",
+      "severity": "P3",
+      "risk": "LOW",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "INTAKE agent (CR-528/CR-546 QA follow-up)",
+      "related": [
+        "CR-528",
+        "CR-546"
+      ],
+      "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L171 activePreset useState)",
+      "completeness": "1/7",
+      "qa_finding_severity": "MINOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546 MINOR: activePreset hard-coded 7D; does not reflect real applied range.",
+      "intake_doc": "change_requests/BUG-697_AUDIT_REPORT_ACTIVE_PRESET_MISMATCH_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-697_AUDIT_REPORT_ACTIVE_PRESET_MISMATCH_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
+    },
+    {
+      "id": "BUG-698",
+      "type": "BUG",
+      "title": "Audit Report \u2014 FY preset does not share range (no setSharedFrom/To) and returns previous completed FY",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P3",
+      "severity": "P3",
+      "risk": "LOW",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "INTAKE agent (CR-528/CR-546 QA follow-up)",
+      "related": [
+        "CR-528",
+        "CR-546"
+      ],
+      "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L192 handlePreset FY branch); datePresets.computePresetRange",
+      "completeness": "1/7",
+      "qa_finding_severity": "MINOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546 MINOR: FY omits shared setters; FY window = previous completed FY (confirm intent, OD-698-01).",
+      "intake_doc": "change_requests/BUG-698_AUDIT_REPORT_FY_PRESET_NO_SHARE_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-698_AUDIT_REPORT_FY_PRESET_NO_SHARE_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
+    },
+    {
+      "id": "BUG-699",
+      "type": "BUG",
+      "title": "Audit Report \u2014 stale data remains under the error shield after a timeout",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P3",
+      "severity": "P3",
+      "risk": "LOW",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "INTAKE agent (CR-528/CR-546 QA follow-up)",
+      "related": [
+        "CR-528",
+        "CR-546"
+      ],
+      "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L202 fetchData catch); ReportLoadingShield",
+      "completeness": "1/7",
+      "qa_finding_severity": "MINOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546 MINOR: on error, previous range KPI/card data retained under error banner (misleading). Related BUG-696.",
+      "intake_doc": "change_requests/BUG-699_AUDIT_REPORT_STALE_DATA_UNDER_ERROR_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-699_AUDIT_REPORT_STALE_DATA_UNDER_ERROR_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
+    },
+    {
+      "id": "BUG-700",
+      "type": "BUG",
+      "title": "Audit Report \u2014 empty-state RiskBar and DrillDownTable lack their data-testids",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P3",
+      "severity": "P3",
+      "risk": "LOW",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "INTAKE agent (CR-528/CR-546 QA follow-up)",
+      "related": [
+        "CR-528",
+        "CR-546"
+      ],
+      "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L93 RiskBar empty return, ~L123 DrillDownTable empty return)",
+      "completeness": "1/7",
+      "qa_finding_severity": "MINOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546 MINOR: empty-state loses audit-card1-risk-bar / audit-card3-table testids (testability).",
+      "intake_doc": "change_requests/BUG-700_AUDIT_REPORT_EMPTY_STATE_MISSING_TESTIDS_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-700_AUDIT_REPORT_EMPTY_STATE_MISSING_TESTIDS_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
     }
   ],
   "meta": {
     "last_updated": "2026-11-18",
-    "last_action": "QA CR-528 + CR-546 (Audit Report v3): structure PASS vs LOCKED design; drill-down rows NOT VERIFIABLE (0 events, cafe103). Filed BUG-695 (MINOR nested button) + BUG-696 (MAJOR insights-dashboard timeout). CR-528/CR-546/BUG-687 QA status updated. No code changed.",
+    "last_action": "INTAKE: registered 4 MINOR Audit Report defects from CR-528/CR-546 QA follow-up (BUG-697 preset highlight, BUG-698 FY preset, BUG-699 stale data under error, BUG-700 empty-state testids). No application code changed.",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
     "qa_group_c_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
     "gate_5b_complete": true,
-    "total": 1127,
-    "total_items": 1127,
+    "total": 1131,
+    "total_items": 1131,
     "last_session": "Batch B Gate 2 IA close 2026-11-15 \u2014 owner R5 answered, R5 read-only probes (RID 541). Handover at /app/memory/handover/SESSION_HANDOVER_2026_11_15_BATCH_B_GATE2_IA_CLOSED.md",
     "last_note": "Batch B Gate 2 IA + Gate 2.5 CLOSED 2026-11-15. Backend brief DRAFT not sent (owner to decide channel). Next: Gate 3 plans (FE-ready items first; backend-blocked items as PARTIAL/BLOCKED per Batch A pattern).",
     "qa_nov_sprint_report": "memory/test_reports/QA_REPORT_NOV_SPRINT_2026_11_18.md"
