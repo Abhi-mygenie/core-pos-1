@@ -128,7 +128,7 @@ const TAB_FILTERS = {
 
 const AllOrdersReportPage = () => {
   const navigate = useNavigate();
-  const { restaurant, paymentTypes: restaurantPaymentTypes, printerAgents } = useRestaurant();
+  const { restaurant, paymentTypes: restaurantPaymentTypes, printerAgents, cancellation } = useRestaurant(); // BUG-682: +cancellation
   const { hasPermission, permissions, user } = useAuth();
   const { toast } = useToast();
   const schedules = useMemo(() => restaurant?.schedules || [], [restaurant?.schedules]);
@@ -1133,6 +1133,7 @@ const AllOrdersReportPage = () => {
           onClose={() => setRefundOrder(null)}
           onCancel={handleRefundConfirm}
           mode="refund"
+          cancelNoteMandatory={cancellation?.cancelNoteMandatory || false}
         />
       )}
 

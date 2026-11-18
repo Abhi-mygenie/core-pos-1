@@ -116,7 +116,7 @@ After an order is placed, there is no way to edit the variations, add-ons, or si
 | OD-551-02 | Should a modified KOT be sent to kitchen? | YES — kitchen needs to know the change |
 | OD-551-03 | Separate permission (`edit_customization`) or use existing `order_edit`? | Use existing `order_edit` — fewer settings |
 | OD-551-04 | Price changes from variation edits — recalculate tax + service charge? | YES — amounts must be consistent |
-| OD-551-05 | Should qty also be editable in the same modal, or keep separate qty pencil? | Keep separate — qty edit already works (BUG-237 delta pattern) |
+| OD-551-05 | Should qty also be editable in the same modal, or keep separate qty pencil? | **Combine in one modal** — single modal for qty + variations + add-ons. Replaces the pencil icon. |
 
 ---
 
@@ -191,7 +191,7 @@ Next: Owner answers 5 ODs → Backend brief to Gyan → Planning Gate 2
 | OD-551-02 | Should kitchen get a modified KOT? | **No KOT on edit** | KOT was already sent at place time. Edit happens before item is served — kitchen works from original KOT. No duplicate/modified KOT needed. |
 | OD-551-03 | Which permission gates the edit button? | **Use existing `order_edit` permission** | No new setting needed. Same permission that controls other order edits. |
 | OD-551-04 | Recalculate tax + service charge on price change? | **Yes, recalculate everything** | Tax, service charge, and total updated to match new item price. |
-| OD-551-05 | Qty in same modal or keep separate? | **Keep qty separate** | Existing qty pencil stays as-is. Customization modal only changes variations/add-ons/size. |
+| OD-551-05 | Qty in same modal or keep separate? | **Combine in one modal** | Single modal for qty + variations + add-ons. Replaces the pencil icon. |
 
 ### OD-551-02 Rationale (owner clarification):
 > "We edited before placing order so why KOT — KOT is when we placed order"

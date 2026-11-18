@@ -262,7 +262,7 @@ const FilterSelect = ({ label, value, options, onChange, disabled, testId }) => 
 
 export default function OrderReportBetaPage() {
   const navigate = useNavigate();
-  const { currencySymbol, printerAgents, paymentTypes: restaurantPaymentTypes, restaurant } = useRestaurant(); // CR-349: +printerAgents, +paymentTypes · CR-431: +restaurant for eInvoice flag
+  const { currencySymbol, printerAgents, paymentTypes: restaurantPaymentTypes, restaurant, cancellation } = useRestaurant(); // CR-349: +printerAgents, +paymentTypes · CR-431: +restaurant for eInvoice flag · BUG-682: +cancellation
   const reconcileEnabled = !!restaurant?.settings?.reconcileAmount; // CR-483 Phase 2
   const { getOrderCancellationReasons } = useSettings(); // CR-165
   const { hasPermission } = useAuth(); // CR-515: permission gating for action buttons
@@ -903,6 +903,7 @@ export default function OrderReportBetaPage() {
           onClose={() => setRefundOrder(null)}
           onCancel={handleRefundConfirm}
           mode="refund"
+          cancelNoteMandatory={cancellation?.cancelNoteMandatory || false}
         />
       )}
       {/* CR-349: Mark-as-Unpaid confirmation dialog */}

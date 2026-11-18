@@ -2322,6 +2322,7 @@ const DashboardPage = () => {
               const order = getOrderDataForEntry(cancelOrderEntry);
               return order?.razorpayOrderId ? 'refund' : 'cancel'; // CR-165
             })()}
+            cancelNoteMandatory={cancellation?.cancelNoteMandatory || false}
           />
         )}
 

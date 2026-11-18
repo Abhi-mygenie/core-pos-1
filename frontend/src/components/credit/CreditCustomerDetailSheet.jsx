@@ -153,7 +153,7 @@ function CreditRow({ entry, index, coverage, onViewBill, onRemove, canRemove }) 
       </td>
       {/* CR-526: Remove from credit action column */}
       <td className="px-3 py-2 text-right">
-        {canRemove && coverage.status === 'open' ? (
+        {canRemove && coverage.type === 'open' ? ( // BUG-681: was coverage.status (undefined)
           <button
             data-testid={`credit-remove-btn-${c.id}`}
             onClick={() => onRemove(c)}
@@ -163,7 +163,7 @@ function CreditRow({ entry, index, coverage, onViewBill, onRemove, canRemove }) 
             <Trash2 className="w-3 h-3 inline-block mr-1" />
             Remove
           </button>
-        ) : coverage.status === 'partial' ? (
+        ) : coverage.type === 'partial' ? ( // BUG-681: was coverage.status (undefined)
           <span className="text-xs text-zinc-400" title="Part already paid back — cannot remove">—</span>
         ) : null}
       </td>

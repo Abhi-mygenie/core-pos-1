@@ -227,6 +227,7 @@ export const fromAPI = {
         allowPostServeCancel2: toBoolean(api.allow_cancel_post_server),
         orderCancelWindowMinutes: parseInt(api.cancel_order_time) || 0,
         itemCancelWindowMinutes: parseInt(api.cancel_food_timings) || 0,
+        cancelNoteMandatory: api.settings?.cancel_note_mandatory === 'Yes', // BUG-682: was in settings only, consumers read from cancellation
       },
 
       // Default order status for confirm endpoint (mapped via F_ORDER_STATUS_API)
