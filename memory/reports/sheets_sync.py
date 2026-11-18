@@ -458,7 +458,7 @@ def _type_raw(item):  # CR-420 G4
 
 
 def to_contract_row(item):
-    """Build a 22-element list for one registry item. Never includes col W."""
+    """Build a 23-element list (A–W) for one registry item. Includes col W (Release date)."""
     raw_status = str(item.get('status', '') or '')
     contract_status, blocked_party = to_contract_status(raw_status)
 
@@ -858,9 +858,9 @@ def write_tab(token, tab_name, rows, dry_run=False):
 
 # ── All Items in-place updater ─────────────────────────────────────────────
 def update_all_items_inplace(token, items, dry_run=False):
-    """Update All Items in-place by ID. Never clears. Never writes col W+.
+    """Update All Items in-place by ID. Writes full row A:W including col W (Release date).
 
-    1. Read current A1:W  (23 cols — skip W entirely)
+    1. Read current A1:W  (23 cols)
     2. id → sheet row number map  (ID = col B = index 1)
     3. For each registry item: update matched row OR queue append
     4. Batch-POST existing rows; append new rows

@@ -21,7 +21,10 @@ CTO edits Priority and Assignee directly on the Google Sheet. The push script wa
 
 - `AGENT_PROMPT_ALPHA.md` Role 13 (Sheet Push Agent): Updated with "Push Field Rules" section.
 - `CONTROL_DASHBOARD.md`: Decision recorded.
-- `sheets_sync.py`: **NOT YET UPDATED** — script needs code changes to implement the skip logic. Currently pushes all fields including Priority and Assignee.
+- `sheets_sync.py`: **FULLY IMPLEMENTED.**
+  - Push writes col W (Release date) — was already in v1.6 script.
+  - Pull accepts blank release dates as "cleared by owner" — fixed 2026-11-18.
+  - Outdated docstrings corrected 2026-11-18.
 
 ## Next
 
