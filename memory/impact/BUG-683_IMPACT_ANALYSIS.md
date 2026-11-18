@@ -87,10 +87,33 @@ RestaurantContext
 
 ## Affected Files, Lines, and Edits
 
-### Edit 1 — profileTransform.js (ROOT FIX)
-**What:** Add `vatStatus` to the `tax` block, reading `vat_info.status` from the API.
-**Where:** L177-188 (inside the `tax: {}` block, after `gstStatus`)
-**Risk:** LOW — additive field, no existing logic changed
+### Edit 1 — profileTransform.js (ROOT FIX) — 2 sub-edits
+**What:** Add `vatStatus` to the `tax` block.
+**PROBE RESULT (OD-683-01 RESOLVED):** `vat_info` is at the TOP LEVEL of the profile response (sibling of `restaurants[]`), NOT inside `restaurants[0]`. Field shape: `{ "status": true|false, "code": "..." }`. `status` is a **boolean**.
+
+**E1a — L79 (call site):** Add `api.vat_info` as 5th argument to `fromAPI.restaurant()`:
+```javascript
+// FROM:
+restaurant: fromAPI.restaurant(api.restaurants?.[0], api.print_agent, api.restaurant_discount_type, api.payment_types),
+// TO:
+restaurant: fromAPI.restaurant(api.restaurants?.[0], api.print_agent, api.restaurant_discount_type, api.payment_types, api.vat_info),
+```
+
+**E1b — L108 (function signature):** Add `vatInfo` parameter:
+```javascript
+// FROM:
+restaurant: (api, printAgent, discountTypesOverride, paymentTypesOverride) => {
+// TO:
+restaurant: (api, printAgent, discountTypesOverride, paymentTypesOverride, vatInfo) => {
+```
+
+**E1c — L187 area (tax block):** Add `vatStatus`:
+```javascript
+gstStatus: api.gst_status === true,
+vatStatus: vatInfo?.status === true,  // BUG-683: top-level vat_info.status (boolean)
+```
+
+**Risk:** LOW — additive field, no existing logic changed. Mirrors existing `printAgent`/`paymentTypes` pass-through pattern.
 **Downstream:** Every component that reads `restaurant.tax.vatStatus`
 
 ### Edit 2 — OrderEntry.jsx (10 property-path corrections)
@@ -197,7 +220,7 @@ TO:   const scGst = restaurant?.tax?.gstStatus !== false ? serviceCharge * scTax
 
 | # | Question | Recommended | Impact |
 |---|----------|-------------|--------|
-| OD-683-01 | What is the exact shape of `vat_info.status` in the profile API? (boolean `true`/`false`? integer `0`/`1`? string?) | Curl probe BeanMeUp/Mantri profile before coding | Determines Edit 1 transform logic |
+| OD-683-01 | ~~What is the exact shape of `vat_info.status`?~~ | **RESOLVED** — Boolean at TOP LEVEL of profile response (`data.vat_info.status`). Not inside `restaurants[0]`. Must be passed as 5th param to `fromAPI.restaurant()`. | Edit 1 updated with 3 sub-edits (E1a call site, E1b signature, E1c tax block) |
 | OD-683-02 | Should Edit 7 (CPP SC GST display gate) be in BUG-683 scope? | YES — it's a 1-line mirror of the same pattern, same CPP file, same session. Cleaner than a separate item. | Adds 3 lines to scope |
 | OD-683-03 | Should BUG-678 (SC prepaid default) be fixed in the same session? | Owner's call — separate item already registered, but same CPP file. | Adds 1 line if YES |
 
