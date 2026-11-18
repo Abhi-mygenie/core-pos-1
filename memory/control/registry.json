@@ -38950,7 +38950,8 @@
         }
       ],
       "files": "OrderEntry.jsx",
-      "notes": "SMOKE FAIL 2026-11-18: OrderEntry fix IS applied. But CPP L470-474 initializes serviceChargeEnabled=true for prepaid dine-in (no isPrepaid check). Fix: add && !isPrepaid to CPP init."
+      "notes": "SMOKE FAIL 2026-11-18: OrderEntry fix IS applied. But CPP L470-474 initializes serviceChargeEnabled=true for prepaid dine-in (no isPrepaid check). Fix: add && !isPrepaid to CPP init.",
+      "registered_date": "2026-11-16"
     },
     {
       "id": "CR-545",
