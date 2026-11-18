@@ -1956,7 +1956,8 @@
         }
       ],
       "area": "Other",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "type": "BUG",
@@ -3118,7 +3119,8 @@
         }
       ],
       "area": "Other",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "type": "BUG",
@@ -13116,7 +13118,8 @@
       "category": "Credit Management / Reports",
       "severity": "P0",
       "notes": "2026-10-22: Backend reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-020",
@@ -13236,7 +13239,8 @@
       "art6_owner_smoke": "PRESENT",
       "artifact_refs": "memory/change_requests/CR_025_DISCOUNT_PAYLOAD_FIX.md",
       "category": "Payments / Discount / Money",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-026",
@@ -13720,7 +13724,8 @@
       "notes": "self_discount hardcoded 0 (should be manual+preset). order_discount uses discounts.total (includes coupon/loyalty/wallet \u2014 should be manual+preset only). 3 payment paths \u00d7 2 fields.",
       "gate": "5b",
       "area": "Payments / Coupons / Credit",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-139",
@@ -13884,7 +13889,8 @@
       "notes": "R6 (order-value impact). Keypad Numpad-minus likely captured by qty step handler. Confidence: REPORTED.",
       "gate": "5a",
       "code_reality": "FULL \u2014 CartPanel.jsx has min={1} + val>=1 guard on both placed/unplaced qty inputs. Negative values rejected by onChange handler.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-143",
@@ -14456,7 +14462,8 @@
       ],
       "implemented_at": "2026-07-08",
       "area": "Inventory / Stock",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-159",
@@ -14481,7 +14488,8 @@
         "components/expense/ExpenseSetupPanel.jsx"
       ],
       "area": "Inventory / Stock",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-160",
@@ -14601,7 +14609,8 @@
       ],
       "implemented_at": "2026-07-11",
       "area": "Menu / Order Entry",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-ROOM-PAIDROOM",
@@ -14767,7 +14776,8 @@
       "intake_doc": "/app/memory/change_requests/BUG_166_ADDON_AMOUNT_QTY_INTAKE.md",
       "owner_decision": "KEEP FIX \u2014 2026-07-11. Revert plan BUG_166_168_ADDON_REVERT_PLAN.md CANCELLED.",
       "area": "Menu / Order Entry",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-167",
@@ -14832,7 +14842,8 @@
       "owner_clarification": "OWNER REPORTS (2026-07-08 late session): the investigation direction was inverted. In production, the PATHS WITH LIVE-UI OVERRIDES (Collect Bill auto-print, B3/B4/B5) emit WRONG values, while the FALLBACK PATHS (dashboard/reports/card 'Bill Print' button, B1/B2/B6/B7 \u2014 all backend-sourced) emit CORRECT values. Opposite of the model this session's investigation used. Owner emphasized that for the WRONG path, all data comes from backend, so no FE math change should be needed. My BUG-168 v2 fix at L1808 is still valid for the addon case on backend-sourced paths, but the primary bug lives in the override-branch path \u2014 needs re-investigation. See handover: /app/memory/handover/SESSION_HANDOVER_2026_07_08_BUG168_PRINT_INVESTIGATION.md",
       "next_investigation_ask": "Capture BOTH payloads side-by-side for the same order (Collect Bill auto-print vs Order Card / Order-Entry Bill Print button), diff every field, then trace the divergent code path (likely paymentData or an override field, not the fallback loop).",
       "area": "Printing / Printer Agent",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-169",
@@ -15212,7 +15223,8 @@
       "intake_doc": "change_requests/BUG_185_DAY_CLOSURE_OPENING_BALANCE_LOGIC.md",
       "notes": "BUG-185 fix applied 2026-07-14: replaced 9 instances of totalFunds-settled with balanceToSettle in SettlementPanel.jsx. Awaiting QA verification on preprod.",
       "area": "Payments / Coupons / Credit",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-186",
@@ -15293,7 +15305,8 @@
       "area": "CRM / Customer Intelligence",
       "severity": "P0",
       "notes": "2026-10-19: backend block removed by owner. FE pipeline confirmed wired. Ready for Gate 2 GO. | 2026-10-22: Owner reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-191",
@@ -15965,7 +15978,8 @@
       ],
       "date": "2026-07-19",
       "area": "Inventory / Stock",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-207",
@@ -16040,7 +16054,8 @@
       "implemented_at": "2026-07-19",
       "qa_report": "memory/test_reports/CR-082_QA_REPORT_2026_07_20.md",
       "area": "Aggregator / Sockets",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-208",
@@ -16749,8 +16764,9 @@
       "gate": "0-1",
       "area": "Payments / Coupons / Credit",
       "notes": "2026-10-22: Owner reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Parth",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-092",
@@ -17041,8 +17057,9 @@
         }
       ],
       "area": "Inventory / Stock",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-234",
@@ -17140,7 +17157,8 @@
         "qa_handover": "/app/memory/handover/QA_HANDOVER_CR097_2026_07_24.md"
       },
       "completeness": "5/7",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-098",
@@ -17503,8 +17521,9 @@
       },
       "gate": "5b",
       "area": "Payments / Coupons / Credit",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-245",
@@ -17743,7 +17762,8 @@
       "intake_doc": "change_requests/BUG-250_POLLING_REMOVES_AGGREGATOR_ORDERS.md",
       "batch": "BATCH_1",
       "area": "Aggregator / Sockets",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-251",
@@ -18130,8 +18150,9 @@
       "qa_date": "2026-07-31",
       "qa_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
       "area": "Menu / Order Entry",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-114",
@@ -18337,8 +18358,9 @@
       "area": "Inventory / Stock",
       "qa_date": "2026-10-28",
       "note": "Backend fixed SQL AUTO_INCREMENT on inventory_audit_logs.id. FE updateIngredient chain was always correct. Retroactive closure.",
-      "assignee": "Parth",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-269",
@@ -19276,7 +19298,8 @@
       "fast_lane_eligible": true,
       "qa_note": "QA CODE PASS \u2014 order.orderId (not aggrId) verified in AggregatorOrderPopOut.jsx:121, OrderCard.jsx:116, TableCard.jsx:154",
       "qa_report": "test_reports/QA_REPORT_GROUP_A_2026_07_31.md",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-291",
@@ -20914,7 +20937,8 @@
         }
       ],
       "area": "Inventory / Stock",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-141",
@@ -21266,8 +21290,9 @@
         }
       ],
       "area": "Aggregator / Sockets",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-147",
@@ -21316,7 +21341,8 @@
       "notes": "REVALIDATED 2026-10-24: Discount type configuration IS accessible and working. API returns restaurant_discount_type at root of profile response (verified: Cafe103 has 1 type 'Complementary 100%', Palm House has 3 types 'Thrive 20%', 'Google Review 10%', 'Complementary 100%'). Data flows: profileTransform.js:288 \u2192 RestaurantContext \u2192 CollectPaymentPanel + CartPanel (preset dropdown). Settings page (SettingsPanel \u2192 DiscountTypesView) shows the list correctly. Code marker collision FIXED: 6 markers renamed from BUG-328 \u2192 BUG-346 (phone-on-bill). Note: Settings add/edit/delete is a UI stub (no API calls) \u2014 separate enhancement if needed.",
       "severity": "P0",
       "closed_at": "2026-10-24",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-148",
@@ -21987,7 +22013,8 @@
       "severity": "P0",
       "notes": "Part A (BUG, FE fix): handleAddOrder in DashboardPage.jsx:1514 hardcodes setOrderEntryType(\"walkIn\"). Fix: open type-picker or default to dineIn. 1 file ~10 lines. Part B (CR): Customers want one-click Delivery and Takeaway tiles on the dashboard like table/room cards. Currently no way to start a new delivery/takeaway with one click. Register Part B as new CR. Sprint: oct_cr_batch.",
       "sprint_key": "oct_cr_batch",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-334",
@@ -22173,7 +22200,8 @@
       "notes": "WhatsAppPaymentModal EXISTS on live dashboard (OrderCard.jsx) for Razorpay clients. NOT in any report page. jeshnest works from dashboard. CR-164 = add to OrderReportBetaPage row action. CRM_EVENTS_BLOCKED status is outdated \u2014 Razorpay path (paymentLinkService.js) works. 2 files, medium scope, gated by restaurant.settings.razorpayEnabled.",
       "severity": "P0",
       "sprint_key": "oct_cr_batch",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "INV-GST-001",
@@ -22210,7 +22238,8 @@
         "BUG-337 (profile staleness)",
         "BUG-338 (room GST not gated)"
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-336",
@@ -22247,7 +22276,8 @@
       "qa_report": "/app/memory/test_reports/QA_REPORT_BATCH01_2026_08_18.md",
       "qa_smoke_date": "2026-08-18",
       "qa_smoke_result": "PASS \u2014 SMOKE-1: CGST \u20b95, SGST \u20b95 visible in Collect Bill for order #002462. SMOKE-3 dir1: GST OFF \u2192 no tax on bill (no reload). Guard confirmed working.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-337",
@@ -23009,7 +23039,8 @@
       "area": "Reports / Analytics",
       "priority": "P0",
       "risk": "LOW",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "type": "BUG",
@@ -23835,7 +23866,8 @@
           "note": "BATCH-02 QA PASS 2026-09-15. 0 blockers. 2 smoke deferrals (test-data, not bugs). Ready Gate 6."
         }
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-375",
@@ -24414,7 +24446,8 @@
           "note": "PLANNING agent \u2014 plan + verification matrix + registry checklist; local src synced to origin/PMS1; G3 re-probes saved"
         }
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-380",
@@ -25712,8 +25745,9 @@
         "OD-386-D2": "LOCKED \u2014 Do not show slab threshold in UI. Slab badge on strip header only."
       },
       "blockers": "NONE \u2014 all ODs locked",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-387",
@@ -25989,8 +26023,9 @@
         }
       ],
       "area": "Menu / Order Entry",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-373",
@@ -26271,8 +26306,9 @@
       "registered": "2026-09-13",
       "impact_doc": "impact/BUG-396_IMPACT_ANALYSIS.md",
       "plan_doc": "plans/BUG-396_IMPLEMENTATION_PLAN.md",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-397",
@@ -26477,7 +26513,8 @@
         }
       ],
       "area": "PMS / Rooms",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-382",
@@ -26672,7 +26709,8 @@
       "backend_brief": "backend_briefs/BACKEND_BRIEF_BUG408_ROOM_REVENUE_SPLIT_2026_09_15.md",
       "area": "PMS / Rooms",
       "severity": "P0",
-      "assignee": "Parth"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-409",
@@ -27607,7 +27645,8 @@
         }
       ],
       "area": "PMS / Rooms",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-412",
@@ -29299,9 +29338,9 @@
         }
       ],
       "area": "Aggregator / Sockets",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "priority": "P0",
-      "release_date": ""
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-455",
@@ -29655,8 +29694,9 @@
         }
       ],
       "area": "Reports / Analytics",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-387",
@@ -29976,7 +30016,8 @@
       "area": "Menu / Order Entry",
       "priority": "P0",
       "notes": "FE fix: normalise availableMenuTypes in MenuContext.jsx to deduplicate by case-insensitive comparison \u2014 \"promational\" and \"Promotional\" collapse into one pill. 1 line, Fast Lane eligible. Backend action (separate): data cleanup \u2014 update product food_for \"promational\" \u2192 \"Promotional\". Menu system documented: per-device (localStorage), no role/user-based assignment currently. Sprint: oct_cr_batch.",
-      "assignee": "Parth"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-464",
@@ -30094,8 +30135,9 @@
       "registered": "2026-09-27",
       "classification": "PRINTER_AGENT_BUG | FE_BUG",
       "notes": "When aggregator order arrives via socket, printer prints old/stale KOT instead of new one. Likely printer-agent or backend aggregator order payload issue. | 2026-10-22: Resolved in latest Printer Agent \u2014 aggregator KOT printing working correctly. Moved to owner smoke on latest PA.",
-      "assignee": "Piyush",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-467",
@@ -30111,7 +30153,8 @@
       "classification": "BACKEND_BUG | DATA_ISSUE",
       "notes": "Requires live R11 probe. FE has no date cutoffs \u2014 if data is absent it is a backend/data issue. Probe with affected account needed. | 2026-10-22: Backend reports CLOSED. Moved to SMOKE for owner verification.",
       "priority": "P0",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-468",
@@ -30158,8 +30201,9 @@
       "registered": "2026-09-27",
       "classification": "FE_BUG",
       "notes": "CONFIRMED FE_BUG \u2014 no edit_order permission key exists in OrderEntry.jsx. updateQuantity / cart mutations are not permission-gated. Permissions checked: cancel, food, transfer_table, merge_table, food_transfer, customer_management, bill, discount, print_icon. Edit is missing. | 2026-10-22: Backend reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Gyan",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-471",
@@ -30194,8 +30238,9 @@
       "registered": "2026-09-27",
       "classification": "BACKEND_BUG",
       "notes": "Sub-issue of BUG-471 \u2014 consumption path sends display_unit (packets) to backend instead of base unit (grams). Related: CR-387 IMPL fixed smart-purchase display-unit payload but order-time deduction path may be untouched. | 2026-10-22: Owner reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Parth",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-473",
@@ -30211,7 +30256,8 @@
       "classification": "UNKNOWN \u2014 needs investigation",
       "notes": "PARKED 2026-10-17 pending more info from owner. Likely related to BUG-243 (stock not credited after add-purchase). Owner to confirm: (1) numbers wrong before submit, or (2) submit does not credit stock. If (2) \u2192 close as duplicate of BUG-243. Test: owner@thegoankitchen.com. Sprint: oct_cr_batch. | 2026-10-22: Owner reports CLOSED. Moved to SMOKE for owner verification.",
       "priority": "P0",
-      "assignee": "Parth"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-474",
@@ -30282,7 +30328,8 @@
       "registered": "2026-09-27",
       "notes": "System clock wrong \u2192 outlet shows as closed. FE uses system time to check operating hours. Need to check if operating hours check is FE-side (localStorage/local time) or backend-side. FE-side check using device clock is the likely root cause. | 2026-10-22: Backend reports CLOSED. Moved to SMOKE for owner verification.",
       "priority": "P0",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-478",
@@ -30330,7 +30377,8 @@
       "classification": "CONFIG_ISSUE | FE_BUG",
       "notes": "FE issue confirmed: allowPostServeCancel reads api.cancle_post_serve (typo). allowPostServeCancel2 (maps api.allow_cancel_post_server) is mapped but NEVER used in any gate \u2014 dead code. RestaurantContext default is false \u2192 cancel always blocked unless api.cancle_post_serve = true. Settings page uses same typo field \u2014 read/write consistent. Fix: also check allowPostServeCancel2 as fallback in gate. Confirm which field backend uses. FE fix: 2 lines in OrderEntry.jsx + check profileTransform. Test: owner@thegoankitchen.com. Sprint: oct_cr_batch.",
       "priority": "P0",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-481",
@@ -30345,8 +30393,9 @@
       "registered": "2026-09-27",
       "classification": "BACKEND_BUG",
       "notes": "When prepaid order is made unpaid and re-settled in Old POS, backend assigns COD as payment method. Likely backend default fallback when payment_method is null/missing on re-settlement call.",
-      "assignee": "Gyan",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-482",
@@ -30361,8 +30410,9 @@
       "registered": "2026-09-27",
       "classification": "BACKEND_BUG",
       "notes": "CRITICAL FINANCIAL BUG \u2014 make-order-unpaid does NOT reverse previous payment allocations. Re-settlement appends new allocation. Backend must: 1) void old allocations on make-unpaid, 2) prevent accumulation. FE paymentMutationService.makeOrderUnpaid correctly calls endpoint \u2014 BACKEND fix needed.",
-      "assignee": "Gyan",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-483",
@@ -30380,7 +30430,8 @@
       "priority": "P0",
       "related": "BUG-547",
       "investigation_report": "investigations/BUG-547_BUG-483_JOINT_INVESTIGATION_REPORT_2026_10_17.md",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-391",
@@ -30428,7 +30479,8 @@
       "registered": "2026-09-27",
       "notes": "Property needs separate GST config for food items vs room charges. Currently GST may be applied uniformly. Requires backend config key + FE settings UI + calculation path changes. HIGH risk \u2014 financial logic. | 2026-10-22: Owner reports CLOSED. Moved to SMOKE for owner verification.",
       "priority": "P0",
-      "assignee": "Parth"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-394",
@@ -30443,7 +30495,7 @@
       "registered": "2026-09-27",
       "notes": "[2026-11-15 Gate 2 IA closed] see impact/CR-394_IMPACT_ANALYSIS.md || [2026-11-14 owner decisions] Inclusive vs exclusive unclear \u2014 discuss at impact. || Open/custom items need backward (inclusive) GST calculation \u2014 extract GST from entered price instead of adding on top. || [2026-11-16 RETROACTIVE] Code verified in AddCustomItemModal.jsx L252, ProductCard.jsx L219.",
       "blocked_by": "BACKEND",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "priority": "P0",
       "blocked_on": "",
       "client": "ALL",
@@ -30502,8 +30554,9 @@
       "source": "OWNER-REPORTED",
       "registered": "2026-09-27",
       "notes": "Waiter should be able to take orders but only serve items assigned to their tables/sections. Separate from BUG-470 (which is about edit permission missing). This is a new permission scope feature. | 2026-10-22: External team reports DONE. Moved to SMOKE for owner verification.",
-      "assignee": "Piyush",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-397",
@@ -30536,8 +30589,9 @@
       "source": "OWNER-REPORTED",
       "registered": "2026-09-27",
       "notes": "Old POS needs time-based food item deactivation (e.g. breakfast items inactive after 11 AM). Currently only available in New POS. | 2026-10-22: External team reports DONE. Moved to SMOKE for owner verification.",
-      "assignee": "Piyush",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-399",
@@ -30834,7 +30888,8 @@
       "notes": "insights-sales API returns method=Other for TAB/channel payments. FE passes raw value. Backend must fix categorization. FE can add mapping table as workaround if backend slow.",
       "priority": "P0",
       "sprint_key": "oct_cr_batch",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-487",
@@ -30886,8 +30941,9 @@
       "fast_lane_eligible": true,
       "sprint_key": "oct_bug_batch",
       "area": "PMS / Rooms",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-489",
@@ -31248,7 +31304,8 @@
       "notes": "BUG-496 formula floor((bc-adv)/bc*100) omits gst_on_advance. Owner rule: max_flat=(bc-adv)-computeRoomGst(advance,nights).gstTotal. Green cap 8000 (should be 7950), red alert 88%/7920 (should be 88.33%/7950). OD-504-02 (pct format) + OD-504-03 (trigger) open. CheckInForm.jsx depends on BUG-503 first. OD-504-01 LOCKED. OD-504-02 OPEN (pct format). OD-504-03 OPEN (trigger). IA: impact/BUG-504_IMPACT_ANALYSIS.md Plan: plans/BUG-504_IMPLEMENTATION_PLAN.md. OD-504-02=A(decimal), OD-504-03=A(no change). CheckInPage.jsx independent. CheckInForm.jsx after BUG-503.",
       "impact_doc": "impact/BUG-504_IMPACT_ANALYSIS.md",
       "plan_doc": "plans/BUG-504_IMPLEMENTATION_PLAN.md",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-505",
@@ -31380,8 +31437,9 @@
       "registered_date": "2026-10-07",
       "gate": 3,
       "area": "PMS / Rooms",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-512",
@@ -31428,8 +31486,9 @@
       "impact_analysis": "impact/BUG-513_IMPACT_ANALYSIS.md",
       "implementation_plan": "plans/BUG-513_IMPLEMENTATION_PLAN.md",
       "area": "PMS / Rooms",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-514",
@@ -31461,8 +31520,9 @@
       },
       "implementation_plan": "plans/BUG-514_IMPLEMENTATION_PLAN.md",
       "area": "PMS / Rooms",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-515",
@@ -31552,8 +31612,9 @@
       ],
       "notes": "BUG-499 fix left display/payload inconsistency: RoomSection shows min(800,600)=600 but handlePaid sends floor(800/2)=400. Staff sees room balance=0 but backend records 200 owed. OD-518-01/02/03 open. CRITICAL R6 P0. Intake: change_requests/BUG-518_*.md. | OD-518-01 LOCKED=a (cap each half independently). OD-518-02 LOCKED=YES (display=payload). OD-518-03 LOCKED=YES (fnbTotal=order.amount). All ODs closed.",
       "area": "Payments / Coupons / Credit",
-      "assignee": "",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-519",
@@ -31783,7 +31844,8 @@
       "notes": "BUNDLE: BUG-529+BUG-530+BUG-531+BUG-532 (oct_bug_batch). BUG-529+BUG-531 can go in same Gate 4 pass (both NOT R5). BUG-530 needs own Gate 3 (R5). BUG-532 backend-blocked. | IMPL 2026-10-10: frontDeskService.js L175 discountAmount:0 added. Code marker BUG-529. Compile PASS. EXIT GATE 5/5.",
       "completeness": "5/7",
       "area": "PMS / Rooms",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-530",
@@ -31840,9 +31902,10 @@
       "related": "BUG-527 F1, BUG-529",
       "notes": "computeRoomCardAmount L49 food=order.amount (no SC=\u20b9227) vs CPP finalTotal=\u20b9248. Gap=\u20b921=SC. PRE-EXISTING (predates oct_bug_batch). Backend-blocked: ask filed to include SC in order.amount. OD-532-01 open (FE fix now vs wait backend). R5 file. Intake: change_requests/BUG-532_DASHBOARD_TILE_SC_GAP_ORDER_AMOUNT_VS_FINALTOTAL_INTAKE.md | IA: impact/BUG-532_IMPACT_ANALYSIS_2026_10_10.md. KEY: NOT backend-blocked \u2014 order.serviceTax (api.total_service_tax_amount) already on order shape. Fix: food += order.serviceTax. 1 line, R5. OD-532-01 REVISED (FE fix approved?). OD-532-02 NEW (fix transfers? DEFER recommended). Non-room tiles unaffected. restaurants with SC=0: no-op. | Plan: plans/BUG-532_IMPLEMENTATION_PLAN_2026_10_10.md. E1: food += order.serviceTax (1 line, R5). NOT backend-blocked. OD-532-01 awaiting Gate 4 GO. OD-532-02 DEFERRED (transfers).",
       "priority": "P0",
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-533",
@@ -31990,7 +32053,8 @@
       "area": "Payments / Coupons / Credit",
       "priority": "P0",
       "notes": "BACKEND DELIVERED 2026-10-19: loyalty key now available in socket payload. FE unblocked. Ready for Gate 2 GO. | 2026-10-22: Backend reports CLOSED. Moved to SMOKE for owner verification.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-411",
@@ -32274,7 +32338,8 @@
       "area": "Permissions / Security",
       "notes": "OD-538-01 LOCKED: Apply button (Option Y \u2014 saves to backend immediately). Cashier: hide entire section, show read-only discount line in bill totals from order_discount_json. OD-538-02 OPEN: backend API endpoint for apply-discount needed. | OD-538-02 LOCKED: POST /api/v1/vendoremployee/order-discount-manage. field: discount_amount (request), discount (response). type: percent|fixed. Gate 3 READY. | REAL FIX: profileTransform.js missing roleBaseDiscount mapping. restaurantSettingsTransform.js had it but CPP reads profileTransform via useRestaurant(). Fixed 2026-10-18.",
       "assignee": "Abhishek",
-      "priority": "P0"
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-415",
@@ -32588,7 +32653,8 @@
       "registered_by": "INTAKE agent",
       "risk": "MEDIUM",
       "priority": "P0",
-      "assignee": "Piyush"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-554",
@@ -32622,7 +32688,8 @@
       "risk": "MEDIUM",
       "priority": "P0",
       "notes": "2026-10-22: CLOSED. IA confirmed already resolved by CR-415 + PMS phase deliveries (CR-358 P2/P3/P4, CR-363, CR-366, CR-385). COMING_SOON_ITEMS set is empty, no comingSoon flags on any sidebar item, all 11 PMS routes point to real pages. PmsPlaceholderPage is dead code. Owner confirmed close.",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-545",
@@ -32721,8 +32788,9 @@
       "registered_by": "INTAKE agent",
       "risk": "MEDIUM",
       "notes": "2026-10-22: External team reports DONE. Moved to SMOKE for owner verification.",
-      "assignee": "Piyush",
-      "priority": "P0"
+      "assignee": "Abhishek",
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-421",
@@ -32789,7 +32857,8 @@
       "priority": "P0",
       "notes": "Revised IA 2026-11-02: scope reduced from 6\u21923 pages. RoomOrders+FoodCourt+FoodCourtBeta already working (inline exports). Remaining: (1) CancellationsMockup \u2014 both disabled, needs buildExportPayload (P1, backend agg), (2) PLReportPage \u2014 PDF only, needs Excel (P2, backend agg), (3) OrderReportBetaPage \u2014 Excel only, needs PDF (P2, backend agg). All 3 use backend aggregation endpoints. Data captured correctly in all. IA: impact/CR-423_IMPACT_ANALYSIS_REVISED.md. | 2026-11-02: Gate 3 plan complete. 3 pages, 10 edits. CancellationsMockup (full export impl), PLReportPage (+Excel), OrderReportBetaPage (+PDF). Plan: plans/CR-423_IMPLEMENTATION_PLAN.md. | 2026-11-02: IMPLEMENTED. 3 pages: CancellationsMockup (full Excel+PDF export), PLReportPage (+Excel), OrderReportBetaPage (+PDF). webpack 0 new warnings. EXIT GATE 5/5.",
       "investigation_report": "investigations/CR-423_INVESTIGATION_REPORT_2026_10_17.md",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-424",
@@ -32847,8 +32916,9 @@
       "risk": "MEDIUM",
       "priority": "P0",
       "notes": "2026-11-05: Re-raised by owner (\"GST % on bill\"); Printer Agent team; related CR-487 (tracking).",
-      "assignee": "Piyush",
-      "closed_date": "2026-11-05"
+      "assignee": "Abhishek",
+      "closed_date": "2026-11-05",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-555",
@@ -33132,7 +33202,8 @@
       "notes": "Registry updated 2026-10-17 per owner. Full intake complete (BUG-560_FIREBASE_MESSAGING_UNSUPPORTED_INTAKE.md). Root cause confirmed: isSupported() promise bypass. Ready for Planning Gate 2.",
       "next": "PLANNING Gate 2 Impact Analysis",
       "priority": "P0",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-561",
@@ -33394,7 +33465,8 @@
       ],
       "intake_doc": "change_requests/BUG-570_SIDEBAR_BACKDROP_SCROLL_BLEEDTHROUGH_INTAKE.md",
       "notes": "2026-10-22: IMPLEMENTED. Removed backdrop-blur-sm from sidebar drawer backdrop (Sidebar.jsx L518). bg-black/50 solid overlay remains. Fixes Android tablet GPU repaint bleed-through during nav scroll. Webpack: 0 errors.",
-      "assignee": "Abhishek"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-429",
@@ -33420,7 +33492,8 @@
         "src/components/dashboard/ChannelColumn.jsx"
       ],
       "notes": "2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-571",
@@ -33436,7 +33509,8 @@
       "duplicate_check": "DISTINCT",
       "od_571_01": "LOCKED: In ORDER VIEW, filter out group containers that have zero orderId items before rendering. ChannelColumn.jsx:L259 \u2014 add filter so groups with only non-order items (viewType=order && !item.orderId) are hidden entirely.",
       "qa_report": "test_reports/iteration_11.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-572",
@@ -33455,7 +33529,8 @@
       "impact_analysis": "impact/BUG-572_IMPACT_ANALYSIS_2026_10_16.md",
       "implementation_plan": "plans/BUG-572_IMPLEMENTATION_PLAN_2026_10_16.md",
       "qa_report": "test_reports/iteration_18.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-573",
@@ -33471,7 +33546,8 @@
       "duplicate_check": "DISTINCT",
       "od_573_01": "BACKEND_BLOCKED: backend not returning selected option value in item.variation array. Backend team to add selected option label field.",
       "notes": "2026-10-21: Gate 2 IA closed. TWO gaps found: (1) FE \u2014 OrderCard v.values[].label not mapped, shows group name only. Ready for Gate 3. (2) BACKEND \u2014 order_note sent in place-order payload but backend returns empty in employee-orders-list. Notes pushed to food_level_notes at item level instead. Backend brief needed. IA: impact/BUG-573_IMPACT_ANALYSIS_2026_10_21.md | 2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-574",
@@ -33490,7 +33566,8 @@
       "impact_analysis": "impact/BUG-574_IMPACT_ANALYSIS_2026_10_16.md",
       "implementation_plan": "plans/BUG-574_IMPLEMENTATION_PLAN_2026_10_16.md",
       "qa_report": "test_reports/iteration_18.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-575",
@@ -33509,7 +33586,8 @@
       "od_575_01": "NONE \u2014 root cause confirmed. OrderCard.jsx:L468 header stopPropagation blocks onEdit.",
       "root_cause_fix": "LOCKED: OrderCard.jsx:L468 \u2014 remove blanket onClick stopPropagation from header div. Verify merge/shift/cancel buttons inside header each have their own e.stopPropagation() individually.",
       "qa_report": "test_reports/iteration_11.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-576",
@@ -33539,7 +33617,8 @@
         "src/pages/DashboardPage.jsx"
       ],
       "qa_report": "test_reports/iteration_2.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-577",
@@ -33556,7 +33635,8 @@
       "od_577_01": "OPEN \u2014 need to identify which print path shows cancelled items (manual/auto-bill/aggregator).",
       "od_577_02": "OPEN \u2014 backend probe needed: are cancel markers (food_status=3, cancel_at) reliably set on cancelled items?",
       "notes": "2026-10-22: Resolved in latest Printer Agent \u2014 cancelled items no longer printed on bill. Moved to owner smoke on latest PA.",
-      "assignee": "Piyush"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-430",
@@ -33610,7 +33690,8 @@
       ],
       "qa_report_e3_e4_e5": "test_reports/iteration_5.json",
       "notes": "2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-578",
@@ -33625,8 +33706,9 @@
       "intake_doc": "change_requests/BUG-578_ROOM_TRANSFER_NOT_PRINTING_INTAKE.md",
       "duplicate_check": "DISTINCT",
       "od_578_01": "BACKEND_BLOCKED: backend not returning associated_order_list in running-order API response for room orders. Backend team to include transfer order data.",
-      "assignee": "Piyush",
-      "closed_date": "2026-10-22"
+      "assignee": "Abhishek",
+      "closed_date": "2026-10-22",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-579",
@@ -33646,7 +33728,8 @@
       "notes": "2026-10-21: Gate 2 IA v2 (full 6-month probe, 2 restaurants). FE: 2 key mismatches (3 lines fix, ready Gate 3). Backend: 2 stage gaps \u2014 (1) cancel_type=Order overwrites real item stage (39+18 items), (2) cancel_type=unknown/null (3+68 items, 19% on Pav2). Backend gaps pending owner discussion. Deferred: scope tab KPI filtering (P2), audit stub (P3). IA: impact/BUG-579_IMPACT_ANALYSIS_2026_10_21.md | 2026-10-24: FE fix implemented \u2014 CancellationsMockup.jsx L290-291 key names (order_cancel_count/item_cancel_count), L297 stage name match (Before Cooking + Before Serving). Verified against live API data.",
       "code_reality": "FULL",
       "last_updated": "2026-10-24",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-580",
@@ -33664,7 +33747,8 @@
       "od_580_01": "BACKEND_BLOCKED: thrive/custom discount for Palmhouse not included in insights-discounts response. Backend to return all discount types.",
       "notes": "2026-10-21: Gate 2 IA revised (full 6-month probe, 2 restaurants). Backend done \u2014 all fields correct. 4 FE gaps: (1) HIGH: Reason column reads discount_for (all null) instead of discount_category (Thrive/Google Review/Complementary). (2) MEDIUM: by_category[] not rendered \u2014 3 custom types hidden. (3) LOW: Date reads order_date but API sends collect_bill. (4) OPTIONAL: employee name per order. 1 file, ~28 lines. IA: impact/BUG-580_IMPACT_ANALYSIS_2026_10_21.md",
       "severity": "P0",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-431",
@@ -33688,7 +33772,8 @@
       "impact_analysis": "impact/CR-431_IMPACT_ANALYSIS_2026_10_16.md",
       "implementation_plan": "plans/CR-431_IMPLEMENTATION_PLAN_2026_10_16.md",
       "qa_report": "test_reports/iteration_17.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-432",
@@ -33711,7 +33796,8 @@
       "impact_analysis": "impact/CR-432_IMPACT_ANALYSIS_2026_10_16.md",
       "implementation_plan": "plans/CR-432_IMPLEMENTATION_PLAN_2026_10_16.md",
       "qa_report": "test_reports/iteration_12.json",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-433",
@@ -33824,7 +33910,8 @@
       "investigation_findings": "Requirement clarified 2026-10-17: current colour behaviour fine. New ask: billPrinted=true \u2192 green border override on both cards. Backend blocker: print_bill_status must be in orders list API response.",
       "backend_ask": "print_bill_status field required in /api/v1/vendoremployee/pos/employee-orders-list response",
       "notes": "CODE_EXISTS_PARTIAL: orderTransform.js:310 already maps billPrinted=api.print_bill_status===Yes. FE transform ready; backend must return print_bill_status in employee-orders-list for feature to activate. | 2026-11-05: Re-raised by owner (\"change order colour once bill printed\"); also dependency of CR-489. Backend brief filed: backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md \u00a7A (re-validate print_bill_status). | 2026-11-06: Backend unblocked \u2014 bill_print field confirmed in orders-list + socket (printing handover). Design locked by owner: Option B (green border #329937 + light green background #E8F5E9). IA: impact/BUG-583_IMPACT_ANALYSIS_2026_11_06.md. Plan: plans/BUG-583_IMPLEMENTATION_PLAN_2026_11_06.md. 5 edits / 5 files. Awaiting Gate 4 GO. | 2026-11-06: PLAN REVALIDATED \u2014 line numbers drifted (BUG-652/653/654/655 shifted DashboardPage +11, OrderCard +2, TableCard +1, colors.js +1). All content matches. Corrected plan: plans/BUG-583_IMPLEMENTATION_PLAN_VALIDATION_2026_11_06.md.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-584",
@@ -34077,12 +34164,13 @@
       "registered": "2026-10-18",
       "notes": "FE sends discount_value=50 (raw %). Backend does not populate restaurant_discount_amount for prepaid/unserved orders. fromAPI.order L234 fallback reads discount_value (%) not rupee amount. order-temp-store gets discount_amount=50. Two-part fix: backend to populate restaurant_discount_amount at order creation; FE safety net at L234. Evidence: bill photos BillNo 000524. | 2026-11-07: Cross-branch handoff. FE fix (drop discount_value fallback in fromAPI.order) planned under CR-513. Plan: plans/CR-513_BUG-592_IMPLEMENTATION_PLAN.md E1.",
       "priority": "P0",
-      "assignee": "Piyush",
+      "assignee": "Abhishek",
       "related": [
         "CR-513"
       ],
       "gate": "GATE_5A_IMPLEMENTED",
-      "current_gate": 5
+      "current_gate": 5,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-436",
@@ -34232,7 +34320,8 @@
       "sprint_key": "oct_cr_batch",
       "area": "Tooling / Control Layer",
       "notes": "OD-597-01 LOCKED: toast+auto-reload-10s. OD-597-02 LOCKED: retry=1-guard. E1: firebase-messaging-sw.js \u2014 install/activate (+9 lines after L77). E2: NotificationContext.jsx \u2014 swUpdatePending state + SW ready/updatefound/controllerchange listeners + export (+13 lines). E3: App.js \u2014 SwUpdateBanner function+render, useNotifications import (+30 lines). E4: ErrorBoundary.jsx \u2014 ChunkLoadError detect+retry=1-guard in getDerivedStateFromError (+10 lines). 4 files ~62 lines. Zero R5. Zero financial. IA: impact/BUG-597_IMPACT_ANALYSIS_2026_10_19.md. Plan: plans/BUG-597_IMPLEMENTATION_PLAN_2026_10_19.md. Awaiting Gate 4 GO.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-598-A",
@@ -34256,7 +34345,8 @@
       "sprint_key": "nov_cr_batch",
       "risk": "HIGH",
       "notes": "2026-10-21: Investigation complete (8/10 steps, HIGH confidence). 4-point gap: authService never stores assignFoodMenu, AuthContext has no field, MenuContext derives from first product. Fix: thread assignFoodMenu from login through AuthContext to MenuContext. Report: evidence/BUG-598/BUG-598_INVESTIGATION_REPORT_2026_10_21.md | 2026-10-28: INVESTIGATION validated code-as-truth \u2014 full implementation confirmed across 4 files (AuthContext.jsx, MenuContext.jsx, authService.js, authTransform.js). 9 BUG-598 markers. Chain: login\u2192authTransform\u2192sessionStorage\u2192AuthContext\u2192MenuContext\u2192activeMenuType. Registry advanced GATE_2_PLANNING \u2192 GATE_5A_IMPLEMENTED. Needs retroactive QA \u2192 closure. | 2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-599",
@@ -34270,7 +34360,8 @@
       "notes": "2026-10-21: IMPLEMENTED Rev2. Aggregator orders added to LoadingPage boot (Tier 2 parallel) with loading/error/retry UI. POS+aggregator combined in post-batch before setOrders. DashboardPage boot fetch removed. Refresh fetches both POS+aggregator in parallel via Promise.allSettled. 4 files: constants.js, LoadingPage.jsx, DashboardPage.jsx, useRefreshAllData.js. Plan: plans/BUG-599_IMPLEMENTATION_PLAN_REV2.md | 2026-10-24: Hardened \u2014 aggregator boot failure now non-blocking (SUCCESS instead of ERROR in LoadingPage). useRefreshAllData rethrows on POS failure to preserve existing orders. | 2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
       "code_reality": "FULL",
       "last_updated": "2026-10-24",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-600",
@@ -34297,7 +34388,8 @@
       "impact_doc": "impact/BUG-601_IMPACT_ANALYSIS_2026_10_22.md",
       "code_reality": "FULL",
       "last_updated": "2026-10-24",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-602",
@@ -34311,8 +34403,9 @@
       "notes": "2026-10-22: Backend fix confirmed live. API probe: order_note persists on create, updates correctly, preserved on null/empty update. FE rendering chain verified: OrderCard.jsx:636, CartPanel.jsx:1517, OrderDetailSheet.jsx:741, AggregatorOrderPopOut.jsx:270, ScanOrderPopOut.jsx:437, OrderEntry.jsx:432 (restore on re-engage). No FE code changes needed \u2014 backend fix unblocked the existing FE chain. Ready for QA. | 2026-10-24: Revalidated. FE chain confirmed: orderTransform.js:306 maps order_note, OrderCard.jsx:636 renders it. Backend returns empty string. Purely backend issue.",
       "code_reality": "FULL (FE chain complete \u2014 backend must store and return order_note)",
       "last_updated": "2026-10-24",
-      "assignee": "Gyan",
-      "closed_date": "2026-10-24"
+      "assignee": "Abhishek",
+      "closed_date": "2026-10-24",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-603",
@@ -34327,7 +34420,8 @@
       "code_reality": "FULL (backend fix)",
       "last_updated": "2026-10-24",
       "closed_at": "2026-10-24",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-604",
@@ -34342,7 +34436,8 @@
       "code_reality": "FULL (backend fix)",
       "last_updated": "2026-10-24",
       "closed_at": "2026-10-24",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-442",
@@ -34455,7 +34550,7 @@
       ],
       "notes": "[2026-11-14 owner decisions] Make Unpaid does nothing on click (all order types); Change Payment Method works. Merged into CR-526. || from TT-002 | Excel Item #3 (Unpaid Button) is a DUPLICATE of this bug.",
       "blocked_by": "BACKEND",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "priority": "P0",
       "client": "ALL",
       "batch": "BATCH-C-2026-11-14",
@@ -34636,7 +34731,8 @@
       "blocked_by": "BACKEND",
       "qa_date": "2026-10-28",
       "note": "Implemented via BUG-595. Backend confirmed sending socket. Full chain verified: orderTransform\u2192OrderContext\u2192OrderEntry\u2192CPP reactive.",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-607",
@@ -34664,7 +34760,7 @@
         "OD-607-04"
       ],
       "notes": "[2026-11-15 Gate 2 IA closed] see impact/BUG-607_IMPACT_ANALYSIS.md || [2026-11-14 owner decisions] Item/category-level GST when GST enabled \u2014 backend. POS key exists; FE part at impact. || from TT-027 | API contract FINAL v1 2026-11-15: contracts/BATCH-B_BUG-607_API_CONTRACT_2026_11_15.md",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "priority": "P0",
       "client": "ALL",
       "batch": "BATCH-B-2026-11-14",
@@ -34718,8 +34814,9 @@
       "notes": "from TT-031",
       "priority": "P0",
       "blocked_by": "BACKEND",
-      "assignee": "Gyan",
-      "closed_date": "2026-10-22"
+      "assignee": "Abhishek",
+      "closed_date": "2026-10-22",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-608",
@@ -34774,7 +34871,8 @@
       ],
       "notes": "from TT-028 | 2026-10-28: INVESTIGATION validated code-as-truth \u2014 full implementation confirmed across 6 files (productTransform.js, menuManagementTransform.js, ProductList.jsx, ProductForm.jsx, BulkEditor.jsx, ProductCard.jsx). 27 CR-449 markers. Station mapping: transforms + form UI + grid editor + card display. Registry advanced GATE_1_INTAKE_COMPLETE \u2192 GATE_5A_IMPLEMENTED. Needs retroactive QA \u2192 closure. | 2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
       "priority": "P0",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-450",
@@ -35118,8 +35216,9 @@
       "tt_source": "TT-041",
       "blocked_by": "BACKEND",
       "blocked_on": "BACKEND",
-      "assignee": "Gyan",
-      "closed_date": "2026-11-05"
+      "assignee": "Abhishek",
+      "closed_date": "2026-11-05",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-471",
@@ -35135,9 +35234,10 @@
       "registered": "2026-10-22",
       "tt_source": "TT-042",
       "blocked_by": "BACKEND",
-      "assignee": "Piyush",
+      "assignee": "Abhishek",
       "blocked_on": "",
-      "closed_date": "2026-11-05"
+      "closed_date": "2026-11-05",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-472",
@@ -35268,8 +35368,9 @@
       "sprint_key": "nov_cr_batch",
       "qa_date": null,
       "notes": "2026-10-28: QA PASS \u2014 retroactive QA batch. Testing agent 14/14 backend + 7/7 browser + 4 code-verified.",
-      "assignee": "",
-      "area": "Payments / Coupons / Credit"
+      "assignee": "Abhishek",
+      "area": "Payments / Coupons / Credit",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-619",
@@ -35280,8 +35381,9 @@
       "risk": "HIGH",
       "sprint_key": "nov_cr_batch",
       "qa_date": "2026-10-26",
-      "assignee": "",
-      "area": "Payments / Coupons / Credit"
+      "assignee": "Abhishek",
+      "area": "Payments / Coupons / Credit",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-620",
@@ -35329,8 +35431,9 @@
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "qa_date": "2026-10-28",
-      "assignee": "",
-      "area": "Aggregator / Sockets"
+      "assignee": "Abhishek",
+      "area": "Aggregator / Sockets",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-476",
@@ -35360,7 +35463,8 @@
       ],
       "intake_doc": "change_requests/BUG-623_NULL_VARIATION_ORDERTRANSFORM_CRASH_INTAKE.md",
       "notes": "QA batch 2026-10-28: orderTransform.js L722 reduce on possibly-null v. BUG-618 fix incomplete \u2014 guarded symptom not source. Also: CollectPaymentPanel markers say BUG-NEW not BUG-618. | 2026-10-28: IA+Plan complete (batch). Doc: impact/QA_BATCH_BUGS_623_627_IMPACT_ANALYSIS_2026_10_28.md",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-624",
@@ -35396,7 +35500,8 @@
       ],
       "intake_doc": "change_requests/BUG-625_CR429_ACTIVE_FIRST_TABLET_MISSING_INTAKE.md",
       "notes": "QA batch 2026-10-28: Active First only in xl nav, not in tablet filter dropdown. Tablet users can't toggle. | 2026-10-28: IA+Plan complete (batch). Doc: impact/QA_BATCH_BUGS_623_627_IMPACT_ANALYSIS_2026_10_28.md | 2026-11-07: Standalone plan written + validated. Plan: plans/BUG-625_IMPLEMENTATION_PLAN_2026_11_07.md. 2026-11-07: GATE_5A_IMPLEMENTED. E1: Header.jsx L436 \u2014 Active First button inserted in tablet dropdown. Compile clean. EXIT GATE 5/5.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-626",
@@ -35414,7 +35519,8 @@
       ],
       "intake_doc": "change_requests/BUG-626_STATUS_BADGE_UPI_CARD_ROOM_MISSING_INTAKE.md",
       "notes": "QA batch 2026-10-28: Same pattern as BUG-354. 3 more entries needed. ~148 rows affected on Palm House. | 2026-10-28: IA+Plan complete (batch). | 2026-11-07: Standalone plan + revalidated (line drift L57\u2192L58 corrected). Plan: plans/BUG-626_IMPLEMENTATION_PLAN_2026_11_07.md. | 2026-11-07: GATE_5A_IMPLEMENTED. E1: OrderReportBetaPage.jsx L59-61 \u2014 Upi/Card\u2192Paid blue, Room\u2192Room purple added to getStatusBadge. Compile clean. EXIT GATE 5/5.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-627",
@@ -35537,7 +35643,7 @@
       "open_decisions": [],
       "blocked_by": "BACKEND",
       "assignee": "Abhishek",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "qa_gate_status": "NOT IN TESTED BUILD (out of scope this pass; present only in newer main)",
       "qa_date": "2026-11-18",
       "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A"
@@ -35877,11 +35983,12 @@
         "src/api/transforms/orderTransform.js"
       ],
       "notes": "buildBillPrintPayload L1868: spread {..d} kept stale food_details.complementary:no for runtime comp items. Printer agent reads food_details.complementary not is_complementary. Fix: food_details: { ...d.food_details, complementary: Yes }. 1 line, 1 file. webpack 0 new warnings.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "area": "Printing / Printer Agent",
       "gate": "GATE_5B_QA_PASS",
       "current_gate": 6,
-      "priority": "P0"
+      "priority": "P0",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-482",
@@ -35924,7 +36031,8 @@
       ],
       "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-483",
@@ -35948,14 +36056,15 @@
       "notes": "2026-11-04: Intake. Dup: RELATED. Code reality: PARTIAL \u2014 Cash has \"Cash Received\" box but handlePayment hard-blocks received < total (BUG-CASH-UNDERPAY guard, CollectPaymentPanel.jsx ~L11 | ODs: OD-483-01 Where the difference goes ; OD-483-02 Max allowed difference (e.g. \u2264 \u20b91 / \u2264 \u20b910 / configurable) ; OD-483-03 Applies to UPI only, or Cash/Card/Split too ; OD-483-04 Permission-gated (manager only above limit)? ; OD-483-05 Backend field for adjustment amount | 2026-11-04 owner: new Settlement Amount field on all methods, difference = discount. OD-483-06 OPEN (A post-tax settlement discount recommended / B pre-tax). | 2026-11-05: owner reconfirmed registration (Settlement Amount field, difference = discount). OD-483-06 still OPEN. | 2026-11-05 r3: ODs mostly LOCKED (A post-tax; cap \u20b910 default/per-restaurant; no right; all methods; reprint line; Discounts own type). OPEN: reason?, link with CR-484. | 2026-11-05 r4: NO discount, billing untouched; \"Received Amount\" field all methods (+/- within restaurant % default 3%); backend computes Reconciliation; Order Report +2 cols. Earlier discount decisions SUPERSEDED. | 2026-11-05 r5: CR-484 merged in; 3% limit everywhere. INTAKE FROZEN. | 2026-11-05: Backend brief filed `backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md` \u00a7B. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-06: Backend unblocked \u2014 received_amount + reconcile_amount APIs delivered (settings + received-amount handovers). IA: impact/P0_BATCH_BUG583_CR483_CR484_CR489_CR490_IMPACT_ANALYSIS.md \u00a7CR-483. 9 edits / 6+ files (CPP R5, orderTransform R5, settings, profile, reports). Awaiting Gate 3 GO. | 2026-11-07: Gate 3 PLAN COMPLETE. Phased: P1=bill collection (5 files, CRITICAL), P2=report columns (1 file, MEDIUM). All backend deps resolved. OD-483-10 LOCKED: phased delivery. Awaiting Gate 4 GO. | 2026-11-07: GATE 3 CLOSED. Plan written (342 lines), live probe verified (cafe103 order #021109), design mockups generated (4), all ODs locked (OD-483-01 through OD-483-11). Awaiting Gate 4 GO. | 2026-11-07: GATE 4 GO received. Phase 1 IMPLEMENTED: 5 files, 17 markers, webpack PASS (1 pre-existing warning). E-1 settingsTransform, E-2 profileTransform, E-3 SettingsPage, E-4 orderTransform read, E-5 collectBill payload, E-6 placeOrder payload, E-7 CPP input+validation+wiring. | 2026-11-07: Phase 2 IMPLEMENTED: OrderReportBetaPage.jsx \u2014 2 new columns (Received, Recon) after Amount before GST. Conditionally rendered. PDF export updated. Excel = backend (no FE change). 22 total CR-483 markers. webpack PASS.",
       "backend_brief": "backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md",
       "blocked_on": "",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "art3_plan": "plans/CR-483_IMPLEMENTATION_PLAN_2026_11_07.md",
       "implementation_plan": "plans/CR-483_IMPLEMENTATION_PLAN_2026_11_07.md",
       "phase": "Phase 1: Bill Collection (CPP + payload + settings) | Phase 2: Report columns",
       "gate": "GATE_5B_QA_PASS",
       "current_gate": 6,
       "design_lock": "LOCKED 2026-11-07: 4 mockups (settings toggle, CPP UPI, CPP Cash, error state). OD-483-11.",
-      "design_ref": "plans/CR-483_IMPLEMENTATION_PLAN_2026_11_07.md \u00a7Design References"
+      "design_ref": "plans/CR-483_IMPLEMENTATION_PLAN_2026_11_07.md \u00a7Design References",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-484",
@@ -35977,7 +36086,8 @@
       "description": "Bank deducts/charges extra on card transactions, so the amount the bank charges differs from what the customer pays on the bill. Owner originally raised as \"round-off option for card payments\". Needs a defined way to handle it.",
       "notes": "2026-11-04: Intake. Dup: RELATED. Code reality: NONE \u2014 card flow captures only last-4 transaction id; round-off (CR-170) applies to grand total for all methods; no bank-charge concept. | ODs: OD-484-01 Who bears the charge ; OD-484-02 Charge % fixed per restaurant or per card type (debit/credit/Amex) ; OD-484-03 Applies to split payments card portion | 2026-11-05 r3: Owner: bill same; Settlement Amount +/-; new Reconciliation Amount field for card bank charge; no discount. Interpretation OD-484-05 to confirm. | 2026-11-05 r4: same Received Amount logic as CR-483; proposed SUBSUMED into CR-483. | 2026-11-05 r5: SUBSUMED into CR-483 (owner). | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-06: No separate implementation needed. CR-483 Received Amount on ALL payment methods (including Card) covers this use case. Track via CR-483.",
       "blocked_on": "BACKEND",
-      "assignee": "Gyan"
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-485",
@@ -36002,9 +36112,10 @@
       "files": [
         "src/components/reports/OrderTable.jsx"
       ],
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-486",
@@ -36050,9 +36161,10 @@
       "intake_doc": "change_requests/CR-487_DISCOUNT_PERCENT_AND_AMOUNT_ON_BILL_INTAKE.md",
       "description": "Bill should print both the discount percentage and the discount amount (e.g. \"Discount (10%)  -\u20b956.00\").",
       "notes": "2026-11-04: Intake. Dup: RELATED. Code reality: PARTIAL \u2014 bill payload carries one discount value; BUG-592 shows % sometimes printed instead of \u20b9. | ODs: OD-487-01 Flat-\u20b9 discounts: show computed % too, or \u20b9 only? ; OD-487-02 Fix together with BUG-592 and CR-426 (same print payload) ; OD-487-03 Printer Agent template change needed? | 2026-11-05 r3: Owner: bill details owned by Old POS Printer Agent team \u2014 external dependency. | 2026-11-05 r4: owner statement suggests withdraw / external \u2014 OD-487-06 to confirm. | 2026-11-05 r5: tracking only (Printer Agent team). | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-07: Subsumed into CR-513 on this branch (cross-branch handoff).",
-      "assignee": "Piyush",
+      "assignee": "Abhishek",
       "blocked_on": "",
-      "subsumed_by": "CR-513"
+      "subsumed_by": "CR-513",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-488",
@@ -36078,9 +36190,10 @@
       "files": [
         "src/components/reports/OrderDetailSheet.jsx"
       ],
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-489",
@@ -36106,9 +36219,10 @@
       "notes": "2026-11-05: Intake. PARTIAL \u2014 OrderEntry.jsx L333-341 permission flags (order_cancel, food, bill, discount, print_icon\u2026); BUG-470 edit_order gate exists (GATE_6). No \"edit after bill print\" permission or restaurant setting. Bill-printed sig | 2026-11-05: owner ODs locked \u2014 setting ON/OFF; after print only Collect Payment without right; no PIN override. | 2026-11-05: OD-489-04 CONFIRMED \u2014 without right, no order-taking operation for that order; only Collect Payment. | 2026-11-05 r3: All owner ODs closed (no discount/coupon, reprint yes, KOT no, cancel no, settings access toggles, auto-print locks, no retro lock). | 2026-11-05 r5 FROZEN. | 2026-11-05: Backend brief filed `backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md` \u00a7A+\u00a7C. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-06: Both backend blockers resolved. (1) BUG-583 print detection: use bill_print (printing handover). (2) Permission key: order_edit_access delivered as restaurant setting + role module ID 104 (settings handover). OD-489-03 CLOSED: key = order_edit_access. OD-489-05 CLOSED: use bill_print. IA: impact/P0_BATCH_BUG583_CR483_CR484_CR489_CR490_IMPACT_ANALYSIS.md \u00a7CR-489. 8 edits / 7+ files. Depends on BUG-583 landing first. Awaiting Gate 3 GO. | 2026-11-06: GATE 3 PLAN COMPLETE. Live probe verified: order_edit_access setting in basic (Yes), permission module ID 104 in role_modules.frontend. Permissions passthrough confirmed \u2014 no profileTransform edit for perms. Plan: plans/CR-489_IMPLEMENTATION_PLAN_2026_11_06.md.",
       "backend_brief": "backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md",
       "blocked_on": "BACKEND",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-490",
@@ -36133,9 +36247,10 @@
       "notes": "2026-11-05: Intake. NONE (granular) \u2014 Sidebar.jsx L41-52 SIDEBAR_PERMISSIONS: `reports` and `insights` both gated by single `report` permission \u2192 all-or-nothing. No per-report permission. CR-071 (app-wide role gating) is DEFERRED; this is a | 2026-11-05: owner ODs locked \u2014 A single daily_report key; Day Closure separate; route guard YES. | 2026-11-05 r3: All owner ODs closed (all tabs, export yes, Insights hidden). | 2026-11-05 r5 FROZEN. | 2026-11-05: Backend brief filed `backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md` \u00a7D. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-06: Backend unblocked \u2014 show_daily_report permission key delivered (module ID 106, settings handover). OD-490-04 CLOSED: key = show_daily_report. IA: impact/P0_BATCH_BUG583_CR483_CR484_CR489_CR490_IMPACT_ANALYSIS.md \u00a7CR-490. 5 edits / 4 files. Awaiting Gate 3 GO. | 2026-11-07: GATE_5A_IMPLEMENTED. 13 edits across 5 files. Sidebar: array permission, hasAnyPermission, children + flyout filter. NEW PermissionRoute.jsx (PermissionInner rename). guards/index.js export. App.js import + 5 route wraps. permissionCatalog show_daily_report entry. Compile clean. EXIT GATE 5/5. Plan: plans/CR-490_IMPLEMENTATION_PLAN_2026_11_07.md",
       "backend_brief": "backend_briefs/BACKEND_BRIEF_INTAKE_BATCH_2026_11_05.md",
       "blocked_on": "BACKEND",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-491",
@@ -36159,9 +36274,10 @@
       "intake_doc": "change_requests/CR-491_HARDCODED_VALUES_CLEANUP_INTAKE.md",
       "description": "Remove hardcoded API calls/URLs/mock data from Reports and other sections.",
       "notes": "2026-11-05: Intake. Audit: 7 services raw API paths, hardcoded asset/aggregator/wa.me URLs, 38 Mockup + 12 Comparison/Preview pages, 16 .bak files. | 2026-11-05 r3: ODs 01/05 LOCKED. Correction: 38 *Mockup.jsx are LIVE reports (rename, not delete). 12 demo pages unprotected. OPEN 02/03/04. | 2026-11-05 r4: delete 12 demo pages + 16 backups; store links/logo from profile, +91 fixed. Detail table added. OPEN OD-491-06 (MyGenie brand logo handling). | 2026-11-05 r5: logo plan re-check at Gate 2. FROZEN. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-05: Gate 2 IA complete. IA doc: impact/CR-491_IMPACT_ANALYSIS.md. | 2026-11-05: Gate 3 plan written. Plan: plans/CR-491_IMPLEMENTATION_PLAN.md. | 2026-11-05: IMPLEMENTED \u2014 GATE_5A_IMPLEMENTED (Wave 1).",
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-642",
@@ -36183,9 +36299,10 @@
       "intake_doc": "change_requests/BUG-642_PWA_NO_BACK_NAVIGATION_INTAKE.md",
       "description": "Owner: \"there is no option to go back in pwa app in browser we use brio\". manifest.json display=standalone hides browser chrome (no back arrow); app shell has no in-app Back control, so drawers/sub-pages cannot be exited by back navigation.",
       "notes": "2026-11-05: Intake. CONFIRMED gap \u2014 public/manifest.json L11 `\"display\": \"standalone\"`; no global Back button in layout (Sidebar.jsx has none). BUG-416 added Back only on Night Audit / Revenue Dashboard. | 2026-11-05 r4: in-app Back button (browser + PWA). | 2026-11-05 r5 FROZEN. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-05: Gate 2 IA complete. IA doc: impact/BUG-642_IMPACT_ANALYSIS.md. | 2026-11-05: Gate 3 plan written. Plan: plans/BUG-642_IMPLEMENTATION_PLAN.md. | 2026-11-05: IMPLEMENTED \u2014 GATE_5A_IMPLEMENTED.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-643",
@@ -36206,9 +36323,10 @@
       "intake_doc": "change_requests/BUG-643_CREDIT_ORDER_DETAIL_SHEET_WONT_CLOSE_INTAKE.md",
       "description": "Credit Management \u2192 customer drawer (SS2) \u2192 View \u2192 Order details (SS3). Clicking X does not close the pop-up (owner screenshot, cursor on X, order 000868).",
       "notes": "2026-11-05: Intake. PARTIAL \u2014 SS3 is `OrderDetailSheet` portaled to document.body (src/components/credit/CreditCustomerDetailSheet.jsx ~L714) OUTSIDE the Radix modal Sheet (SS2). Radix modal Dialog sets `pointer-events:n | 2026-11-05 r4: code confirms \u2014 Esc works, mouse click blocked by Radix body pointer-events:none. | 2026-11-05 r5 FROZEN. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive). | 2026-11-05: Gate 2 IA complete. IA doc: impact/BUG-643_IMPACT_ANALYSIS.md. | 2026-11-05: Gate 3 plan written. Plan: plans/BUG-643_IMPLEMENTATION_PLAN.md. | 2026-11-05: IMPLEMENTED \u2014 GATE_5A_IMPLEMENTED.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5B_QA_PASS",
-      "current_gate": 6
+      "current_gate": 6,
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-644",
@@ -36230,8 +36348,9 @@
       "description": "Order 000414 (pos.mygenie.online/credit): chip shows \"3 Items\", totals \u20b9244.23 / \u20b9257, but no item list is visible in Order Details.",
       "notes": "2026-11-05: Intake. PARTIAL \u2014 SS3 fetches via getSingleOrderNew (FETCH MODE, src/components/reports/OrderDetailSheet.jsx ~L505) and renders items in scroll body (~L728, fallback text \"Item details not available\" not visi | 2026-11-05 r3: Re-shared SS3 shows scrollbar \u2192 supports H1. | 2026-11-05 r4: owner says items visible on scroll. OD-644-02 close vs UX fix. | 2026-11-05 r5: owner \u2014 behaviour, not a bug, no change. | 2026-11-05: PRIORITY UPGRADE P1\u2192P0 (owner directive).",
       "blocked_on": "BACKEND",
-      "assignee": "Gyan",
-      "closed_date": "2026-11-05"
+      "assignee": "Abhishek",
+      "closed_date": "2026-11-05",
+      "release_date": "2026-11-17"
     },
     {
       "type": "BUG",
@@ -36543,7 +36662,8 @@
       "related": [
         "CR-482"
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-653",
@@ -36638,7 +36758,8 @@
         "BUG-583",
         "CR-512"
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-657",
@@ -36664,7 +36785,8 @@
         "BUG-583",
         "CR-512"
       ],
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -36860,7 +36982,7 @@
       "notes": "[2026-11-14 owner decisions] Merged into CR-443. || When served item cancelled, alert manager/owner via in-app notification. No code for this trigger exists. Backend must differentiate after-serve cancel events.",
       "blocked_on": "BACKEND",
       "related": [],
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "artifact_refs": [
         {
           "label": "Intake",
@@ -36978,7 +37100,7 @@
       "related": [
         "BUG-468"
       ],
-      "assignee": "Piyush",
+      "assignee": "Abhishek",
       "artifact_refs": [
         {
           "label": "Intake",
@@ -37348,7 +37470,7 @@
       "files": "orderService.js, constants.js, OrderCard.jsx (R5-adj), OrderEntry.jsx (R5)",
       "notes": "2026-11-06: INTAKE. Backend delivered 3 new print APIs (update-print-status, print-logs POST/GET) in frontend-handover-printing.md. None wired in FE. Without calling update-print-status after bill print, bill_print stays 'No' \u2192 BUG-583 green cards never activate, CR-489 edit-lock can't detect print. Cleanest fix: add confirmation inside printOrder() in orderService.js \u2014 all 10 callers get it for free. DISTINCT. Code reality: NONE.",
       "blocked_on": "",
-      "assignee": "",
+      "assignee": "Abhishek",
       "related": [
         "BUG-583",
         "CR-489",
@@ -37361,7 +37483,8 @@
           "path": "memory/change_requests/CR-512_PRINT_CONFIRMATION_FLOW_WIRE_UPDATE_PRINT_STATUS_INTAKE.md",
           "type": "intake"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -37449,12 +37572,13 @@
       "registered": "2026-11-08",
       "gate": "GATE_5B_QA_PASS",
       "current_gate": 6,
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "related": [
         "CR-513",
         "BUG-592"
       ],
-      "notes": "Manual reprint paths (P5a-c + P6a-b) omit discount_percentage and roundoff. Backend fix verified 2026-11-07: get-single-order-new now returns discount_type, discount_value, round_up. FE fix: E1 map 3 new fields in fromAPI.order; E2 add fallbacks in buildBillPrintPayload default branch. Plan: plans/BUG-659_IMPLEMENTATION_PLAN.md. Supplement: P5 paths (dashboard/OrderEntry) need Option A (pre-fetch from get-single-order-new) \u2014 separate gate cycle. P6 paths (report reprints) will auto-fix with E1+E2. Backend brief: backend_briefs/BACKEND_BRIEF_BUG-659_2026-11-08.md."
+      "notes": "Manual reprint paths (P5a-c + P6a-b) omit discount_percentage and roundoff. Backend fix verified 2026-11-07: get-single-order-new now returns discount_type, discount_value, round_up. FE fix: E1 map 3 new fields in fromAPI.order; E2 add fallbacks in buildBillPrintPayload default branch. Plan: plans/BUG-659_IMPLEMENTATION_PLAN.md. Supplement: P5 paths (dashboard/OrderEntry) need Option A (pre-fetch from get-single-order-new) \u2014 separate gate cycle. P6 paths (report reprints) will auto-fix with E1+E2. Backend brief: backend_briefs/BACKEND_BRIEF_BUG-659_2026-11-08.md.",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-660",
@@ -37478,7 +37602,7 @@
       ],
       "intake_doc": "change_requests/BUG-660_CPP_CREDIT_PREFILLED_CUSTOMER_DOUBLE_SUGGESTIONS_INTAKE.md",
       "notes": "Root cause: tabIsCustomerSelected seeded false (L541) so name (L607) + phone (L559) typeahead effects both auto-open on prefilled values. CRM has 1 record. Owner decision: option (c) treat prefilled CRM-matching customer as selected. Investigation: INV-021115_INVESTIGATION_REPORT.md. Fix: tabSeedMatched (E1), stale guards (E2/E4), lookup auto-select (E3), phone ref (E5), any-edit reset (E6), tabPhoneWasUserTypedRef V5-fix. All in CollectPaymentPanel.jsx.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "gate": "GATE_5A",
       "current_gate": 5,
       "impact_doc": "impact/BUG-660_IMPACT_ANALYSIS.md",
@@ -37488,7 +37612,8 @@
         "OD-660-03": "YES",
         "severity": "P0 (owner override of P2)"
       },
-      "plan_doc": "plans/BUG-660_IMPLEMENTATION_PLAN.md"
+      "plan_doc": "plans/BUG-660_IMPLEMENTATION_PLAN.md",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-661",
@@ -37544,8 +37669,9 @@
       "intake_doc": "change_requests/BUG-661_PWA_MANUAL_UPDATE_BANNER_INTAKE.md",
       "impact_doc": "impact/BUG-661_IMPACT_ANALYSIS.md",
       "plan_doc": "plans/BUG-661_IMPLEMENTATION_PLAN.md",
-      "assignee": "",
-      "notes": "Root cause: SW file never changes per release \u2192 no 'waiting' worker \u2192 banner never triggers. White screen: stale index.html \u2192 deleted hashed bundles 404 before React boots. 8-file fix: F1 craco build-id+version.json emit; F2 public/version.json stub; F3 useAppVersionCheck hook; F4 App.js banner text+no-auto-reload; F5 NotificationContext ungated SW detection+hadController guard; F6 index.html inline boot guard; F7 index.js boot flag; F8 ErrorBoundary session-scoped 60s retry. OD prefix mapping: OD-621-xx \u2192 OD-661-xx (all same decisions). Testing: preview via public/version.json change to dev2. No login needed. IMPLEMENTED 2026-11-09: F1 craco BUILD_ID+version.json emit; F2 public/version.json stub; F3 useAppVersionCheck 5-min poll hook; F4 App.js banner text\u2192\"New version available\"/button\u2192\"Update now\", auto-timer removed (OD-661-01), versionUpdatePending added (OD-661-06); F5 NotificationContext SW detection ungated+hadController guard; F6 index.html inline boot guard (session-scoped one-shot reload); F7 index.js __APP_BOOTED__ flag; F8 ErrorBoundary 60s sessionStorage retry. INVESTIGATION 2026-11-10 (INV-BUG661-BROWSER-PWA-BANNER-GAP): Browser fresh open shows no banner \u2014 CORRECT (user loads new bundle, BUILD_ID matches version.json). PWA shows banner \u2014 CORRECT (cached old bundle, BUILD_ID \u2260 new version.json). NOT a code bug. F-2: firebase-messaging-sw.js has max-age=14400 instead of no-cache \u2014 DevOps action needed. Full report: investigations/INV-BUG661-BROWSER-PWA-BANNER-GAP_2026_11_10.md"
+      "assignee": "Abhishek",
+      "notes": "Root cause: SW file never changes per release \u2192 no 'waiting' worker \u2192 banner never triggers. White screen: stale index.html \u2192 deleted hashed bundles 404 before React boots. 8-file fix: F1 craco build-id+version.json emit; F2 public/version.json stub; F3 useAppVersionCheck hook; F4 App.js banner text+no-auto-reload; F5 NotificationContext ungated SW detection+hadController guard; F6 index.html inline boot guard; F7 index.js boot flag; F8 ErrorBoundary session-scoped 60s retry. OD prefix mapping: OD-621-xx \u2192 OD-661-xx (all same decisions). Testing: preview via public/version.json change to dev2. No login needed. IMPLEMENTED 2026-11-09: F1 craco BUILD_ID+version.json emit; F2 public/version.json stub; F3 useAppVersionCheck 5-min poll hook; F4 App.js banner text\u2192\"New version available\"/button\u2192\"Update now\", auto-timer removed (OD-661-01), versionUpdatePending added (OD-661-06); F5 NotificationContext SW detection ungated+hadController guard; F6 index.html inline boot guard (session-scoped one-shot reload); F7 index.js __APP_BOOTED__ flag; F8 ErrorBoundary 60s sessionStorage retry. INVESTIGATION 2026-11-10 (INV-BUG661-BROWSER-PWA-BANNER-GAP): Browser fresh open shows no banner \u2014 CORRECT (user loads new bundle, BUILD_ID matches version.json). PWA shows banner \u2014 CORRECT (cached old bundle, BUILD_ID \u2260 new version.json). NOT a code bug. F-2: firebase-messaging-sw.js has max-age=14400 instead of no-cache \u2014 DevOps action needed. Full report: investigations/INV-BUG661-BROWSER-PWA-BANNER-GAP_2026_11_10.md",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-663",
@@ -37596,7 +37722,8 @@
         "OD-662-02": "(a) prepaid paths only (E1+E2 in OrderEntry.jsx)"
       },
       "notes": "E1 L1679-1680: add || paymentData?.serviceCharge>0 to scApplicable. E2 L2462-2464: same in inline ternary. Postpaid collectBillExisting untouched. R5 hotspot \u2014 additive OR only.",
-      "assignee": ""
+      "assignee": "Abhishek",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-664",
@@ -37658,11 +37785,12 @@
         "OD-665-02": "LOCKED \u2014 ALL payment types: prepaid, postpaid (collect-bill), QSR. One fix covers all (single splitCap L3034 shared by all payment paths in CPP)."
       },
       "notes": "Trigger: SC \u00d7 SC-GST-rate produces 0.5-paisa intermediate (e.g. 350.9 \u00d7 5% = 17.5449). orderTransform L29 rounds totalGst as whole \u2192 192.99. CPP L789-790 rounds sgst/cgst halves separately \u2192 96.50+96.50=193.00. Split cap uses CPP total (4052.90), payload uses orderTransform total (4052.89). Backend sees 1-paisa mismatch \u2192 rejects order. Reported by owner@ruby.com on RID 672 2026-11-10. ODs locked 2026-11-10: OD-665-01=Option A, OD-665-02=ALL. Single fix point: CPP L3034 splitCap. One line covers prepaid+postpaid+QSR.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "reported_by": "owner@ruby.com (Ruby ZAP RID 672)",
       "evidence": "Owner payload in chat 2026-11-10 + mathematical proof + code trace CPP L784-790/L3034, orderTransform L14-39",
       "impact_doc": "impact/BUG-665_IMPACT_ANALYSIS.md",
-      "plan_doc": "plans/BUG-665_IMPLEMENTATION_PLAN.md"
+      "plan_doc": "plans/BUG-665_IMPLEMENTATION_PLAN.md",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-666",
@@ -37698,9 +37826,10 @@
       "trigger": "item price \u00d7 GST% produces half-paisa intermediate when split into SGST/CGST + SC on + restaurant.totalRound=false",
       "reported_by": "owner@ruby.com (Ruby ZAP RID 672) 2026-11-10",
       "notes": "Layer 1 (this bug): CPP taxTotals L296 taxAmt=linePrice\u00d7rate/100, L300 sgst+=taxAmt/2 \u2014 for 114.29\u00d75%=5.7145, halved=2.857250, rounded=2.86\u00d72=5.72. orderTransform L846 parseFloat('5.71')=5.71. Gap=0.01/item. Layer 2 (BUG-665): totalGst half-rounding \u2014 fixed. Combined: pre-665 gap=0.02, post-665 gap=0.01, post-666 gap=0.00. Ruby has totalRound=false \u2192 neither BUG-665 alone nor round-off absorption saves it. Order amount 132=correct from orderTransform (gst_amount=5.71\u2192totalTax=6.28\u2192132.00). CPP gives 132.01 after BUG-665.",
-      "assignee": "",
+      "assignee": "Abhishek",
       "impact_doc": "impact/BUG-666_IMPACT_ANALYSIS.md",
-      "plan_doc": "plans/BUG-666_IMPLEMENTATION_PLAN.md"
+      "plan_doc": "plans/BUG-666_IMPLEMENTATION_PLAN.md",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-514",
@@ -37975,7 +38104,7 @@
       "gate": "GATE_1",
       "current_gate": 1,
       "registered": "2026-11-12",
-      "assignee": "Piyush",
+      "assignee": "Abhishek",
       "release_date": "2026-11-17"
     },
     {
@@ -38661,7 +38790,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": ""
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-533",
@@ -38680,7 +38809,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": ""
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-534",
@@ -38699,7 +38828,7 @@
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
-      "release_date": ""
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-535",
@@ -38948,7 +39077,7 @@
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Audit / Settings",
       "intake_doc": "change_requests/35_CR-543_LATE_CANCELLATION_AUDIT_THRESHOLD_INTAKE.md",
-      "assignee": "",
+      "assignee": "Abhishek",
       "release_date": "2026-11-17",
       "registered_date": "2026-11-17"
     },
@@ -38962,7 +39091,7 @@
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Audit / Fraud Detection",
       "intake_doc": "change_requests/36_CR-544_CANCEL_AFTER_UNPAID_AUDIT_INTAKE.md",
-      "assignee": "",
+      "assignee": "Abhishek",
       "release_date": "2026-11-17",
       "registered_date": "2026-11-17"
     },
@@ -38991,7 +39120,7 @@
           "type": "implementation_plan"
         }
       ],
-      "release_date": "",
+      "release_date": "2026-11-17",
       "registered_date": "2026-11-16",
       "revalidated_date": "2026-11-18",
       "implemented_date": "2026-11-18",
@@ -39034,7 +39163,8 @@
       "registered_date": "2026-11-16",
       "qa_gate_status": "QA BLOCKED (blocked by BLOCKER-1) \u2014 code present [blocker registered BUG-685]",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-545",
@@ -39073,7 +39203,7 @@
       "area": "Reports / Audit / Fraud Detection",
       "intake_doc": "change_requests/37_CR-546_DISCOUNT_AFTER_BILL_PRINT_AUDIT_INTAKE.md",
       "client": "ALL",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "release_date": "2026-11-17",
       "registered_date": "2026-11-17",
       "qa_gate_status": "QA 2026-11-18 (v3 LOCKED design): Card 3 structure + Excel \"Leakage After Print\" sheet PASS. Discount apply/remove after-print badge + columns NOT VERIFIABLE (0 events for cafe103); code review confirms EVENT_BADGE mapping matches spec. Retest needs post-print discount data + BUG-696 fix."
@@ -39169,7 +39299,7 @@
       "status": "GATE_1_INTAKE_COMPLETE \u2014 OD LOCKED. Backend brief needed.",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "assignee_reason": "Backend order_amount mutation recommended (Option B)",
       "registered_date": "2026-11-17",
       "source": "AGENT-DISCOVERED (Investigation session 2, 2026-11-17)",
@@ -39197,7 +39327,7 @@
       "status": "IMPLEMENTED",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "assignee_reason": "Backend-blocked \u2014 no edit-food-item endpoint exists (all 5 probed returned 404)",
       "registered_date": "2026-11-17",
       "source": "OWNER-REPORTED + AGENT-INVESTIGATED (Investigation session 2, 2026-11-17)",
@@ -39255,7 +39385,8 @@
       "description": "CreditCustomerDetailSheet.jsx checks coverage.status (L156, L166) but computeFifoCoverage() returns .type. coverage.status always undefined \u2192 button never renders. 2-line fix.",
       "priority": "P0",
       "area": "Payments / Coupons / Credit",
-      "money_path": "yes"
+      "money_path": "yes",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-682",
@@ -39280,7 +39411,8 @@
       "open_decisions": [],
       "description": "cancelNoteMandatory parsed into restaurant.settings but UI reads from restaurant.cancellation which lacks it. Always false. Fix: add to cancellation object in profileTransform.js + wire prop in 3 consumers.",
       "priority": "P0",
-      "area": "Menu / Order Entry"
+      "area": "Menu / Order Entry",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-683",
@@ -39329,7 +39461,8 @@
       "registered_date": "2026-11-18",
       "qa_gate_status": "QA BLOCKED (blocked by BLOCKER-1) \u2014 code present [blocker registered BUG-685]",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-684",
@@ -39435,7 +39568,8 @@
           "path": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md",
           "type": "handover"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-686",
@@ -40082,7 +40216,7 @@
   ],
   "meta": {
     "last_updated": "2026-11-18",
-    "last_action": "PLANNING Gate 2: combined Impact Analysis for Audit Report QA bugs BUG-695..700 (all AuditLogMockup.jsx except BUG-696 service/backend). Conflict CLEAN. Owner decisions OD-696-01/698-01/699-01 + backend brief for BUG-696. No code changed. Doc: memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+    "last_action": "Bulk update: all 178 P0 items -> assignee=Abhishek, release_date=2026-11-17. No application code changed.",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
