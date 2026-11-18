@@ -1,3 +1,7 @@
+**CURRENT 2026-11-18 — PLANNING Gate 2 (Impact Analysis) for QA Nov Sprint defects BUG-685…694 → status GATE_2_IA_COMPLETE. IA bundle in `impact/` (one file per bug; BUG-687+691 combined in `impact/BUG-687_BUG-691_AUDIT_LOG_IMPACT_ANALYSIS.md`; index `impact/NOV_SPRINT_BUG685-694_IA_INDEX.md`). Root cause CONFIRMED for BUG-685/686; BUG-687+691 batch same-file (AuditLogMockup.jsx) with BUG-695…700 at Gate 3. Owner decisions open: OD-687-01, OD-689-01, OD-692-01, OD-693-01, OD-694-01. No code changed.**
+
+
+
 **CURRENT 2026-11-18 — PLANNING Gate 2 (Impact Analysis) for Audit Report QA bugs BUG-695…700 → status GATE_2_IA_COMPLETE. Combined IA: `impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md`. Conflict CLEAN (batch same-file edits with sibling BUG-691 at Gate 3). Owner decisions: OD-696-01 (max wait), OD-698-01 (FY current vs previous), OD-699-01 (blank vs label) + backend brief for BUG-696. No code changed.**
 
 
@@ -27,16 +31,16 @@
 
 | ID | Title | Sev | Risk | Status | Doc |
 |---|---|---|---|---|---|
-| **BUG-685** | Add-to-cart crashes Order Entry — `ReferenceError: onEdit is not defined` (incomplete CR-551) | **P0** | **HIGH** | GATE_1_INTAKE_COMPLETE — QA BLOCKER-1; fix = add `onEdit` to CartPanel props (CartPanel.jsx ~L811/L1353) | `change_requests/BUG-685_ORDER_ENTRY_ADD_TO_CART_ONEDIT_CRASH_INTAKE.md` |
-| **BUG-686** | Dashboard drops ALL running orders after login (~60-70%) — rejected fetch treated as server=0 | **P1** | **HIGH** | GATE_1_INTAKE_COMPLETE — QA MAJOR-2; fix = skip reconcile on `posResult.status==='rejected'` (useOrderPollingReconciliation.js:275-281) | `change_requests/BUG-686_DASHBOARD_DROPS_RUNNING_ORDERS_ON_LOGIN_INTAKE.md` |
-| **BUG-687** | Audit Log report does not match CR-528 spec (renders CR-546 design) | **P2** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — SPEC-CR528; needs CR-528 vs CR-546 spec reconciliation before code | `change_requests/BUG-687_AUDIT_LOG_SPEC_MISMATCH_CR528_INTAKE.md` |
-| **BUG-688** | `join_restaurant` emitted twice after socket reconnect (double ack) | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-1 (noted vs BUG-677) | `change_requests/BUG-688_JOIN_RESTAURANT_DOUBLE_EMIT_RECONNECT_INTAKE.md` |
-| **BUG-689** | Auto-generated employee email gets an extra `.com` appended | **P2** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-2 (noted vs BUG-229) | `change_requests/BUG-689_AUTOGEN_EMPLOYEE_EMAIL_EXTRA_DOTCOM_INTAKE.md` |
-| **BUG-690** | Add-on list does not auto-refresh after creating an add-on | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-3 (noted vs BUG-669) | `change_requests/BUG-690_ADDON_LIST_NO_AUTO_REFRESH_INTAKE.md` |
-| **BUG-691** | Audit Log TIME cells clipped at `"2026-"` | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-4 (noted vs CR-528) | `change_requests/BUG-691_AUDIT_LOG_TIME_CELLS_CLIPPED_INTAKE.md` |
-| **BUG-692** | "New version available" banner shows on every page | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-5 (related BUG-661) | `change_requests/BUG-692_NEW_VERSION_BANNER_ON_EVERY_PAGE_INTAKE.md` |
-| **BUG-693** | Login-page logo renders blank | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR-6 (env-dependent, unconfirmed) | `change_requests/BUG-693_LOGIN_PAGE_LOGO_BLANK_INTAKE.md` |
-| **BUG-694** | Direct URL after fresh login routes through `/loading` for >10s | **P2** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — QA MINOR-7 | `change_requests/BUG-694_POST_LOGIN_LOADING_ROUTE_SLOW_INTAKE.md` |
+| **BUG-685** | Add-to-cart crashes Order Entry — `ReferenceError: onEdit is not defined` (incomplete CR-551) | **P0** | **HIGH** | GATE_2_IA_COMPLETE — QA BLOCKER-1; root cause CONFIRMED = add `onEdit` to CartPanel props (CartPanel.jsx ~L811/L1353) | `impact/BUG-685_IMPACT_ANALYSIS.md` |
+| **BUG-686** | Dashboard drops ALL running orders after login (~60-70%) — rejected fetch treated as server=0 | **P1** | **HIGH** | GATE_2_IA_COMPLETE — QA MAJOR-2; root cause CONFIRMED = skip reconcile on `posResult.status==='rejected'` (useOrderPollingReconciliation.js:275-281) | `impact/BUG-686_IMPACT_ANALYSIS.md` |
+| **BUG-687** | Audit Log report does not match CR-528 spec (renders CR-546 design) | **P2** | **MEDIUM** | GATE_2_IA_COMPLETE — SPEC-CR528; likely working-as-designed (CR-546 v3 LOCKED) — OD-687-01 before code; batch same-file w/ BUG-691/695-700 | `impact/BUG-687_BUG-691_AUDIT_LOG_IMPACT_ANALYSIS.md` |
+| **BUG-688** | `join_restaurant` emitted twice after socket reconnect (double ack) | **P3** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-1; reconnect double-emit, 2nd emitter confirmed at Gate 3 | `impact/BUG-688_IMPACT_ANALYSIS.md` |
+| **BUG-689** | Auto-generated employee email gets an extra `.com` appended | **P2** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-2; generateEmail hard-appends `.com` — OD-689-01 (intended domain) | `impact/BUG-689_IMPACT_ANALYSIS.md` |
+| **BUG-690** | Add-on list does not auto-refresh after creating an add-on | **P3** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-3; missing list re-fetch after create (Fast-Lane candidate) | `impact/BUG-690_IMPACT_ANALYSIS.md` |
+| **BUG-691** | Audit Log TIME cells clipped at `"2026-"` | **P3** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-4; `fmtTime` slices date-only to `"2026-"`; batch same-file w/ BUG-687/695-700 | `impact/BUG-687_BUG-691_AUDIT_LOG_IMPACT_ANALYSIS.md` |
+| **BUG-692** | "New version available" banner shows on every page | **P3** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-5; likely env (BUILD_ID vs version.json), banner persistent by design — OD-692-01 | `impact/BUG-692_IMPACT_ANALYSIS.md` |
+| **BUG-693** | Login-page logo renders blank | **P3** | **LOW** | GATE_2_IA_COMPLETE — QA MINOR-6; `GENIE_LOGO_URL` remote asset fails (intermittent/env) — OD-693-01 | `impact/BUG-693_IMPACT_ANALYSIS.md` |
+| **BUG-694** | Direct URL after fresh login routes through `/loading` for >10s | **P2** | **MEDIUM** | GATE_2_IA_COMPLETE — QA MINOR-7; boot loader chain has sequential awaits >10s cold — OD-694-01 | `impact/BUG-694_IMPACT_ANALYSIS.md` |
 
 ---
 
