@@ -1,3 +1,10 @@
+**2026-11-18 — Nov Sprint batch (Gate 4):**
+- `components/order-entry/CartPanel.jsx` — BUG-685 (onEdit prop)
+- `hooks/useOrderPollingReconciliation.js` — BUG-686 (skip reconcile on rejected POS fetch)
+- `pages/reports-module/AuditLogMockup.jsx` — BUG-691, 695, 697, 698, 700 (batched)
+- `api/socket/socketService.js` — BUG-688 (one join per connection)
+- `components/panels/menu/AddonManagementPanel.jsx` — BUG-690 (await onRefresh)
+
 # Layer 7 — File Ownership Map
 
 

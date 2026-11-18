@@ -809,6 +809,7 @@ const CartPanel = ({
   setShowPaymentPanel,
   onAddNote,
   onCustomize,
+  onEdit, // BUG-685: passed at render (CR-551, ~L1353) but was never destructured -> ReferenceError
   customer,
   onCustomerChange,
   onClearCart,

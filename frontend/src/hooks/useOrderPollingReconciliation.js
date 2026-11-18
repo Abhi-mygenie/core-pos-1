@@ -277,8 +277,14 @@ export const useOrderPollingReconciliation = () => {
         getAggregatorOrderList().catch(() => []),
       ]);
 
-      const serverOrders = posResult.status === 'fulfilled' ? (posResult.value || []) : [];
-      reconcile(serverOrders, trigger, Date.now() - t0);
+      // BUG-686: only reconcile against an authoritative server list. A rejected POS fetch
+      // (timeout/abort/network) must NOT be treated as server=0 — that wiped all local running orders.
+      if (posResult.status === 'fulfilled') {
+        reconcile(posResult.value || [], trigger, Date.now() - t0);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('[OrderPolling] BUG-686: skip reconcile — POS fetch rejected, retaining local orders');
+      }
 
       // BUG-677 F4: reconcile aggregator orders — add missing ones to context
       if (aggResult.status === 'fulfilled') {

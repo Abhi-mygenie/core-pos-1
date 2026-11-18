@@ -60,7 +60,7 @@ export default function AddonManagementPanel({ addons = [], currencySymbol = 'â‚
       toast({ title: 'Added', description: `"${addForm.name}" created.` });
       setAddForm(EMPTY_ADD);
       setAddMode(false);
-      onRefresh();
+      await onRefresh(); // BUG-690: await the list reload (via MenuManagementPanel.fetchAddons) so the new add-on appears immediately and deterministically
     } catch (err) {
       toast({ title: 'Error', description: err?.readableMessage || 'Failed to add', variant: 'destructive' });
     } finally { setSaving(false); }

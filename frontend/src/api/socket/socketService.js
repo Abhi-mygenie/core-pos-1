@@ -96,10 +96,18 @@ class SocketService {
   // BUG-677 F6: emit join_restaurant with ACK timeout + re-emit + force reconnect
   _emitJoinWithAck(restaurantId, attempt = 1) {
     if (!this.socket || !this.socket.connected) return;
+    // BUG-688: dedupe the first join per connection. Both the 'connect' handler and the
+    // useSocketEvents hook can trigger a join on the same (re)connection; emit only once.
+    // ACK-miss re-emits (attempt >= 2) and force-reconnects are unaffected.
+    if (attempt === 1 && this._joinedSocketId === this.socket.id) {
+      this._log('INFO', `join_restaurant skipped — already joined on connection ${this.socket.id} (BUG-688)`);
+      return;
+    }
     // Clear any previous ACK timeout
     if (this._joinAckTimeout) clearTimeout(this._joinAckTimeout);
 
     this.socket.emit(JOIN_EVENT, { restaurant_id: restaurantId });
+    if (attempt === 1) this._joinedSocketId = this.socket.id; // BUG-688: mark this connection joined
     this._log('INFO', `join_restaurant emitted for ${restaurantId} (attempt ${attempt})`);
 
     this._joinAckTimeout = setTimeout(() => {
@@ -125,6 +133,7 @@ class SocketService {
       clearTimeout(this._joinAckTimeout);
       this._joinAckTimeout = null;
     }
+    this._joinedSocketId = null; // BUG-688: next connection must re-join
     if (this.socket) {
       this._log('INFO', 'Disconnecting...');
       this.socket.disconnect();
@@ -294,6 +303,7 @@ class SocketService {
     // Disconnected
     this.socket.on(CONNECTION_EVENTS.DISCONNECT, (reason) => {
       this._log('WARN', `Disconnected: ${reason}`);
+      this._joinedSocketId = null; // BUG-688: next (re)connection must re-join
       if (reason === 'io server disconnect') {
         // Server initiated disconnect, won't auto-reconnect
         this._setStatus(CONNECTION_STATUS.DISCONNECTED);

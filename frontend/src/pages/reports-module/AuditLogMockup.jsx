@@ -21,7 +21,35 @@ import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePreset
 
 // --- Helpers ---
 const fmtINR = (n) => (parseFloat(n) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
-const fmtTime = (dt) => dt ? dt.split(' ').pop()?.slice(0, 5) || dt : '—';
+// BUG-691: robust to "YYYY-MM-DD HH:MM:SS" (space), ISO "...THH:MM:SS" (T), and date-only
+// inputs — returns HH:MM, or "—" when there is no time (never a date prefix like "2026-").
+const fmtTime = (dt) => {
+  if (!dt) return '—';
+  const m = String(dt).match(/(\d{1,2}:\d{2})/);
+  return m ? m[1] : '—';
+};
+
+// BUG-697: derive which preset (if any) matches an applied range so the chip highlight
+// reflects the real range on first load instead of a hard-coded default.
+const matchPreset = (from, to) => {
+  if (!from || !to) return '';
+  const t = new Date();
+  const td = fmtISO(t);
+  const now = new Date();
+  const cands = {
+    Today: { from: fmtISO(t), to: td },
+    '7D': { from: fmtISO(new Date(t.getTime() - 6 * 86400000)), to: td },
+    '30D': { from: fmtISO(new Date(t.getTime() - 29 * 86400000)), to: td },
+    MTD: { from: fmtISO(new Date(t.getFullYear(), t.getMonth(), 1)), to: td },
+    LM: { from: fmtISO(new Date(now.getFullYear(), now.getMonth() - 1, 1)), to: fmtISO(new Date(now.getFullYear(), now.getMonth(), 0)) },
+  };
+  const fy = computePresetRange('FY');
+  if (fy) cands.FY = fy;
+  for (const [label, r] of Object.entries(cands)) {
+    if (r.from === from && r.to === to) return label;
+  }
+  return '';
+};
 
 // CR-543/544/546: Card classification constants
 const CARD_1_TYPES = new Set(['late_cancel']);
@@ -90,7 +118,7 @@ const KpiCard = ({ icon: Icon, label, value, color, borderColor, testId }) => (
 // CR-543: Risk Bar (horizontal stacked)
 const RiskBar = ({ doubt, risk, highRisk }) => {
   const total = doubt + risk + highRisk;
-  if (total === 0) return <div className="text-xs text-zinc-400 py-2">No high-risk cancellations</div>;
+  if (total === 0) return <div className="text-xs text-zinc-400 py-2" data-testid="audit-card1-risk-bar">No high-risk cancellations</div>; // BUG-700: testid on empty state
   const pct = (n) => Math.max(2, (n / total) * 100); // min 2% for visibility
   return (
     <div data-testid="audit-card1-risk-bar">
@@ -120,7 +148,7 @@ const OverlapBadges = ({ cards }) => (
 
 // Drill-down table for Card 2 and Card 3
 const DrillDownTable = ({ events, testId }) => {
-  if (!events || events.length === 0) return <div className="py-6 text-center text-zinc-400 text-sm">No events</div>;
+  if (!events || events.length === 0) return <div className="py-6 text-center text-zinc-400 text-sm" data-testid={testId}>No events</div>; // BUG-700: testid on empty state
   return (
     <div className="overflow-x-auto" data-testid={testId}>
       <table className="w-full text-sm">
@@ -168,7 +196,7 @@ const AuditReportPage = () => {
   const [toDate, setToDate] = useState(sharedTo);
   const [appliedFrom, setAppliedFrom] = useState(sharedFrom);
   const [appliedTo, setAppliedTo] = useState(sharedTo);
-  const [activePreset, setActivePreset] = useState('7D');
+  const [activePreset, setActivePreset] = useState(() => matchPreset(sharedFrom, sharedTo)); // BUG-697: match applied range, not hard-coded 7D
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const [error, setError] = useState(null);
@@ -189,7 +217,7 @@ const AuditReportPage = () => {
     else if (p === 'LM') { const now = new Date(); const lf = fmtISO(new Date(now.getFullYear(), now.getMonth() - 1, 1)); const lt = fmtISO(new Date(now.getFullYear(), now.getMonth(), 0)); setFromDate(lf); setToDate(lt); setAppliedFrom(lf); setAppliedTo(lt); setActivePreset(p); setSharedFrom(lf); setSharedTo(lt); return; }
     else if (p === '30D') f = new Date(t.getTime() - 29 * 86400000);
     else if (p === 'MTD') { f = new Date(t.getFullYear(), t.getMonth(), 1); }
-    else if (p === 'FY') { const range = computePresetRange('FY'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setActivePreset(p); } return; }
+    else if (p === 'FY') { const range = computePresetRange('FY'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setSharedFrom(range.from); setSharedTo(range.to); setActivePreset(p); } return; } // BUG-698: propagate FY range to shared Insights context (FY window unchanged, OD-698-01)
     else return;
     const fd = fmtISO(f); const td = fmtISO(t);
     setFromDate(fd); setToDate(td); setAppliedFrom(fd); setAppliedTo(td); setActivePreset(p); setSharedFrom(fd); setSharedTo(td);
@@ -344,7 +372,8 @@ const AuditReportPage = () => {
 
                   {/* Card 1 — High Risk Cancellations (CR-543) */}
                   <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden" data-testid="audit-card1">
-                    <button onClick={() => toggleCard('card1')} className="w-full flex items-center justify-between px-6 py-4 hover:bg-zinc-50/50 transition-colors" data-testid="audit-card1-toggle">
+                    {/* BUG-695: outer toggle is a div (role=button) so the inner "Cancellation Report" <button> is not nested inside a <button> (invalid HTML) */}
+                    <div role="button" tabIndex={0} onClick={() => toggleCard('card1')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCard('card1'); } }} className="w-full flex items-center justify-between px-6 py-4 hover:bg-zinc-50/50 transition-colors cursor-pointer text-left" data-testid="audit-card1-toggle">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FEE2E2' }}>
                           <Clock className="w-5 h-5" style={{ color: '#991B1B' }} />
@@ -362,7 +391,7 @@ const AuditReportPage = () => {
                         <button onClick={(ev) => { ev.stopPropagation(); navigate('/reports-module/cancellations'); }} className="text-xs text-emerald-700 font-medium hover:underline flex items-center gap-1" data-testid="audit-card1-link"><ExternalLink className="w-3 h-3" /> Cancellation Report</button>
                         {expandedCard === 'card1' ? <ChevronUp className="w-5 h-5 text-zinc-400" /> : <ChevronDown className="w-5 h-5 text-zinc-400" />}
                       </div>
-                    </button>
+                    </div>
                     {/* Risk bar always visible */}
                     <div className="px-6 pb-4 border-t border-zinc-100">
                       <RiskBar doubt={analytics.card1Doubt} risk={analytics.card1Risk} highRisk={analytics.card1HighRisk} />
