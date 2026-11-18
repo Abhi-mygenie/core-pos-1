@@ -39109,7 +39109,7 @@
       "type": "CR",
       "severity": "P0",
       "risk": "HIGH",
-      "status": "GATE_2_IMPACT_ANALYSIS \u2014 Backend-blocked (no edit-food-item endpoint). IA at impact/CR-551_IMPACT_ANALYSIS_2026_11_17.md. Backend brief to Gyan needed. Next: Gate 3 after backend delivers.",
+      "status": "GATE_2_IMPACT_ANALYSIS_v3_2026-11-18",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
       "assignee": "Gyan",
@@ -39130,7 +39130,7 @@
         "OD-551-04: LOCKED \u2014 Yes, recalculate tax + service charge on price change",
         "OD-551-05: LOCKED \u2014 Keep qty separate (existing pencil stays)"
       ],
-      "description": "No backend API for editing variations/add-ons on placed items. EDIT_ORDER_ITEM in constants.js is TBD. PlacedItemRow has no customize button. Workaround: cancel + re-add. Backend endpoint needed first, then 7 FE files.",
+      "description": "Customize button unchanged. NEW Edit button: opens modal pre-populated, replaces original in-place via _editMode flag. 3 files ~23 lines. MEDIUM risk. Backend: NONE.",
       "priority": "P0",
       "area": "Menu / Order Entry",
       "release_date": "2026-11-17"
