@@ -9,6 +9,40 @@
 
 ---
 
+### RE-VALIDATION — 2026-11-18 (Planning Agent, pre-Gate-4)
+
+**Code Reality:** NONE — 0 BUG-677 markers in codebase. All 10 edits still pending.
+
+**Line-by-line check:**
+
+| Edit | Plan line(s) | Actual line(s) | Match |
+|------|-------------|----------------|-------|
+| E1 | socketEvents.js L14 | L14 | ✅ EXACT |
+| E4 | socketService.js L5 | L5 | ✅ EXACT |
+| E2 | socketService.js L45–52 | L45–52 | ✅ EXACT |
+| E5 | socketService.js L79–86 | L79–86 | ✅ EXACT |
+| E7 | socketService.js L91–100 | L91–100 | ✅ EXACT |
+| E6 | socketService.js L252–254 | L252–254 | ✅ EXACT |
+| E3 | socketService.js L298–302 | L298–302 | ✅ EXACT |
+| E8 | SocketContext.jsx after L87 | after L87 | ✅ EXACT |
+| E9a | useOrderPolling after L26 | after L26 | ✅ EXACT |
+| E9b | useOrderPolling L270–275 | **L269–275** | ⚠️ 1-line shift (see §2.9 below) |
+
+**Dependency check:**
+- `JOINED_ACK_EVENT`: already exported from socketEvents.js at L100 (CR-082). E4 import is still needed in socketService.js. ✅
+- `getAggregatorOrderList`: exists in aggregatorService.js L5. ✅
+- `aggregatorFromAPI.aggregatorOrderList`: exists in aggregatorTransform.js L149. ✅
+- `addOrder`, `ordersSnapshotRef`: both present in useOrderPollingReconciliation.js. ✅
+- `CONNECTION_STATUS`: imported in SocketContext.jsx L5. ✅
+
+**Conflict re-check:**
+- CR-082 (socketService.js, socketEvents.js): status QA PASS — awaiting owner smoke. Code already in codebase (CR-082's work is BUG-677's starting state). **Non-blocking.**
+- BUG-167 (socket food_update channel): status QA PASS — different channel, no overlap. **Non-blocking.**
+
+**Verdict: Plan is VALID. One line-number annotation updated in E9b below.**
+
+---
+
 ## 1. Scope Lock
 
 **Files WILL change:**
@@ -286,10 +320,10 @@ import { getAggregatorOrderList } from '../api/services/aggregatorService'; // B
 import { fromAPI as aggregatorFromAPI } from '../api/transforms/aggregatorTransform'; // BUG-677 F4
 ```
 
-**E9b — Add aggregator fetch inside pollOnce (extend L270-275):**
+**E9b — Add aggregator fetch inside pollOnce (extend L269-275, was L270-275 in original plan — 1-line shift confirmed 2026-11-18):**
 
 ```
-CURRENT (L270-275):
+CURRENT (L269-275, was L270-275 in original plan):
     const t0 = Date.now();
     try {
       const roleParam = permissions?.[0] || 'Manager';

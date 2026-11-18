@@ -38900,7 +38900,7 @@
       "title": "Socket Disconnection in PWA \u2014 Reconnection Exhaustion + No Auto-Reconnect",
       "priority": "P0",
       "risk": "HIGH",
-      "status": "GATE_3_PLAN_COMPLETE",
+      "status": "GATE_3_PLAN_REVALIDATED_2026-11-18",
       "sprint_key": "nov_cr_batch",
       "area": "Aggregator / Sockets",
       "assignee": "Abhishek",
@@ -38920,7 +38920,8 @@
         }
       ],
       "release_date": "",
-      "registered_date": "2026-11-16"
+      "registered_date": "2026-11-16",
+      "revalidated_date": "2026-11-18"
     },
     {
       "id": "BUG-678",
