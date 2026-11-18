@@ -967,18 +967,22 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
       toast({ title: "Cannot Edit", description: "Prepaid orders cannot be modified", variant: "destructive" });
       return;
     }
+    // CR-551: Edit in-place — remove original before merge/append when _editMode set
+    const workingCart = (item._editMode && item._cartKey)
+      ? cartItems.filter(ci => ci._cartKey !== item._cartKey)
+      : cartItems; // CR-551
     // BUG-246: Merge identical customized items instead of always appending
     const key = customizationKey(item);
-    const existingIndex = cartItems.findIndex(ci => !ci.placed && ci.customizations && customizationKey(ci) === key);
+    const existingIndex = workingCart.findIndex(ci => !ci.placed && ci.customizations && customizationKey(ci) === key); // CR-551: workingCart
     if (existingIndex >= 0) {
-      const updated = [...cartItems];
+      const updated = [...workingCart]; // CR-551: workingCart
       updated[existingIndex] = { ...updated[existingIndex], qty: updated[existingIndex].qty + (item.quantity || 1) };
       lastAddedKeyRef.current = updated[existingIndex]._cartKey; // CR-482 P8
       setCartItems(updated);
     } else {
       const newKey = genCartKey(); // BUG-374
       lastAddedKeyRef.current = newKey; // CR-482 P8
-      setCartItems([...cartItems, {
+      setCartItems([...workingCart, { // CR-551: workingCart
         ...item,
         qty: item.quantity || 1,
         status: "preparing",
@@ -2957,6 +2961,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
                 roomInfo={orderData?.roomInfo || null}
                 onAddNote={(item, cartIndex) => setItemNotesModal({ item, cartIndex })}
                 onCustomize={(item) => setCustomizationItem(item)}
+                onEdit={(item) => setCustomizationItem({ ...item, _editMode: true })} // CR-551
                 customer={customer}
                 onCustomerChange={isEditLocked ? undefined : (customerData) => { setCustomer(customerData); saveCustomerToServer(customerData); }} // BUG-656 + CR-523
                 selectedAddress={selectedAddress}
@@ -3023,7 +3028,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
 
       {/* Modals */}
       {customizationItem && (
-        <ItemCustomizationModal item={customizationItem} onClose={() => setCustomizationItem(null)} onAddToOrder={addCustomizedItemToCart} kbdEnabled={kbdEnabled} />
+        <ItemCustomizationModal item={customizationItem} onClose={() => setCustomizationItem(null)} onAddToOrder={addCustomizedItemToCart} kbdEnabled={kbdEnabled} buttonLabel={customizationItem?._editMode ? 'Save Changes' : 'Add to Order'} /* CR-551 */ />
       )}
 
       {/* BUG-035 (Apr-2026): Dynamic-price item entry modal.

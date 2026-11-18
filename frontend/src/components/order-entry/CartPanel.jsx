@@ -259,7 +259,7 @@ const kbdRowProps = ({ onPlus, onMinus, onDelete, onExit, disabled = false }) =>
     }
   },
 });
-const NewItemRow = ({ item, cartIndex, onDeleteItem, updateQuantity, onAddNote, onCustomize, kbdRowProps = {} }) => (
+const NewItemRow = ({ item, cartIndex, onDeleteItem, updateQuantity, onAddNote, onCustomize, onEdit, isEditLocked = false, isPrepaid = false, kbdRowProps = {} }) => ( // CR-551: +onEdit, +isEditLocked, +isPrepaid
   <div {...kbdRowProps} {...(kbdRowProps.tabIndex !== undefined ? { 'data-kbd-cart-row': 'new' } : {})} className={`px-3 py-2.5 flex items-start gap-2${kbdRowProps.className ? ' ' + kbdRowProps.className : ''}`} style={{ borderBottom: `1px solid ${COLORS.borderGray}` }}>
     {/* Trash delete — removes unplaced item directly from cart (no cancel modal) */}
     <button
@@ -294,11 +294,22 @@ const NewItemRow = ({ item, cartIndex, onDeleteItem, updateQuantity, onAddNote, 
         <button 
           onClick={() => onCustomize && onCustomize(item)}
           className="px-2 py-1.5 text-xs hover:bg-gray-50 rounded-lg transition-colors whitespace-nowrap" 
-          style={{ color: COLORS.primaryGreen }}
+          style={{ color: COLORS.primaryOrange }}
           data-testid={`customize-btn-${item.id}`}
         >
           Customize
         </button>
+        {/* CR-551: Edit button — in-place replace; only for items with customizations; hidden when locked/prepaid */}
+        {(item.customizable || item.customizations?.size || item.customizations?.variants?.length > 0 || hasAddons(item)) && !isEditLocked && !isPrepaid && (
+          <button
+            onClick={() => onEdit && onEdit(item)}
+            className="px-2 py-1.5 text-xs hover:bg-gray-50 rounded-lg transition-colors whitespace-nowrap font-medium"
+            style={{ color: COLORS.primaryGreen }}
+            data-testid={`edit-item-btn-${item.id}`}
+          >
+            ✎ Edit
+          </button>
+        )}
         <button 
           className="px-2 py-1.5 text-xs hover:bg-gray-50 rounded-lg transition-colors whitespace-nowrap" 
           style={{ color: (item.itemNotes?.length > 0 || item.notes?.trim()) ? COLORS.primaryOrange : COLORS.grayText }}
@@ -1339,6 +1350,9 @@ const CartPanel = ({
                       updateQuantity={updateQuantity}
                       onAddNote={onAddNote}
                       onCustomize={onCustomize}
+                      onEdit={onEdit} // CR-551
+                      isEditLocked={isEditLocked} // CR-551
+                      isPrepaid={isPrepaid} // CR-551
                       kbdRowProps={kbdEnabled ? kbdRowProps({
                         disabled: isPlacingOrder,
                         onPlus: () => {

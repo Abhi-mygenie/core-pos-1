@@ -3,7 +3,7 @@ import { X, Minus, Plus, StickyNote, Check } from "lucide-react";
 import { COLORS } from "../../constants";
 import { useKeyboardShortcuts, clickIfEnabled } from "../../hooks/useKeyboardShortcuts";
 
-const ItemCustomizationModal = ({ item, onClose, onAddToOrder, kbdEnabled = false }) => {
+const ItemCustomizationModal = ({ item, onClose, onAddToOrder, kbdEnabled = false, buttonLabel = 'Add to Order' }) => { // CR-551: buttonLabel for Edit mode
   const contentRef = useRef(null); // CR-482 P5
   const [selectedSize, setSelectedSize] = useState(null);
   // CR-006 Phase B / Bucket B1 (May-2026, multi-select variations):
@@ -752,7 +752,7 @@ const ItemCustomizationModal = ({ item, onClose, onAddToOrder, kbdEnabled = fals
             style={{ backgroundColor: COLORS.primaryGreen }}
             data-testid="add-to-order-btn"
           >
-            Add to Order
+            {buttonLabel} {/* CR-551: dynamic label — "Add to Order" or "Save Changes" */}
             {kbdEnabled && <span className="ml-2 text-xs opacity-80" data-testid="add-to-order-kbd-hint">(Ctrl+Enter)</span>}
           </button>
         </div>
