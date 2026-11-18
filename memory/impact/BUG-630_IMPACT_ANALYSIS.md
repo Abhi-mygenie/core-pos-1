@@ -98,6 +98,7 @@ API: POST top-food%20sales-report
 | **OD-630-04** | Total Sales KPI subtitle | ✅ `"incl. tax"` | As recommended. |
 | **OD-630-05** | Tax KPI subtitle | ✅ `"GST + SC"` | As recommended. |
 | **OD-630-06** | Add Total Sales as table column | ✅ Yes — both Net Sales + Total Sales columns visible | Owner: "yes". |
+| **OD-630-07** | Page header badge content | ✅ Replace `"1 API call · any range"` → `"Net Sales · Taxes · Discount · Total Sales"` | Owner 2026-11-18 |
 
 ---
 

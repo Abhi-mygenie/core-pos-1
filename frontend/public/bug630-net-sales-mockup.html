@@ -61,7 +61,7 @@
     <div class="page-header">
       <h2>Item Sales</h2>
       <span class="badge-wrong">1 API call · any range</span>
-      <span style="font-size:12px;color:#ef4444;font-weight:600;">← dev badge, must be removed</span>
+      <span style="font-size:12px;color:#ef4444;font-weight:600;">← replace badge content</span>
     </div>
 
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
@@ -116,7 +116,8 @@
 
     <div class="page-header">
       <h2>Item Sales</h2>
-      <span style="font-size:12px;color:#22c55e;font-weight:600;">✓ dev badge removed</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#fff0eb;color:#b4471b;border:1px solid #fcd5c0;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;">Net Sales · Taxes · Discount · Total Sales</span>
+      <span style="font-size:12px;color:#22c55e;font-weight:600;">✓ badge updated</span>
     </div>
 
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
@@ -179,7 +180,7 @@
   <div class="section">
     <div class="section-label">Change summary</div>
     <ul class="change-list">
-      <li><span class="pill pill-removed">1 API call · any range badge</span> → removed</li>
+      <li><span class="pill pill-fixed">Badge content</span> → <code>"1 API call · any range"</code> → <code>"Net Sales · Taxes · Discount · Total Sales"</code></li>
       <li><span style="color:#71717a;text-decoration:line-through;">FROM / TO labels</span> → <strong>no change</strong> (OD-630-03: keep as today)</li>
       <li><span class="pill pill-fixed">Net Sales KPI value</span> → reads new <code>r.net_sales</code> backend field (BB-14) — always ≤ Gross Revenue</li>
       <li><span class="pill pill-fixed">Net Sales subtitle</span> → <code>"before taxes"</code> (discount already deducted)</li>
