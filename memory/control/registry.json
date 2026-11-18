@@ -39819,7 +39819,7 @@
       "id": "BUG-695",
       "type": "BUG",
       "title": "Audit Report Card 1 \u2014 nested <button> (audit-card1-link inside audit-card1-toggle) causes invalid HTML + console error",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P3",
       "severity": "P3",
       "risk": "LOW",
@@ -39837,7 +39837,7 @@
       "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L347 toggle, ~L362 link)",
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 Card 1 nested button; fix = div role=button or move link out. Risk LOW. No owner decision.",
       "notes": "QA CR-528/CR-546: React \"<button> cannot be a descendant of <button>\" on every Audit Report load. Fix: div role=button or move link out of toggle.",
       "intake_doc": "change_requests/BUG-695_AUDIT_REPORT_CARD1_NESTED_BUTTON_INTAKE.md",
       "artifact_refs": [
@@ -39850,14 +39850,20 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-696",
       "type": "BUG",
       "title": "Audit Report cannot load 30D/FY ranges \u2014 insights-dashboard ~43s exceeds 60s axios timeout",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P1",
       "severity": "P1",
       "risk": "MEDIUM",
@@ -39875,7 +39881,7 @@
       "files": "preprod insights-dashboard (latency); frontend insightsService.js timeout",
       "completeness": "1/7",
       "qa_finding_severity": "MAJOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 timeout; backend brief (Gyan) + FE per-request timeout on fetchInsightsDashboard (NOT global axios). Risk MEDIUM. OD-696-01 max wait.",
       "notes": "QA CR-528/CR-546: wide ranges time out (error shield). Root cause external backend latency; FE can raise timeout. Backend brief needed. Blocked wide-range QA of post-print events.",
       "intake_doc": "change_requests/BUG-696_AUDIT_REPORT_INSIGHTS_DASHBOARD_TIMEOUT_INTAKE.md",
       "artifact_refs": [
@@ -39888,14 +39894,20 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-697",
       "type": "BUG",
       "title": "Audit Report \u2014 active preset highlight (\"7D\") does not match applied/shared range on first load",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P3",
       "severity": "P3",
       "risk": "LOW",
@@ -39913,7 +39925,7 @@
       "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L171 activePreset useState)",
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 init activePreset from applied range. Risk LOW.",
       "notes": "QA CR-528/CR-546 MINOR: activePreset hard-coded 7D; does not reflect real applied range.",
       "intake_doc": "change_requests/BUG-697_AUDIT_REPORT_ACTIVE_PRESET_MISMATCH_INTAKE.md",
       "artifact_refs": [
@@ -39926,14 +39938,20 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-698",
       "type": "BUG",
       "title": "Audit Report \u2014 FY preset does not share range (no setSharedFrom/To) and returns previous completed FY",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P3",
       "severity": "P3",
       "risk": "LOW",
@@ -39951,7 +39969,7 @@
       "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L192 handlePreset FY branch); datePresets.computePresetRange",
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 FY branch add setSharedFrom/To; FY window gated on OD-698-01 (current vs previous FY). Risk LOW.",
       "notes": "QA CR-528/CR-546 MINOR: FY omits shared setters; FY window = previous completed FY (confirm intent, OD-698-01).",
       "intake_doc": "change_requests/BUG-698_AUDIT_REPORT_FY_PRESET_NO_SHARE_INTAKE.md",
       "artifact_refs": [
@@ -39964,14 +39982,20 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-699",
       "type": "BUG",
       "title": "Audit Report \u2014 stale data remains under the error shield after a timeout",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P3",
       "severity": "P3",
       "risk": "LOW",
@@ -39989,7 +40013,7 @@
       "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L202 fetchData catch); ReportLoadingShield",
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 clear/label stale rawData on error. Risk LOW. OD-699-01 blank vs label.",
       "notes": "QA CR-528/CR-546 MINOR: on error, previous range KPI/card data retained under error banner (misleading). Related BUG-696.",
       "intake_doc": "change_requests/BUG-699_AUDIT_REPORT_STALE_DATA_UNDER_ERROR_INTAKE.md",
       "artifact_refs": [
@@ -40002,14 +40026,20 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-700",
       "type": "BUG",
       "title": "Audit Report \u2014 empty-state RiskBar and DrillDownTable lack their data-testids",
-      "status": "GATE_1_INTAKE_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE",
       "priority": "P3",
       "severity": "P3",
       "risk": "LOW",
@@ -40027,7 +40057,7 @@
       "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L93 RiskBar empty return, ~L123 DrillDownTable empty return)",
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 add testids to empty-state RiskBar + DrillDownTable. Risk LOW.",
       "notes": "QA CR-528/CR-546 MINOR: empty-state loses audit-card1-risk-bar / audit-card3-table testids (testability).",
       "intake_doc": "change_requests/BUG-700_AUDIT_REPORT_EMPTY_STATE_MISSING_TESTIDS_INTAKE.md",
       "artifact_refs": [
@@ -40040,13 +40070,19 @@
           "label": "QA Report",
           "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
           "type": "qa_report"
+        },
+        {
+          "label": "Impact Analysis",
+          "path": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+          "type": "impact"
         }
-      ]
+      ],
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
     }
   ],
   "meta": {
     "last_updated": "2026-11-18",
-    "last_action": "INTAKE: registered 4 MINOR Audit Report defects from CR-528/CR-546 QA follow-up (BUG-697 preset highlight, BUG-698 FY preset, BUG-699 stale data under error, BUG-700 empty-state testids). No application code changed.",
+    "last_action": "PLANNING Gate 2: combined Impact Analysis for Audit Report QA bugs BUG-695..700 (all AuditLogMockup.jsx except BUG-696 service/backend). Conflict CLEAN. Owner decisions OD-696-01/698-01/699-01 + backend brief for BUG-696. No code changed. Doc: memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
