@@ -35899,9 +35899,9 @@
       "sprint_key": "nov_cr_batch",
       "id": "BUG-647",
       "title": "GST OFF \u2014 API Payload Still Sends gst_tax and Inflated order_amount",
-      "status": "GATE_5A_IMPLEMENTED 2026-11-16. 3 files ~35 lines: applyTaxFlags wrapper + calcOrderTotals gstEnabled/vatEnabled + OE/CP guards + taxFlags plumbing.",
+      "status": "GATE_5A_IMPLEMENTED \u2014 SMOKE FAIL 2026-11-18. Re-investigation found incomplete fix: vatEnabled never populated from profile API (always true). CPP missing VAT skip check. See investigations/INV-BUG647-BUG678-REINVESTIGATION-2026-11-18.md",
       "files": "orderTransform.js, OrderEntry.jsx, CartPanel.jsx, CollectPaymentPanel.jsx",
-      "notes": "P0/CRITICAL. FE_BUG. BUG-336 fixed UI display (CPP L287) but buildCartItem/calcOrderTotals/localTax/taxTotals have NO gstStatus check \u2014 payload sends GST even when restaurant has GST disabled. Cashier sees \u20b9239, backend receives \u20b9250. ~30-40 lines fix across 5 sites. Planning skip NOT eligible. Related: BUG-336, INV-GST-001. 2 ODs open.",
+      "notes": "P0/CRITICAL. FE_BUG. BUG-336 fixed UI display (CPP L287) but buildCartItem/calcOrderTotals/localTax/taxTotals have NO gstStatus check \u2014 payload sends GST even when restaurant has GST disabled. Cashier sees \u20b9239, backend receives \u20b9250. ~30-40 lines fix across 5 sites. Planning skip NOT eligible. Related: BUG-336, INV-GST-001. 2 ODs open. | SMOKE FAIL 2026-11-18: 3 root causes found \u2014 (1) restaurant.settings.vatEnabled not in profileTransform (always undefined\u2192true), (2) CPP L337 no VAT skip check, (3) taxFlags use wrong property path for VAT.",
       "artifact_refs": [
         {
           "label": "Intake",
@@ -38451,7 +38451,7 @@
       "title": "Service Charge in API Payload Despite UI Toggle OFF (Prepaid)",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "GATE_5A_IMPLEMENTED",
+      "status": "GATE_5A_IMPLEMENTED \u2014 SMOKE FAIL 2026-11-18. Re-investigation found incomplete fix: CPP serviceChargeEnabled init does not check isPrepaid. See investigations/INV-BUG647-BUG678-REINVESTIGATION-2026-11-18.md",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -38470,7 +38470,8 @@
           "type": "implementation_plan"
         }
       ],
-      "files": "OrderEntry.jsx"
+      "files": "OrderEntry.jsx",
+      "notes": "SMOKE FAIL 2026-11-18: OrderEntry fix IS applied. But CPP L470-474 initializes serviceChargeEnabled=true for prepaid dine-in (no isPrepaid check). Fix: add && !isPrepaid to CPP init."
     },
     {
       "id": "CR-545",
@@ -38612,11 +38613,11 @@
       "type": "CR",
       "severity": "P0",
       "risk": "HIGH",
-      "status": "GATE_2_IMPACT_ANALYSIS \u2014 Backend-blocked (no edit-food-item endpoint). IA at impact/CR-551_IMPACT_ANALYSIS_2026_11_17.md. Backend brief to Gyan needed. Next: Gate 3 after backend delivers.",
+      "status": "GATE_2_IMPACT_ANALYSIS \u2014 RE-INVESTIGATED 2026-11-18. FE-only bug (not backend-blocked). Customize on cart item adds duplicate instead of editing in-place. ~8 lines fix in OrderEntry.jsx addCustomizedItemToCart.",
       "sprint_key": "nov_cr_batch",
       "client": "ALL",
-      "assignee": "Gyan",
-      "assignee_reason": "Backend-blocked \u2014 no edit-food-item endpoint exists (all 5 probed returned 404)",
+      "assignee": "Abhishek",
+      "assignee_reason": "FE-only fix \u2014 no backend endpoint needed",
       "registered_date": "2026-11-17",
       "source": "OWNER-REPORTED + AGENT-INVESTIGATED (Investigation session 2, 2026-11-17)",
       "related": [
@@ -38627,13 +38628,15 @@
       "intake_doc": "change_requests/CR-551_EDIT_VARIATIONS_AFTER_PLACE_INTAKE.md",
       "investigation_doc": "investigations/INV-CR-EDIT-VARIATIONS_AFTER_PLACE_2026_11_17.md",
       "open_decisions": [
-        "OD-551-01: LOCKED \u2014 Only before item is served",
-        "OD-551-02: LOCKED \u2014 No KOT on edit (KOT was sent at place time, edit is pre-serve adjustment)",
-        "OD-551-03: LOCKED \u2014 Use existing order_edit permission",
-        "OD-551-04: LOCKED \u2014 Yes, recalculate tax + service charge on price change",
-        "OD-551-05: LOCKED \u2014 Keep qty separate (existing pencil stays)"
+        "OD-551-01: CORRECTED \u2014 Editing variations/add-ons allowed only BEFORE placing order (while in cart). After placing, cancel + re-add is the designed workflow.",
+        "OD-551-02: N/A \u2014 No KOT implications (edit is pre-place, before any KOT sent)",
+        "OD-551-03: N/A \u2014 No permission needed (cart items are always editable)",
+        "OD-551-04: N/A \u2014 Price recalculation handled locally by ItemCustomizationModal.calculateTotal()",
+        "OD-551-05: LOCKED \u2014 Customize modal already handles qty + variations + add-ons in one modal"
       ],
-      "description": "No backend API for editing variations/add-ons on placed items. EDIT_ORDER_ITEM in constants.js is TBD. PlacedItemRow has no customize button. Workaround: cancel + re-add. Backend endpoint needed first, then 7 FE files."
+      "description": "No backend API for editing variations/add-ons on placed items. EDIT_ORDER_ITEM in constants.js is TBD. PlacedItemRow has no customize button. Workaround: cancel + re-add. Backend endpoint needed first, then 7 FE files.",
+      "notes": "CORRECTED 2026-11-18: Original investigation wrongly scoped as backend-blocked (edit placed items). Real issue is FE-only: clicking Customize on a pre-placed cart item (NewItemRow) adds a duplicate instead of replacing the original. Root cause: addCustomizedItemToCart has no replace-by-_cartKey path. Fix: ~8 lines in OrderEntry.jsx. OD-551-01 CORRECTED: editing before PLACING (not before served). After placing = cancel + re-add (by design).",
+      "blocked_on": ""
     },
     {
       "id": "BUG-681",

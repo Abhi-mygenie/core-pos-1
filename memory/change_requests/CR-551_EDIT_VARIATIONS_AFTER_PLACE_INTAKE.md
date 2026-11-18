@@ -183,19 +183,24 @@ Next: Owner answers 5 ODs → Backend brief to Gyan → Planning Gate 2
 
 ---
 
-## 11. Owner Decisions — ALL LOCKED (2026-11-17)
+## 11. Owner Decisions — CORRECTED (2026-11-18 Re-Investigation)
 
 | # | Question | Answer | Rationale |
 |---|----------|--------|-----------|
-| OD-551-01 | When should editing be allowed? | **Only before item is served** | Edit blocked once served. Safest for kitchen. |
-| OD-551-02 | Should kitchen get a modified KOT? | **No KOT on edit** | KOT was already sent at place time. Edit happens before item is served — kitchen works from original KOT. No duplicate/modified KOT needed. |
-| OD-551-03 | Which permission gates the edit button? | **Use existing `order_edit` permission** | No new setting needed. Same permission that controls other order edits. |
-| OD-551-04 | Recalculate tax + service charge on price change? | **Yes, recalculate everything** | Tax, service charge, and total updated to match new item price. |
-| OD-551-05 | Qty in same modal or keep separate? | **Combine in one modal** | Single modal for qty + variations + add-ons. Replaces the pencil icon. |
+| OD-551-01 | When should editing be allowed? | **CORRECTED: Only BEFORE placing order (while item is in cart)** | Original answer "before served" was wrong. Editing variations/add-ons is a pre-place operation. After placing → cancel + re-add is the designed workflow. |
+| OD-551-02 | Should kitchen get a modified KOT? | **N/A** | Edit is pre-place — no KOT has been sent yet. Not applicable. |
+| OD-551-03 | Which permission gates the edit button? | **N/A** | Cart items are always editable before placing. No permission needed. |
+| OD-551-04 | Recalculate tax + service charge on price change? | **N/A** | Price recalculation handled locally by ItemCustomizationModal.calculateTotal(). No backend involved. |
+| OD-551-05 | Qty in same modal or keep separate? | **LOCKED — Combine in one modal** | Customize modal already handles qty + variations + add-ons. |
 
-### OD-551-02 Rationale (owner clarification):
-> "We edited before placing order so why KOT — KOT is when we placed order"
+### 2026-11-18 Re-Investigation Correction:
+> Owner clarification: "Editing should be allowed only before placing order while item is already in cart. Editing after placing is more of cancel previous and add new."
 
-The edit happens on a placed order but **before the item is served**. The original KOT was sent when the order was placed. Since the edit is a pre-serve adjustment (before kitchen completes the item), no modified KOT is needed. Kitchen continues working from the original KOT — the variation change is handled operationally (verbal communication or the item gets re-prepped if needed).
+**Root cause re-classified as FE-ONLY bug:**
+- Clicking "Customize" on a NewItemRow (pre-placed cart item) opens the modal correctly and pre-populates selections ✅
+- BUT: saving from the modal calls `addCustomizedItemToCart` which **always appends a new item** instead of replacing the existing cart item
+- The original cart item with old customizations **remains in the cart** → duplicate
+- Fix: ~8 lines in `OrderEntry.jsx` `addCustomizedItemToCart` — add replace-by-`_cartKey` path when item came from cart edit
+- **No backend endpoint needed. Not backend-blocked.**
 
-**All 5 ODs locked. No open questions remain. Ready for backend brief.**
+**All ODs finalized. FE-only fix. No backend brief needed for CR-551.**
