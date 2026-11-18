@@ -116,7 +116,7 @@
 
     <div class="page-header">
       <h2>Item Sales</h2>
-      <span style="display:inline-flex;align-items:center;gap:6px;background:#fff0eb;color:#b4471b;border:1px solid #fcd5c0;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;">Net Sales · Taxes · Discount · Total Sales</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#fff0eb;color:#b4471b;border:1px solid #fcd5c0;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;">Net Sales · Total Sales</span>
       <span style="font-size:12px;color:#22c55e;font-weight:600;">✓ badge updated</span>
     </div>
 
@@ -144,11 +144,6 @@
         <div class="kpi-label">📊 Units Sold</div>
         <div class="kpi-value">—</div>
         <div class="kpi-sub">servings</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">💰 Gross Revenue</div>
-        <div class="kpi-value">₹14,39,944</div>
-        <div class="kpi-sub" id="sub-gross">before disc</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">% Discount</div>
@@ -187,7 +182,7 @@
       <li><span class="pill pill-added">Tax KPI</span> → new card, subtitle <code>"GST + SC"</code> — FE sums <code>gst + vat + service_charge</code> (no backend change)</li>
       <li><span class="pill pill-added">Total Sales KPI</span> → renamed from "Net Sales", subtitle <code>"incl. tax"</code>, keeps <code>r.total_sales</code></li>
       <li><span class="pill pill-added">Total Sales table column</span> → added alongside existing Net Sales column (OD-630-06)</li>
-      <li>Gross Revenue subtitle → <strong>no change</strong> — keep <code>"before disc"</code> (OD-630-02)</li>
+      <li>Gross Revenue KPI card → <strong>removed</strong> (OD-630-08)</li>
     </ul>
   </div>
 
