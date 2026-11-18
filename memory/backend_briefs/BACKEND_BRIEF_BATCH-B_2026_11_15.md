@@ -19,6 +19,7 @@ Owner rule: all changes ADDITIVE — existing behaviour must keep working. Field
 | CR-536 | NO | BB-10 |
 | BUG-607 | FE: note only; fix is backend | BB-11, BB-12 |
 | CR-394 | YES (UI); data fix by backend | BB-13 |
+| BUG-630 | NO (needs `net_sales` field) | BB-14 |
 
 ## 1. Credit on prepaid orders (BUG-672)
 | ID | Ask | Evidence / detail |
@@ -74,7 +75,13 @@ Owner rule: all changes ADDITIVE — existing behaviour must keep working. Field
 ## Release impact
 - BB-03 changes behaviour (unpaid blocked after settlement) — owner-approved (OD-526-B).
 - BB-01 changes behaviour only when admin sets TAB `prepaid:0` — that is the intended rule.
+- BB-14 is fully additive — new `net_sales` field only; no existing field renamed or removed.
 - All other asks are additive fields.
 
+## 9. Net Sales field — Item Sales Ledger (BUG-630)
+| ID | Ask | Evidence / detail |
+|---|---|---|
+| BB-14 | `top-food-sales-report` response: add `net_sales` field per row = `item_price + variation_price + addon_price − discount` (pre-tax, before GST/VAT/SC). Current `total_sales` = Net Sales + GST + VAT + SC (total billed) — keep sending it; FE will relabel it "Total Sales". Relationship confirmed from live probe: `net_sales + (gst + vat + service_charge) = total_sales`. | BUG-630 investigation 2026-10-31: `total_sales ₹13,61,162 = net ₹12,96,586 + tax ₹64,577` (RID confirmed). FE plan: rename "Net Sales" KPI → "Total Sales" (keeps reading `total_sales`); new "Net Sales" KPI reads `r.net_sales`; new "Tax" KPI sums existing `gst + vat + service_charge` per row (no new backend field needed for tax). Additive — no existing field changed. |
+
 ## Reply format
-Per ID: DONE / WILL DO (date) / NOT POSSIBLE (reason) + final field names. FE Gate 3 plans wait on BB-02..BB-10 replies for the blocked items.
+Per ID: DONE / WILL DO (date) / NOT POSSIBLE (reason) + final field names. FE Gate 3 plans wait on BB-02..BB-10 replies for the blocked items. FE BUG-630 plan waits on BB-14 reply.
