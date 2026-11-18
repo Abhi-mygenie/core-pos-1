@@ -1482,6 +1482,16 @@ None — no file reading required.
 1. Run: `cd /app && python3 memory/reports/sheets_sync.py --push`
 2. Check exit code AND scan stdout for any `⚠ Write failed` line.
 
+### Push Field Rules (2026-11-18 owner decision)
+**Priority and Assignee are CTO-owned on the Sheet.** The push script must follow these rules:
+
+| Field | Push behaviour |
+|-------|---------------|
+| **Priority** | **NEVER overwrite.** If the Sheet cell already has a value, keep it. Only fill if Sheet cell is blank. |
+| **Assignee** | **NEVER overwrite.** If the Sheet cell already has a value, keep it. Only fill if Sheet cell is blank. |
+| **All other fields** | Push from registry → Sheet normally. |
+| **Blank registry values** | Skip — do not write blank/empty over a Sheet value that already has content. |
+
 ### Hard Gate — NO CODE FILE TOUCHES (MANDATORY)
 This role MUST NOT modify any file under `frontend/src/` or `backend/`, any `*.jsx/.js/.py` application file, any `.env` file, or any `*.json` file. Violation is a CRITICAL protocol error.
 

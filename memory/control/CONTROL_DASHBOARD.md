@@ -306,3 +306,10 @@ ng-only during Gate 2.5) |
 | Next Gate | **Gate 6 — Owner Smoke Test** (SMOKE FACILITATOR role) |
 
 **2026-09-10 — PLANNING Gate 2:** CR-374 Impact Analysis complete (`impact/CR-374_IMPACT_ANALYSIS.md`). Code reality: NONE. All 3 ODs locked. 1 file only (BulkEditor.jsx, ~66 lines, 4 edits). Conflict: BUG-392 parallel-safe (different section, line 1318 vs 244/425/958). BUG-391 declared Batch B (must wait for Batch A QA). OG-AUDIT-003 noted (line 682 marker, pre-release concern, do not touch). Zero blockers. Registry: 642 items. Next: Gate 3 Implementation Plan after owner Gate 4 GO.
+
+**2026-11-18 — OWNER DECISION: Sheet Push Field Rules (applies to all future pushes)**
+- **Priority:** NEVER overwrite on push. Sheet value wins (CTO-owned). Only fill if Sheet cell is blank.
+- **Assignee:** NEVER overwrite on push. Sheet value wins (CTO-owned). Only fill if Sheet cell is blank.
+- **Blank registry values:** Skip on push — do not write blank/empty over a Sheet value that has content.
+- **All other fields:** Push from registry → Sheet normally.
+- Decision recorded in: `AGENT_PROMPT_ALPHA.md` Role 13 (Sheet Push Agent) — "Push Field Rules" section.
