@@ -183,7 +183,7 @@ const sidebarMenuItems = [
       { id: "insights-staff-cashiers", label: "Cashier Activity", path: "/reports-module/staff-cashiers" },
       // Audit group
       { id: "insights-audit-group", label: "Audit", isGroup: true },
-      { id: "insights-audit-log", label: "Order Edit Audit", path: "/reports-module/audit-log" },
+      { id: "insights-audit-log", label: "Audit Report", path: "/reports-module/audit-log" },  // D2: renamed from "Order Edit Audit" — CR-543/544/546 v3
       // Customers group
       { id: "insights-customers-group", label: "Customers", isGroup: true },
       { id: "insights-customers-rfm", label: "Customer Intelligence", path: "/reports-module/customers-rfm" },

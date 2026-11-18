@@ -38403,7 +38403,7 @@
       "title": "Late Cancellation Audit: Time-Threshold-Based Flagging",
       "priority": "P0",
       "risk": "MEDIUM",
-      "status": "GATE_3_PLAN_COMPLETE \u2014 Audit Report v3 Card 1 (combined plan). Plan at plans/AUDIT_REPORT_V3_IMPLEMENTATION_PLAN_2026_11_17.md. Awaiting Gate 4 GO.",
+      "status": "GATE_5A_IMPLEMENTED \u2014 Audit Report v3 Card 1 (High Risk Cancellations). AuditLogMockup.jsx full rewrite. Awaiting QA.",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Audit / Settings",
       "intake_doc": "change_requests/35_CR-543_LATE_CANCELLATION_AUDIT_THRESHOLD_INTAKE.md"
@@ -38414,7 +38414,7 @@
       "title": "Cancel After Making Unpaid: Audit Event",
       "priority": "P0",
       "risk": "MEDIUM",
-      "status": "GATE_3_PLAN_COMPLETE \u2014 Audit Report v3 Card 2 Option B (combined plan). cancel_after_unpaid DELIVERED, discount/gap PLACEHOLDER. Awaiting Gate 4 GO.",
+      "status": "GATE_5A_IMPLEMENTED \u2014 Audit Report v3 Card 2 Option B (cancel_after_unpaid live, discount/gap placeholder). Awaiting QA.",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Audit / Fraud Detection",
       "intake_doc": "change_requests/36_CR-544_CANCEL_AFTER_UNPAID_AUDIT_INTAKE.md"
@@ -38499,7 +38499,7 @@
       "title": "Discount After Bill Print: Audit Event \u2014 Apply & Remove",
       "priority": "P0",
       "risk": "HIGH",
-      "status": "GATE_3_PLAN_COMPLETE \u2014 Audit Report v3 Card 3 (combined plan). All events DELIVERED. Awaiting Gate 4 GO.",
+      "status": "GATE_5A_IMPLEMENTED \u2014 Audit Report v3 Card 3 (Leakage After Print, all 4 event types). Awaiting QA.",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Audit / Fraud Detection",
       "intake_doc": "change_requests/37_CR-546_DISCOUNT_AFTER_BILL_PRINT_AUDIT_INTAKE.md",
