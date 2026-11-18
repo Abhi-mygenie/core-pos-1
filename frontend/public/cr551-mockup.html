@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CR-551 Mockup — Cart Customize Fix</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F0F0F0; padding: 32px 24px; }
+
+  /* ── Layout ── */
+  .page-title { font-size: 15px; font-weight: 700; color: #1A1A1A; margin-bottom: 6px; letter-spacing: .3px; }
+  .page-sub   { font-size: 12px; color: #666; margin-bottom: 28px; }
+  .cols       { display: flex; gap: 24px; align-items: flex-start; }
+  .col        { flex: 1; }
+  .col-label  { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+                color: #fff; padding: 5px 12px; border-radius: 6px 6px 0 0; display: inline-block; margin-bottom: 0; }
+  .label-bug  { background: #EF4444; }
+  .label-fix  { background: #329937; }
+
+  /* ── Cart Panel ── */
+  .cart-panel { background: #fff; border-radius: 0 10px 10px 10px; border: 1.5px solid #E5E5E5;
+                box-shadow: 0 2px 8px rgba(0,0,0,.07); overflow: hidden; min-width: 300px; }
+  .cart-header { background: #F7F7F7; padding: 10px 14px; border-bottom: 1px solid #E5E5E5;
+                 font-size: 13px; font-weight: 700; color: #1A1A1A; display: flex; justify-content: space-between; align-items: center; }
+  .cart-header span { font-size: 11px; color: #666; font-weight: 400; }
+
+  /* ── Cart Item Row ── */
+  .cart-item   { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px;
+                 border-bottom: 1px solid #E5E5E5; background: #fff; }
+  .cart-item.highlighted { background: #FFF8F0; }
+  .cart-item.duplicate   { background: #FEF2F2; border-left: 3px solid #EF4444; }
+  .cart-item.updated     { background: #F0FDF4; border-left: 3px solid #329937; }
+
+  .trash-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: #FEE2E2;
+               display: flex; align-items: center; justify-content: center; cursor: pointer;
+               flex-shrink: 0; margin-top: 2px; }
+  .trash-btn svg { width: 13px; height: 13px; color: #EF4444; }
+
+  .item-info   { flex: 1; min-width: 0; }
+  .item-name   { font-size: 13px; font-weight: 600; color: #1A1A1A; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-custom { font-size: 11px; color: #329937; margin-bottom: 3px; }
+  .item-custom.orange { color: #F26B33; }
+  .item-actions { display: flex; gap: 2px; margin-top: 4px; margin-left: -6px; }
+  .btn-link    { font-size: 11px; color: #329937; background: none; border: none;
+                 padding: 4px 6px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .btn-link:hover { background: #F7F7F7; }
+  .btn-link.gray  { color: #666; }
+
+  .qty-wrap    { display: flex; align-items: center; gap: 2px; padding-left: 10px;
+                 border-left: 1px solid #E5E5E5; flex-shrink: 0; }
+  .qty-btn     { width: 30px; height: 30px; border: none; background: none; border-radius: 6px;
+                 font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .qty-btn.minus { color: #666; }
+  .qty-btn.plus  { color: #329937; }
+  .qty-num     { font-size: 13px; font-weight: 700; color: #329937; min-width: 20px; text-align: center; }
+
+  .price-wrap  { width: 64px; text-align: right; padding-left: 8px; border-left: 1px solid #E5E5E5;
+                 flex-shrink: 0; }
+  .price       { font-size: 13px; font-weight: 700; color: #1A1A1A; }
+  .price-sub   { font-size: 10px; color: #999; }
+
+  /* ── Badge ── */
+  .badge       { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700;
+                 padding: 2px 7px; border-radius: 20px; margin-left: 6px; }
+  .badge-red   { background: #FEE2E2; color: #EF4444; }
+  .badge-green { background: #DCFCE7; color: #16A34A; }
+
+  /* ── Arrow + Label ── */
+  .step { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: #F7F7F7; border-top: 1px solid #E5E5E5; }
+  .step-num { width: 20px; height: 20px; border-radius: 50%; background: #329937; color: #fff;
+              font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-txt { font-size: 11px; color: #444; }
+  .step-txt strong { color: #1A1A1A; }
+
+  /* ── Modal hint ── */
+  .modal-hint { margin: 10px 12px; border: 1.5px dashed #E5E5E5; border-radius: 10px; padding: 10px 12px; background: #F9F9F9; }
+  .modal-hint-title { font-size: 11px; font-weight: 700; color: #666; margin-bottom: 6px; }
+  .modal-row   { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #EFEFEF; }
+  .modal-row:last-child { border-bottom: none; }
+  .modal-row span:first-child { font-size: 11px; color: #444; }
+  .modal-row span:last-child  { font-size: 11px; font-weight: 600; color: #1A1A1A; }
+  .modal-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .save-btn    { width: 100%; margin-top: 8px; padding: 7px; background: #329937; color: #fff;
+                 border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+  /* ── Cart footer ── */
+  .cart-footer { padding: 10px 14px; background: #F7F7F7; border-top: 1px solid #E5E5E5; }
+  .total-row   { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #1A1A1A; }
+  .collect-btn { margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: none;
+                 background: #329937; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+  /* ── Annotation ── */
+  .ann         { font-size: 10px; padding: 3px 8px; border-radius: 4px; display: inline-block; margin: 4px 12px 2px; }
+  .ann-red     { background: #FEE2E2; color: #EF4444; }
+  .ann-green   { background: #DCFCE7; color: #16A34A; }
+
+  /* ── Arrow between panels ── */
+  .arrow-col   { display: flex; flex-direction: column; align-items: center; justify-content: center;
+                 padding-top: 60px; gap: 6px; }
+  .arrow-icon  { font-size: 24px; color: #999; }
+  .arrow-label { font-size: 10px; color: #999; text-align: center; white-space: nowrap; }
+
+  .divider     { height: 1px; background: #E5E5E5; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-title">CR-551 — Cart Item Re-Customize: Before vs After Fix</div>
+<div class="page-sub">Bug: tapping "Customize" on an existing cart item and saving creates a duplicate. Fix: replace original in-place.</div>
+
+<div class="cols">
+
+  <!-- ══════════════ BEFORE (BUG) ══════════════ -->
+  <div class="col">
+    <div class="col-label label-bug">🐛 BEFORE — Current Bug</div>
+    <div class="cart-panel">
+      <div class="cart-header">Cart — Table 3 <span>Dine-In</span></div>
+
+      <!-- Step 1: initial cart -->
+      <div class="step"><div class="step-num">1</div><div class="step-txt">Item in cart: <strong>Woko Pasta</strong> · Whole Wheat, Extra Cheese</div></div>
+
+      <div class="cart-item highlighted">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta</div>
+          <div class="item-custom">Whole Wheat Noodles, Extra Cheese Add-on x1</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">1</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹365</div><div class="price-sub">per item</div></div>
+      </div>
+
+      <!-- Modal hint -->
+      <div class="modal-hint">
+        <div class="modal-hint-title">📋 Customize Modal opens (pre-filled) — user changes size</div>
+        <div class="modal-row"><span>Size</span><span><span class="modal-swatch" style="background:#329937"></span>Whole Wheat → <strong>Rice Noodles</strong></span></div>
+        <div class="modal-row"><span>Add-on</span><span>Extra Cheese x1 ✓</span></div>
+        <div class="modal-row"><span>Qty</span><span>1</span></div>
+        <button class="save-btn">Add to Order ✓</button>
+      </div>
+
+      <!-- Step 2: after save — DUPLICATE -->
+      <div class="step"><div class="step-num">2</div><div class="step-txt"><strong>After "Add to Order"</strong> — original stays, new item appended</div></div>
+
+      <div class="ann ann-red">❌ Original never removed — duplicate created</div>
+
+      <div class="cart-item highlighted">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta</div>
+          <div class="item-custom">Whole Wheat Noodles, Extra Cheese Add-on x1</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">1</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹365</div></div>
+      </div>
+
+      <div class="cart-item duplicate">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta <span class="badge badge-red">DUPLICATE</span></div>
+          <div class="item-custom">Rice Noodles, Extra Cheese Add-on x1</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">1</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹365</div></div>
+      </div>
+
+      <div class="cart-footer">
+        <div class="total-row"><span>Total (2 items)</span><span>₹730</span></div>
+        <button class="collect-btn">Collect Bill ₹730</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arrow-col">
+    <div class="arrow-icon">→</div>
+    <div class="arrow-label">~5 lines<br>in addCustomized<br>ItemToCart</div>
+  </div>
+
+  <!-- ══════════════ AFTER (FIX) ══════════════ -->
+  <div class="col">
+    <div class="col-label label-fix">✅ AFTER — Fixed Behaviour</div>
+    <div class="cart-panel">
+      <div class="cart-header">Cart — Table 3 <span>Dine-In</span></div>
+
+      <!-- Step 1: initial cart -->
+      <div class="step"><div class="step-num">1</div><div class="step-txt">Same starting point: <strong>Woko Pasta</strong> · Whole Wheat, Extra Cheese</div></div>
+
+      <div class="cart-item highlighted">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta</div>
+          <div class="item-custom">Whole Wheat Noodles, Extra Cheese Add-on x1</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">1</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹365</div><div class="price-sub">per item</div></div>
+      </div>
+
+      <!-- Modal hint -->
+      <div class="modal-hint">
+        <div class="modal-hint-title">📋 Same modal — user changes size to Rice Noodles</div>
+        <div class="modal-row"><span>Size</span><span><span class="modal-swatch" style="background:#329937"></span>Whole Wheat → <strong>Rice Noodles</strong></span></div>
+        <div class="modal-row"><span>Add-on</span><span>Extra Cheese x1 ✓</span></div>
+        <div class="modal-row"><span>Qty</span><span>1</span></div>
+        <button class="save-btn">Add to Order ✓</button>
+      </div>
+
+      <!-- Step 2: after save — UPDATED IN PLACE -->
+      <div class="step"><div class="step-num">2</div><div class="step-txt"><strong>After "Add to Order"</strong> — original removed, updated item in its place</div></div>
+
+      <div class="ann ann-green">✅ _cartKey detected → original removed → new saved in place</div>
+
+      <div class="cart-item updated">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta <span class="badge badge-green">UPDATED</span></div>
+          <div class="item-custom">Rice Noodles, Extra Cheese Add-on x1</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">1</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹365</div></div>
+      </div>
+
+      <!-- Edge case: merge -->
+      <div class="step"><div class="step-num">★</div><div class="step-txt">Edge case: if cart already has 2× Rice Noodles → <strong>qty merges to 3</strong></div></div>
+      <div class="cart-item">
+        <button class="trash-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+        <div class="item-info">
+          <div class="item-name">Woko Pasta</div>
+          <div class="item-custom">Rice Noodles, Extra Cheese Add-on x3</div>
+          <div class="item-actions">
+            <button class="btn-link">Customize</button>
+            <button class="btn-link gray">Add Note</button>
+          </div>
+        </div>
+        <div class="qty-wrap">
+          <button class="qty-btn minus">−</button>
+          <span class="qty-num">3</span>
+          <button class="qty-btn plus">+</button>
+        </div>
+        <div class="price-wrap"><div class="price">₹1095</div></div>
+      </div>
+
+      <div class="cart-footer">
+        <div class="total-row"><span>Total (1 item)</span><span>₹365</span></div>
+        <button class="collect-btn">Collect Bill ₹365</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Code change callout ── -->
+<div style="margin-top:28px; background:#fff; border-radius:10px; border:1.5px solid #E5E5E5; padding:16px 20px; max-width:860px;">
+  <div style="font-size:12px; font-weight:700; color:#1A1A1A; margin-bottom:10px;">📌 The Fix — addCustomizedItemToCart (OrderEntry.jsx L961)</div>
+  <div style="display:flex; gap:16px;">
+    <div style="flex:1; background:#FEF2F2; border-radius:8px; padding:12px; font-size:11px; font-family:monospace; color:#991B1B; border:1px solid #FECACA;">
+      <div style="font-weight:700; margin-bottom:6px; font-family:sans-serif; color:#EF4444;">❌ BEFORE</div>
+      <div style="color:#666">// no detection of re-edit</div>
+      <div>const key = customizationKey(item);</div>
+      <div>const idx = cart.findIndex(...);</div>
+      <div>if (idx >= 0) { /* merge qty */ }</div>
+      <div>else { cart.push(item); }</div>
+      <div style="color:#666; margin-top:6px;">// original with _cartKey stays → duplicate</div>
+    </div>
+    <div style="flex:1; background:#F0FDF4; border-radius:8px; padding:12px; font-size:11px; font-family:monospace; color:#14532D; border:1px solid #BBF7D0;">
+      <div style="font-weight:700; margin-bottom:6px; font-family:sans-serif; color:#329937;">✅ AFTER (+5 lines)</div>
+      <div style="color:#329937; font-weight:600">// BUG-374-style _cartKey detection</div>
+      <div style="color:#329937; font-weight:600">if (item._cartKey) {</div>
+      <div style="color:#329937; font-weight:600">&nbsp;&nbsp;newCart = cart.filter(</div>
+      <div style="color:#329937; font-weight:600">&nbsp;&nbsp;&nbsp;&nbsp;c => c._cartKey !== item._cartKey);</div>
+      <div style="color:#329937; font-weight:600">}</div>
+      <div>const key = customizationKey(item);</div>
+      <div>const idx = newCart.findIndex(...);</div>
+      <div>if (idx >= 0) { /* merge qty */ }</div>
+      <div>else { newCart.push(item); }</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
