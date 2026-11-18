@@ -38713,6 +38713,38 @@
       "completeness": "1/7",
       "category": "IN_PROGRESS",
       "code_reality": "NONE"
+    },
+    {
+      "id": "BUG-684",
+      "type": "BUG",
+      "title": "Cart Collect Bill Button Shows 1 Rupee Different From Billed Amount (Round-Off Mismatch)",
+      "priority": "P1",
+      "risk": "HIGH",
+      "status": "GATE_1_INTAKE_COMPLETE 2026-11-18",
+      "sprint_key": "nov_cr_batch",
+      "area": "Order Entry / Cart / Round-Off",
+      "assignee": "Abhishek",
+      "client": "ALL",
+      "intake_doc": "change_requests/BUG-684_CART_COLLECT_BILL_BUTTON_ROUNDOFF_MISMATCH_INTAKE.md",
+      "blocked_on": "",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-684_CART_COLLECT_BILL_BUTTON_ROUNDOFF_MISMATCH_INTAKE.md",
+          "type": "intake"
+        }
+      ],
+      "files": "OrderEntry.jsx",
+      "notes": "P1/HIGH. CODE_ERROR. Cart button uses local applyRoundOff helper (inverted logic) instead of shared applyGrandTotalRoundOff (CR-170). Also: localTax/unplacedTax sums unrounded item tax (secondary). 1 file, ~6 lines. Display-only — no payload change. Fast Lane candidate (OD-684-01 — owner to decide). Related: CR-170, BUG-666, BUG-647/BUG-683.",
+      "related": [
+        "CR-170",
+        "BUG-666",
+        "BUG-647",
+        "BUG-683"
+      ],
+      "completeness": "1/7",
+      "category": "IN_PROGRESS",
+      "code_reality": "NONE"
     }
   ],
   "meta": {
