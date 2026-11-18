@@ -39273,6 +39273,30 @@
       "code_reality": "NONE",
       "registered_date": "2026-11-18",
       "implemented_date": "2026-11-18"
+    },
+    {
+      "id": "CR-552",
+      "type": "CR",
+      "title": "Per-item approval for web-edit order items (item-level Yet-to-Confirm)",
+      "status": "GATE_3_PLAN_COMPLETE",
+      "priority": "P1",
+      "risk": "HIGH",
+      "area": "Order Management / Dashboard",
+      "assignee": "Abhishek",
+      "sprint_key": "nov_cr_batch",
+      "registered": "2026-11-18",
+      "registered_by": "PLANNING agent (package import)",
+      "intake_doc": "change_requests/CR-552_PER_ITEM_APPROVAL_WEB_ORDERS_INTAKE.md",
+      "related": [
+        "CR-545",
+        "BUG-679",
+        "CR-533",
+        "CR-534"
+      ],
+      "blocked_by": "NONE",
+      "open_decisions": [],
+      "notes": "FE-only. 4 files: orderTransform.js, ScanOrderPopOut.jsx, DashboardPage.jsx, reportTransform.js. AFTER CR-545. All anchors validated 2026-11-18. Plan: plans/CR-552_IMPLEMENTATION_PLAN.md. IA: impact/CR-552_IMPACT_ANALYSIS.md.",
+      "release_date": ""
     }
   ],
   "meta": {

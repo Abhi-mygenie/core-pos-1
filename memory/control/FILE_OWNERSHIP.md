@@ -1,7 +1,16 @@
 # Layer 7 — File Ownership Map
 
 
-## FILE_OWNERSHIP — BUG-630 IMPL Phase A (2026-11-18) — marker `// BUG-630`
+## FILE_OWNERSHIP — CR-552 GATE_3_PLAN_COMPLETE (2026-11-18) — marker `// CR-552`
+
+| File | Planned change | Planning agent |
+|------|---------------|----------------|
+| `src/api/transforms/orderTransform.js` | Add `foodStatus` + `isNotConfirmed` fields to orderItem (Edit A) | CR-552 PLANNING 2026-11-18 |
+| `src/api/transforms/reportTransform.js` | Add `7: 'Yet to Confirm'` to `getFoodStatusLabel` (Edit D) | CR-552 PLANNING 2026-11-18 |
+| `src/components/dashboard/ScanOrderPopOut.jsx` | Mode-B trigger + two-section render + scoped reject (Edit B) | CR-552 PLANNING 2026-11-18 |
+| `src/pages/DashboardPage.jsx` | `handleRejectNewItems` + reason modal wiring + prop (Edit C) | CR-552 PLANNING 2026-11-18 |
+
+
 
 | File | Changes | Agent |
 |------|---------|-------|
