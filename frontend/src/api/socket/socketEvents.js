@@ -11,7 +11,7 @@ export const SOCKET_CONFIG = {
     return url;
   })(),
   RECONNECTION: true,
-  RECONNECTION_ATTEMPTS: 10,
+  RECONNECTION_ATTEMPTS: Infinity, // BUG-677 F1: never exhaust reconnection budget
   RECONNECTION_DELAY: 1000,
   RECONNECTION_DELAY_MAX: 30000,
   TIMEOUT: 5000,

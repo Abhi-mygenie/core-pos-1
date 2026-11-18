@@ -1585,6 +1585,10 @@ See `plans/CR-385_DESIGN_DECISIONS.md` §E for the pre-feedback v2.9 checkpoint/
 | `api/socket/socketEvents.js` | CR-082 | 2026-07-19 | MODIFIED — +JOIN_EVENT, +JOINED_ACK_EVENT constants |
 | `api/socket/socketService.js` | CR-082 | 2026-07-19 | MODIFIED — +joinRestaurant() method, +restaurantId state, +re-join on connect, +clear on disconnect |
 | `api/socket/useSocketEvents.js` | CR-082 | 2026-07-19 | MODIFIED — +socketService.joinRestaurant(restaurantId) call in subscription effect |
+| `src/api/socket/socketEvents.js` | E1: L14 RECONNECTION_ATTEMPTS → Infinity | BUG-677 F1 2026-11-18 |
+| `src/api/socket/socketService.js` | E2: stale socket cleanup in connect(). E3: auto-retry in reconnect_failed. E4: +JOINED_ACK_EVENT import. E5: joinRestaurant→_emitJoinWithAck + new method. E6: JOINED_ACK listener + ACK-aware connect handler. E7: _joinAckTimeout cleanup in disconnect() | BUG-677 F3/F5/F6 2026-11-18 |
+| `src/contexts/SocketContext.jsx` | E8: 30s heartbeat useEffect (ERROR state recovery) | BUG-677 F2 2026-11-18 |
+| `src/hooks/useOrderPollingReconciliation.js` | E9a: aggregatorService + aggregatorTransform imports. E9b: Promise.allSettled POS+aggregator in pollOnce. +addOrder to deps | BUG-677 F4 2026-11-18 |
 | `components/expense/ExpenseSetupPanel.jsx` | BUG-208 | 2026-07-20 | MODIFIED — fetchAll cross-join pricedItems→allItems, improved error message (line 573), Unit Prices edit hint |
 | `components/expense/ExpenseBulkEditor.jsx` | BUG-208 | 2026-07-20 | MODIFIED — price clearing via deleteUnitPrice when user clears price field (2 paths) |
 | `components/expense/ExpenseEntryPanel.jsx` | CR-083 | 2026-07-20 | MODIFIED — Split payment: EMPTY_LINE+splitPayments, EntryLine+split props, split rows UI, validation bar, Cash Draw hint, handleSplitToggle/Change/Remove, flatMap save expansion |

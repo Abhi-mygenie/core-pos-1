@@ -87,6 +87,27 @@ export const SocketProvider = ({ children }) => {
   }, [isAuthenticated]);
 
   // ===========================================================================
+  // BUG-677 F2: PERIODIC HEARTBEAT HEALTH CHECK
+  // Safety net — if socket enters ERROR state and visibility/online handlers
+  // didn't recover it, this 30s check will force a fresh connection.
+  // ===========================================================================
+  useEffect(() => {
+    const heartbeat = setInterval(() => {
+      if (
+        document.visibilityState === 'visible' &&
+        isAuthenticated &&
+        socketService.getStatus() === CONNECTION_STATUS.ERROR
+      ) {
+        console.log('[SocketContext] BUG-677 F2: heartbeat detected ERROR state, reconnecting...');
+        socketService.disconnect();
+        socketService.connect();
+      }
+    }, 30_000);
+
+    return () => clearInterval(heartbeat);
+  }, [isAuthenticated]);
+
+  // ===========================================================================
   // NETWORK ONLINE/OFFLINE HANDLING
   // ===========================================================================
 

@@ -24,6 +24,8 @@ import { useTables } from '../contexts/TableContext';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { useSocketStatus } from '../contexts/SocketContext';
 import * as orderService from '../api/services/orderService';
+import { getAggregatorOrderList } from '../api/services/aggregatorService'; // BUG-677 F4
+import { fromAPI as aggregatorFromAPI } from '../api/transforms/aggregatorTransform'; // BUG-677 F4
 
 // --- Constants (exported for unit testability) -----------------------------
 export const POLL_INTERVAL_MS = 60_000;           // base 60 s cycle
@@ -269,10 +271,32 @@ export const useOrderPollingReconciliation = () => {
     const t0 = Date.now();
     try {
       const roleParam = permissions?.[0] || 'Manager';
-      const serverOrders = await orderService.getRunningOrders(roleParam, {
-        signal: ac.signal,
-      });
-      reconcile(serverOrders || [], trigger, Date.now() - t0);
+      // BUG-677 F4: fetch POS + aggregator orders in parallel (same pattern as useRefreshAllData)
+      const [posResult, aggResult] = await Promise.allSettled([
+        orderService.getRunningOrders(roleParam, { signal: ac.signal }),
+        getAggregatorOrderList().catch(() => []),
+      ]);
+
+      const serverOrders = posResult.status === 'fulfilled' ? (posResult.value || []) : [];
+      reconcile(serverOrders, trigger, Date.now() - t0);
+
+      // BUG-677 F4: reconcile aggregator orders — add missing ones to context
+      if (aggResult.status === 'fulfilled') {
+        const aggOrders = aggResult.value ? aggregatorFromAPI.aggregatorOrderList(aggResult.value) : [];
+        const localOrders = ordersSnapshotRef.current || [];
+        const localIds = new Set(localOrders.map(o => o.orderId));
+        let aggAdded = 0;
+        for (const agg of aggOrders) {
+          if (agg && !localIds.has(agg.orderId)) {
+            addOrder(agg);
+            aggAdded += 1;
+          }
+        }
+        if (aggAdded > 0) {
+          // eslint-disable-next-line no-console
+          console.log(`[OrderPolling] BUG-677 F4: +${aggAdded} aggregator orders discovered`);
+        }
+      }
       failureCountRef.current = 0;
     } catch (err) {
       if (ac.signal.aborted) {
@@ -288,7 +312,7 @@ export const useOrderPollingReconciliation = () => {
       isPollingRef.current = false;
       abortRef.current = null;
     }
-  }, [isAuthenticated, restaurantLoaded, permissions, reconcile]);
+  }, [isAuthenticated, restaurantLoaded, permissions, reconcile, addOrder]); // BUG-677: +addOrder (F4 aggregator reconcile)
 
   // --- Periodic interval (auth + restaurant gated) -----------------------
   useEffect(() => {

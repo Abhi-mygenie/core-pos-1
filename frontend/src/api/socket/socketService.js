@@ -2,7 +2,7 @@
 // Handles connection lifecycle, reconnection, and event management
 
 import io from 'socket.io-client';
-import { SOCKET_CONFIG, CONNECTION_EVENTS, JOIN_EVENT } from './socketEvents'; // CR-082: +JOIN_EVENT
+import { SOCKET_CONFIG, CONNECTION_EVENTS, JOIN_EVENT, JOINED_ACK_EVENT } from './socketEvents'; // CR-082: +JOIN_EVENT, BUG-677: +JOINED_ACK_EVENT
 
 // =============================================================================
 // CONNECTION STATUS ENUM
@@ -49,6 +49,15 @@ class SocketService {
       return this.socket;
     }
 
+    // BUG-677 F3: clean up old socket + handlers before creating new connection
+    // Prevents listener leak when socket exists but is not connected (ERROR/DISCONNECTED)
+    if (this.socket) {
+      this._log('INFO', 'BUG-677 F3: cleaning up stale socket before reconnect');
+      this.socket.removeAllListeners();
+      this.socket.disconnect();
+      this.socket = null;
+    }
+
     this._setStatus(CONNECTION_STATUS.CONNECTING);
     this._log('INFO', `Connecting to ${SOCKET_CONFIG.URL}`);
 
@@ -80,15 +89,42 @@ class SocketService {
     if (!restaurantId) return;
     this.restaurantId = restaurantId;
     if (this.socket && this.socket.connected) {
-      this.socket.emit(JOIN_EVENT, { restaurant_id: restaurantId });
-      this._log('INFO', `join_restaurant emitted for ${restaurantId}`);
+      this._emitJoinWithAck(restaurantId);
     }
+  }
+
+  // BUG-677 F6: emit join_restaurant with ACK timeout + re-emit + force reconnect
+  _emitJoinWithAck(restaurantId, attempt = 1) {
+    if (!this.socket || !this.socket.connected) return;
+    // Clear any previous ACK timeout
+    if (this._joinAckTimeout) clearTimeout(this._joinAckTimeout);
+
+    this.socket.emit(JOIN_EVENT, { restaurant_id: restaurantId });
+    this._log('INFO', `join_restaurant emitted for ${restaurantId} (attempt ${attempt})`);
+
+    this._joinAckTimeout = setTimeout(() => {
+      if (attempt < 2) {
+        // Re-emit once
+        this._log('WARN', `BUG-677 F6: joined_restaurant ACK not received in 5s, re-emitting (attempt 2)`);
+        this._emitJoinWithAck(restaurantId, 2);
+      } else {
+        // Force reconnect after 2nd failure
+        this._log('ERROR', `BUG-677 F6: joined_restaurant ACK not received after 2 attempts, force reconnect`);
+        this.disconnect();
+        this.connect();
+      }
+    }, 5000);
   }
 
   /**
    * Disconnect socket
    */
   disconnect() {
+    // BUG-677 F6: clear join ACK timeout
+    if (this._joinAckTimeout) {
+      clearTimeout(this._joinAckTimeout);
+      this._joinAckTimeout = null;
+    }
     if (this.socket) {
       this._log('INFO', 'Disconnecting...');
       this.socket.disconnect();
@@ -249,9 +285,9 @@ class SocketService {
       this.lastError = null;
       // CR-082: re-join room on EVERY (re)connect — Socket.IO room membership
       // is per-connection and lost on each reconnect
+      // BUG-677 F6: use ACK-aware join on reconnect too
       if (this.restaurantId) {
-        this.socket.emit(JOIN_EVENT, { restaurant_id: this.restaurantId });
-        this._log('INFO', `join_restaurant re-emitted for ${this.restaurantId} (connect)`);
+        this._emitJoinWithAck(this.restaurantId);
       }
     });
 
@@ -299,6 +335,23 @@ class SocketService {
     this.socket.on(CONNECTION_EVENTS.RECONNECT_FAILED, () => {
       this._log('ERROR', 'Reconnect failed after max attempts');
       this._setStatus(CONNECTION_STATUS.ERROR);
+      // BUG-677 F5: auto-retry after 5s — fresh connection bypasses exhausted budget
+      setTimeout(() => {
+        if (this.status === CONNECTION_STATUS.ERROR) {
+          this._log('INFO', 'BUG-677 F5: auto-retry after reconnect_failed');
+          this.disconnect();
+          this.connect();
+        }
+      }, 5000);
+    });
+
+    // BUG-677 F6: listen for joined_restaurant ACK — clears timeout set by _emitJoinWithAck
+    this.socket.on(JOINED_ACK_EVENT, (data) => {
+      if (this._joinAckTimeout) {
+        clearTimeout(this._joinAckTimeout);
+        this._joinAckTimeout = null;
+      }
+      this._log('INFO', `joined_restaurant ACK received: ${JSON.stringify(data)}`);
     });
   }
 
