@@ -61,6 +61,7 @@ const getFoodStatusLabel = (status) => {
     3: 'Cancelled',
     5: 'Served',
     6: 'Paid',
+    7: 'Yet to Confirm',  // CR-552
   };
   return statusMap[status] || 'Unknown';
 };

@@ -476,6 +476,7 @@ const DashboardPage = () => {
   const [checkInRoom, setCheckInRoom] = useState(null); // Room object for CheckIn modal
   const [cancelOrderEntry, setCancelOrderEntry] = useState(null); // Table entry for CancelOrderModal
   const [scanCancelItem, setScanCancelItem] = useState(null); // CR-545: {order, item} for popup cancel
+  const [scanRejectItems, setScanRejectItems] = useState(null); // CR-552: {order, items:[]} for reject web-edit new items
   const [oooRoomIds, setOooRoomIds] = useState(new Set()); // BUG-387: OOO room IDs — excluded from room column
   // CR-106: Aggregator modal state
   const [aggregatorRejectOrder, setAggregatorRejectOrder] = useState(null);
@@ -1686,6 +1687,33 @@ const DashboardPage = () => {
     setScanCancelItem({ order, item });
   }, []);
 
+  // CR-552: reject web-edit new items — opens reason modal (OD-552-06)
+  const handleRejectNewItems = useCallback((order) => {
+    const items = (order?.items || []).filter(it => it?.isNotConfirmed && it?.status !== 'cancelled');
+    if (items.length === 0) return;
+    setScanRejectItems({ order, items });
+  }, []);
+
+  // CR-552: execute reject — loop CANCEL_ITEM over new items only (mirrors executeScanItemCancel)
+  const executeScanRejectNewItems = useCallback(async ({ reason, cancelQuantity, note = '' }) => {
+    if (!scanRejectItems?.order) return;
+    const { order, items } = scanRejectItems;
+    const tableEntry = { orderId: order.orderId || order.id };
+    for (const item of items) {
+      const payload = orderToAPI.cancelItem(tableEntry, item, reason, Number(item?.qty ?? item?.quantity) || 1, {
+        printerAgents: printerAgents || [],
+        allCartItems: order.items || [],
+        cancelItemNote: note,
+      });
+      try {
+        await api.put(API_ENDPOINTS.CANCEL_ITEM, payload);
+      } catch (err) {
+        console.error('[DashboardPage] CR-552: cancel-food-item failed:', err?.message);
+      }
+    }
+    setScanRejectItems(null);
+  }, [scanRejectItems, printerAgents]);
+
   // CR-545: execute item cancel from popup — mirrors OrderEntry.handleCancelFood
   const executeScanItemCancel = useCallback(async ({ item, reason, cancelQuantity, note = '' }) => {
     if (!scanCancelItem?.order) return;
@@ -1879,6 +1907,7 @@ const DashboardPage = () => {
           onEdit={handleTableClick}
           onCancelItem={handleScanCancelItem}  // CR-545
           onPrintKOT={handleScanPrintKOT}      // CR-545
+          onRejectNewItems={handleRejectNewItems} // CR-552
           currencySymbol={currencySymbol}
           suppressed={Boolean(orderEntryType) || Boolean(cancelOrderEntry)}
         />
@@ -2333,6 +2362,17 @@ const DashboardPage = () => {
             reasons={getItemCancellationReasons()}
             onClose={() => setScanCancelItem(null)}
             onCancel={executeScanItemCancel}
+            cancelNoteMandatory={cancellation?.cancelNoteMandatory || false}
+          />
+        )}
+
+        {/* CR-552: reject web-edit new items — reason modal, loops CANCEL_ITEM */}
+        {scanRejectItems && (
+          <CancelFoodModal
+            item={scanRejectItems.items[0]}
+            reasons={getItemCancellationReasons()}
+            onClose={() => setScanRejectItems(null)}
+            onCancel={executeScanRejectNewItems}
             cancelNoteMandatory={cancellation?.cancelNoteMandatory || false}
           />
         )}

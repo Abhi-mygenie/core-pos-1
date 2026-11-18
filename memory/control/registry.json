@@ -39278,7 +39278,7 @@
       "id": "CR-552",
       "type": "CR",
       "title": "Per-item approval for web-edit order items (item-level Yet-to-Confirm)",
-      "status": "GATE_3_PLAN_COMPLETE",
+      "status": "GATE_5A_IMPLEMENTED",
       "priority": "P1",
       "risk": "HIGH",
       "area": "Order Management / Dashboard",
@@ -39295,7 +39295,7 @@
       ],
       "blocked_by": "NONE",
       "open_decisions": [],
-      "notes": "FE-only. 4 files: orderTransform.js, ScanOrderPopOut.jsx, DashboardPage.jsx, reportTransform.js. AFTER CR-545. All anchors validated 2026-11-18. Plan: plans/CR-552_IMPLEMENTATION_PLAN.md. IA: impact/CR-552_IMPACT_ANALYSIS.md.",
+      "notes": "FE-only. 4 files: orderTransform.js, ScanOrderPopOut.jsx, DashboardPage.jsx, reportTransform.js. AFTER CR-545. All anchors validated 2026-11-18. Plan: plans/CR-552_IMPLEMENTATION_PLAN.md. IA: impact/CR-552_IMPACT_ANALYSIS.md. | 2026-11-18: GATE_5A_IMPLEMENTED. 4 edits A/B/C/D across 4 files. 0 new warnings.",
       "release_date": ""
     }
   ],

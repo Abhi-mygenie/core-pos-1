@@ -59,6 +59,12 @@ import soundManager from '../../utils/soundManager';
 export const isUnconfirmedScanOrder = (order) =>
   Boolean(order) && order.fOrderStatus === 7 && !order.scheduled && order.isWebOrder;
 
+// CR-552: web EDIT — order stays fOrderStatus=2 but has appended Not-Confirm (food_status=7) lines.
+export const hasUnconfirmedWebEditItems = (order) =>
+  Boolean(order) && order.isWebOrder && !order.scheduled &&
+  order.fOrderStatus !== 7 &&
+  Array.isArray(order.items) && order.items.some((it) => it?.isNotConfirmed && it?.status !== 'cancelled');
+
 // Pure helper — derives a tableEntry-shaped object for handleTableClick from
 // any web YTC order, regardless of channel. Mirrors the entry shapes the
 // existing DashboardPage handlers already build elsewhere (delivery/takeaway
@@ -163,8 +169,9 @@ const ScanOrderPopOut = ({
   onAccept,
   onReject,
   onEdit,
-  onCancelItem,   // CR-545: (order, item) => void — per-item cancel
-  onPrintKOT,     // CR-545: (order) => void — KOT print from popup
+  onCancelItem,        // CR-545: (order, item) => void — per-item cancel
+  onPrintKOT,          // CR-545: (order) => void — KOT print from popup
+  onRejectNewItems,    // CR-552: (order) => void — reject web-edit new items only
   currencySymbol = '₹',
   suppressed = false,
 }) => {
@@ -172,7 +179,7 @@ const ScanOrderPopOut = ({
   const queue = useMemo(() => {
     const safeOrders = Array.isArray(orders) ? orders : [];
     return safeOrders
-      .filter(isUnconfirmedScanOrder)
+      .filter((o) => isUnconfirmedScanOrder(o) || hasUnconfirmedWebEditItems(o))  // CR-552: include web-edit orders
       .sort((a, b) => {
         const aT = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
         const bT = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -264,6 +271,10 @@ const ScanOrderPopOut = ({
   if (!activeOrder) return null;
 
   const idStr = String(activeOrder.orderId);
+  // CR-552: Mode B = web-edit order with appended Not-Confirm items
+  const isEditMode = hasUnconfirmedWebEditItems(activeOrder);
+  const newItems   = isEditMode ? (activeOrder.items || []).filter(it => it.isNotConfirmed && it.status !== 'cancelled') : [];
+  const prevItems  = isEditMode ? (activeOrder.items || []).filter(it => !it.isNotConfirmed) : [];
   const isUnderlyingSnoozed =
     snoozedOrders && typeof snoozedOrders.has === 'function' && snoozedOrders.has(idStr);
   const total = Number(activeOrder.amount || 0).toFixed(2);
@@ -452,6 +463,64 @@ const ScanOrderPopOut = ({
                 style={{ borderColor: COLORS.borderGray }}
                 data-testid="scan-order-popout-items"
               >
+                {/* CR-552 Mode B: new web-edit items on top (actionable) + prev items greyed below */}
+                {isEditMode ? (
+                  <>
+                    <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
+                      {newItems.map((it, idx) => {
+                        const qty = Number(it?.qty ?? it?.quantity) || 1;
+                        const unit = Number(it?.unitPrice ?? it?.price) || 0;
+                        const lineTotal = unit * qty;
+                        const isComp = Boolean(it?.isComplementary || it?.isComplementaryRuntime);
+                        const variations = Array.isArray(it?.variation) ? it.variation : [];
+                        const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
+                        return (
+                          <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" data-testid={`popout-new-item-${idx}`}>
+                            <span className="flex-1 text-sm" style={{ color: COLORS.darkText }}>
+                              {it?.name || it?.foodName || ''}
+                              {variations.length > 0 && <span className="text-xs text-gray-400 ml-1">({variations.map(v => v.name).join(', ')})</span>}
+                              {addOns.length > 0 && <span className="text-xs text-gray-400 ml-1">+{addOns.map(a => a.name).join(', ')}</span>}
+                            </span>
+                            <span className="text-xs text-gray-500 whitespace-nowrap">×{qty}</span>
+                            {!isComp && <span className="text-xs font-medium tabular-nums" style={{ color: COLORS.darkText }}>{currencySymbol}{lineTotal.toFixed(2)}</span>}
+                            {onCancelItem && (
+                              <button
+                                type="button"
+                                data-testid={`popout-cancel-new-item-${idx}`}
+                                onClick={() => onCancelItem(activeOrder, it)}
+                                className="ml-1 p-0.5 rounded hover:bg-red-50"
+                                title="Cancel this item"
+                              >
+                                <XCircle className="w-4 h-4 text-red-400" />
+                              </button>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    {prevItems.length > 0 && (
+                      <details data-testid="popout-prev-items" className="border-t" style={{ borderColor: COLORS.borderGray }}>
+                        <summary className="px-3 py-2 text-xs font-semibold cursor-pointer select-none" style={{ color: COLORS.grayText }}>
+                          Previously ordered items ({prevItems.length})
+                        </summary>
+                        <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
+                          {prevItems.map((it, idx) => {
+                            const qty = Number(it?.qty ?? it?.quantity) || 1;
+                            const unit = Number(it?.unitPrice ?? it?.price) || 0;
+                            const lineTotal = unit * qty;
+                            return (
+                              <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" style={{ opacity: 0.6 }} data-testid={`popout-prev-item-${idx}`}>
+                                <span className="flex-1 text-sm" style={{ color: COLORS.grayText }}>{it?.name || it?.foodName || ''}</span>
+                                <span className="text-xs text-gray-400 whitespace-nowrap">×{qty}</span>
+                                <span className="text-xs tabular-nums" style={{ color: COLORS.grayText }}>{currencySymbol}{lineTotal.toFixed(2)}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </details>
+                    )}
+                  </>
+                ) : (
                 <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
                   {/* CR-545: APS items (₹1) sort to top so staff sees them first */}
                   {[...(activeOrder.items || [])].sort((a, b) => {
@@ -598,6 +667,7 @@ const ScanOrderPopOut = ({
                     );
                   })}
                 </ul>
+                )} {/* CR-552: end Mode A (!isEditMode) */}
               </div>
             ) : null}
 
@@ -682,7 +752,7 @@ const ScanOrderPopOut = ({
           <button
             type="button"
             data-testid={`popout-reject-btn-${idStr}`}
-            onClick={() => handleRejectClick(activeOrder)}
+            onClick={() => isEditMode ? onRejectNewItems?.(activeOrder) : handleRejectClick(activeOrder)}
             disabled={isAccepting}
             className="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-semibold bg-white disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ borderColor: COLORS.errorText, color: COLORS.errorText }}

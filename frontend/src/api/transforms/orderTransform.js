@@ -158,6 +158,9 @@ export const fromAPI = {
       isWeightItem: ['Kg','gm','L','ml'].includes(detail.item_unit || detail.food_details?.item_unit),
       // CR-028: Discount eligibility — rehydrate from food_details (give_discount: "Yes"/"No")
       giveDiscount: (foodDetails.give_discount || 'Yes') !== 'No',
+      // CR-552: expose raw food status + item-level Not-Confirm flag (web-edit appended lines)
+      foodStatus:      Number(detail.food_status),
+      isNotConfirmed:  Number(detail.food_status) === 7,
     };
   },
 
