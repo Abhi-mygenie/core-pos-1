@@ -1353,11 +1353,10 @@ const CollectPaymentPanel = ({
       deliveryGstAmount:   Math.round(deliveryGst * 100) / 100,
     };
 
-    // Transfer to Room — attach room selection
+    // Transfer to Room — attach room selection (CR-405-B-V2: whole order transfer)
     if (paymentMethod === 'transferToRoom' && selectedRoom) {
       paymentData.isTransferToRoom = true;
-      paymentData.roomId      = selectedRoom.tableId;   // kept for legacy compat
-      paymentData.roomOrderId = selectedRoom.orderId;   // CR-405-B: source_order_id for v1 contract
+      paymentData.roomId = selectedRoom.tableId;         // CR-405-B-V2: room_id for v2 contract (table ID)
     }
 
     onPaymentComplete(paymentData);

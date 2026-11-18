@@ -94,7 +94,7 @@ export const API_ENDPOINTS = {
   
   // Room Operations (Phase 2A + 2B)
   ROOM_CHECK_IN: '/api/v1/vendoremployee/pos/user-group-check-in',
-  ORDER_SHIFTED_ROOM: '/api/v1/vendoremployee/order/order-shifted-room',  // CR-405-B: v1 = new contract (source_order_id + target_order_id)
+  ORDER_SHIFTED_ROOM: '/api/v2/vendoremployee/order/order-shifted-room',  // CR-405-B-V2: v2 = whole order transfer (order_id + room_id + payment)
   // CR-004 Phase 2 — endpoint that returns the full set of currently-active
   // rooms (independent of order-creation date). Used to drive the cross-day
   // in-house view on /reports/rooms.

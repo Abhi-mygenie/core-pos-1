@@ -1813,14 +1813,16 @@ export const toAPI = {
    * @param {number|string} roomId - Destination room ID
    */
   // CR-405-B: order-shifted-room v1 contract (handover_5 §6)
-  // Moves active F&B lines from target (dine-in/walk-in) onto source (open room order).
-  // Does NOT settle — settlement happens separately on the source room order.
-  // v1 = { source_order_id, target_order_id, transfer_note } only.
-  // v2 (old contract) required order_id + payment_mode — no longer used.
-  transferToRoom: (table, paymentData, _roomId) => ({
-    source_order_id: String(paymentData.roomOrderId || ''), // room order (receives items)
-    target_order_id: String(table.orderId),                  // dine-in order (loses items)
-    transfer_note:   'Yes',
+  // CR-405-B-V2: Whole order transfer — moves the entire dine-in/walk-in order
+  // to a room. V2 settles at transfer (OD-RT-02). Room must be assigned/checked-in
+  // but does not need an existing food order (OD-RT-03).
+  // v2 = { order_id, payment_mode, payment_amount, payment_status, room_id }
+  transferToRoom: (table, paymentData, roomId) => ({
+    order_id:       String(table.orderId),                      // dine-in order being transferred
+    payment_mode:   'ROOM',                                     // fixed — room billing
+    payment_amount: String(paymentData.finalTotal || 0),        // order total
+    payment_status: 'unpaid',                                   // OD-RT-02: settles at transfer
+    room_id:        String(roomId || paymentData.roomId || ''), // room table ID (from all-table-list)
   }),
 
   // ==========================================================================

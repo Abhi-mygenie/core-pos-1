@@ -30374,7 +30374,7 @@
       "type": "CR",
       "severity": "P2",
       "risk": "HIGH",
-      "status": "GATE_3_PLAN_COMPLETE \u2014 Phase B V2 plan at plans/CR-405_PHASE_B_V2_IMPLEMENTATION_PLAN_2026_11_17.md. 3 code files + 1 test. Awaiting Gate 4 GO.",
+      "status": "GATE_5A_IMPLEMENTED \u2014 Phase B V2 switch done. constants v1\u2192v2, transferToRoom V2 contract, roomOrderId removed. 8/8 unit tests PASS. Awaiting QA.",
       "sprint_key": "oct_cr_batch",
       "area": "PMS / Rooms",
       "source": "AGENT-DISCOVERED",
