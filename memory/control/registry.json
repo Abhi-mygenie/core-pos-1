@@ -38382,7 +38382,7 @@
       ],
       "files": "AuditLogMockup.jsx",
       "release_date": "2026-11-17",
-      "qa_gate_status": "QA FAIL -> SPEC-CR528 (spec mismatch: CR-546 design rendered instead of CR-528 spec) [registered BUG-687]",
+      "qa_gate_status": "QA 2026-11-18 (v3 LOCKED design): Card 3 \"Leakage After Print\" structure + Post-Print Edits KPI + Excel sheet PASS. Row badge rendering NOT VERIFIABLE (cafe103 has 0 post-print events). Implementation MATCHES LOCKED design (supersedes old CR-528 10-col plan) -> SPEC-CR528/BUG-687 is spec-reconciliation, not a code defect. Retest needs seed data + BUG-696 fix.",
       "qa_date": "2026-11-18",
       "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md \u00a7A"
     },
@@ -39075,7 +39075,8 @@
       "client": "ALL",
       "assignee": "Gyan",
       "release_date": "2026-11-17",
-      "registered_date": "2026-11-17"
+      "registered_date": "2026-11-17",
+      "qa_gate_status": "QA 2026-11-18 (v3 LOCKED design): Card 3 structure + Excel \"Leakage After Print\" sheet PASS. Discount apply/remove after-print badge + columns NOT VERIFIABLE (0 events for cafe103); code review confirms EVENT_BADGE mapping matches spec. Retest needs post-print discount data + BUG-696 fix."
     },
     {
       "id": "BUG-679",
@@ -39501,7 +39502,7 @@
       "files": "AuditLogMockup.jsx",
       "completeness": "1/7",
       "qa_finding_severity": "MAJOR",
-      "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint)",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint) | QA 2026-11-18: implementation matches LOCKED v3 design doc (D1-D19); mismatch was vs stale CR-528 plan. Recommend owner reconcile/close as \"works per approved v3 design\" \u2014 no code defect.",
       "notes": "QA Nov Sprint FAIL \u2014 SPEC-CR528. Needs CR-528 vs CR-546 spec reconciliation before code.",
       "intake_doc": "change_requests/BUG-687_AUDIT_LOG_SPEC_MISMATCH_CR528_INTAKE.md",
       "artifact_refs": [
@@ -39813,18 +39814,94 @@
           "type": "handover"
         }
       ]
+    },
+    {
+      "id": "BUG-695",
+      "type": "BUG",
+      "title": "Audit Report Card 1 \u2014 nested <button> (audit-card1-link inside audit-card1-toggle) causes invalid HTML + console error",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P3",
+      "severity": "P3",
+      "risk": "LOW",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "QA agent (CR-528/CR-546 QA)",
+      "related": [
+        "CR-543",
+        "CR-528"
+      ],
+      "files": "frontend/src/pages/reports-module/AuditLogMockup.jsx (~L347 toggle, ~L362 link)",
+      "completeness": "1/7",
+      "qa_finding_severity": "MINOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546: React \"<button> cannot be a descendant of <button>\" on every Audit Report load. Fix: div role=button or move link out of toggle.",
+      "intake_doc": "change_requests/BUG-695_AUDIT_REPORT_CARD1_NESTED_BUTTON_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-695_AUDIT_REPORT_CARD1_NESTED_BUTTON_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
+    },
+    {
+      "id": "BUG-696",
+      "type": "BUG",
+      "title": "Audit Report cannot load 30D/FY ranges \u2014 insights-dashboard ~43s exceeds 60s axios timeout",
+      "status": "GATE_1_INTAKE_COMPLETE",
+      "priority": "P1",
+      "severity": "P1",
+      "risk": "MEDIUM",
+      "area": "Reports / Analytics",
+      "sprint_key": "nov_cr_batch",
+      "client": "ALL",
+      "assignee": "Gyan",
+      "source": "QA-FOUND (CR-528/CR-546 QA 2026-11-18)",
+      "registered": "2026-11-18",
+      "registered_by": "QA agent (CR-528/CR-546 QA)",
+      "related": [
+        "CR-528",
+        "CR-546"
+      ],
+      "files": "preprod insights-dashboard (latency); frontend insightsService.js timeout",
+      "completeness": "1/7",
+      "qa_finding_severity": "MAJOR",
+      "qa_gate_status": "GATE_1_INTAKE (new defect from CR-528/CR-546 QA)",
+      "notes": "QA CR-528/CR-546: wide ranges time out (error shield). Root cause external backend latency; FE can raise timeout. Backend brief needed. Blocked wide-range QA of post-print events.",
+      "intake_doc": "change_requests/BUG-696_AUDIT_REPORT_INSIGHTS_DASHBOARD_TIMEOUT_INTAKE.md",
+      "artifact_refs": [
+        {
+          "label": "Intake",
+          "path": "memory/change_requests/BUG-696_AUDIT_REPORT_INSIGHTS_DASHBOARD_TIMEOUT_INTAKE.md",
+          "type": "intake"
+        },
+        {
+          "label": "QA Report",
+          "path": "memory/test_reports/CR-528_CR-546_QA_REPORT_2026-11-18.md",
+          "type": "qa_report"
+        }
+      ]
     }
   ],
   "meta": {
     "last_updated": "2026-11-18",
-    "last_action": "INTAKE: registered 10 new defects from QA Nov Sprint triage (BUG-685 BLOCKER crash, BUG-686 MAJOR running-orders drop, BUG-687 Audit Log spec mismatch, BUG-688..694 minors). No application code changed.",
+    "last_action": "QA CR-528 + CR-546 (Audit Report v3): structure PASS vs LOCKED design; drill-down rows NOT VERIFIABLE (0 events, cafe103). Filed BUG-695 (MINOR nested button) + BUG-696 (MAJOR insights-dashboard timeout). CR-528/CR-546/BUG-687 QA status updated. No code changed.",
     "current_gate": "5b",
-    "last_qa_batch": "QA Nov Sprint (all 6 batches) 2026-11-18",
+    "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
     "qa_group_c_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
     "gate_5b_complete": true,
-    "total": 1125,
-    "total_items": 1125,
+    "total": 1127,
+    "total_items": 1127,
     "last_session": "Batch B Gate 2 IA close 2026-11-15 \u2014 owner R5 answered, R5 read-only probes (RID 541). Handover at /app/memory/handover/SESSION_HANDOVER_2026_11_15_BATCH_B_GATE2_IA_CLOSED.md",
     "last_note": "Batch B Gate 2 IA + Gate 2.5 CLOSED 2026-11-15. Backend brief DRAFT not sent (owner to decide channel). Next: Gate 3 plans (FE-ready items first; backend-blocked items as PARTIAL/BLOCKED per Batch A pattern).",
     "qa_nov_sprint_report": "memory/test_reports/QA_REPORT_NOV_SPRINT_2026_11_18.md"

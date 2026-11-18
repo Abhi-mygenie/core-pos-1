@@ -1,3 +1,13 @@
+**CURRENT 2026-11-18 — QA (CR-528 + CR-546 Audit Report v3 — 2 defects filed; QA/triage only, no code changed)**
+
+| ID | Title | Sev | Risk | Status | Doc |
+|---|---|---|---|---|---|
+| **BUG-695** | Audit Report Card 1 — nested `<button>` (link inside toggle) → invalid HTML + console error every load | **P3** | **LOW** | GATE_1_INTAKE_COMPLETE — QA MINOR; fix = `div role=button` or move link out of toggle (AuditLogMockup.jsx ~L347/L362) | `change_requests/BUG-695_AUDIT_REPORT_CARD1_NESTED_BUTTON_INTAKE.md` |
+| **BUG-696** | Audit Report cannot load 30D/FY ranges — `insights-dashboard` ~43s exceeds 60s axios timeout | **P1** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — QA MAJOR; backend latency root cause (brief needed) + FE timeout option | `change_requests/BUG-696_AUDIT_REPORT_INSIGHTS_DASHBOARD_TIMEOUT_INTAKE.md` |
+
+---
+
+
 **CURRENT 2026-11-18 — INTAKE (QA Nov Sprint triage — 10 new defects registered from `HANDOVER_QA_NOV_SPRINT_2026_11_18`; QA/triage only, no code changed)**
 
 | ID | Title | Sev | Risk | Status | Doc |

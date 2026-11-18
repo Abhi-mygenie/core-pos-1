@@ -1,0 +1,71 @@
+{
+  "summary": "QA verification of Audit Report v3 (CR-528 + CR-546 in Card 3 'Leakage After Print') on the preview URL from the request (67382517-...), logged in as owner@cafe103.com, live data from preprod. The v3 structure matches the LOCKED design: 4 KPIs (no 'Order Edit After Print'), 3 cards in the right order, the Card 2 placeholders, the download menu enable/disable states, a working Excel export and the Card 1 link. This account has NO audit events in the date ranges that loaded (Today 2026-11-18, 7D 2026-11-12..18). The raw API response shows audits.orders=[] and every *_after_print_count = 0. So Card 3 shows 0 rows, Post-Print Edits = 0, and the badge labels and overlap pills could NOT be checked against real rows. The 30D and FY presets fail: the preprod insights-dashboard call takes about 43s even for 1-7 days, so these ranges hit the 60s axios timeout and show the 'Failed to load report data - timeout of 60000ms exceeded' error shield.",
+  "observed_values": {
+    "range_7D_2026-11-12_to_2026-11-18": {"total_events": 0, "made_unpaid": 0, "pay_method_changed": 0, "post_print_edits": 0, "card1_events": 0, "card2_events": 0, "card3_events": 0, "card3_rows": 0, "card3_badges_seen": []},
+    "range_Today_2026-11-18": {"all_kpis": 0, "all_cards": "0 events"},
+    "range_30D": "Timed out after 60s (error shield)",
+    "range_FY_2025-04-01_to_2026-03-31": "Timed out after 60s (error shield)",
+    "backend_audits_payload_today": "make_unpaid_count 0, payment_method_change_count 0, item_cancel_after_print_count 0, order_cancel_after_print_count 0, order_edit_after_print_count 0, discount_apply_after_print_count 0, discount_remove_after_print_count 0, late_cancel_* 0, cancel_after_unpaid_count 0, orders []"
+  },
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST preprod /api/v2/vendoremployee/report/insights-dashboard", "issue": "Responds in about 43s even for a 1-day or 7-day range. 30D and FY ranges go past the 60s frontend axios timeout, so the Audit Report cannot load wide ranges (error shield shown). This is an external backend performance issue, but it blocks the requested FY/30D verification.", "priority": "HIGH"}
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Card 1 header", "issue": "<button data-testid='audit-card1-link'> is nested inside <button data-testid='audit-card1-toggle'>. This is invalid HTML and React logs a console error ('<button> cannot be a descendant of <button>') on every load. Fix: make the outer toggle a div role=button, or move the link outside the toggle.", "selector": "[data-testid='audit-card1-link']", "priority": "MEDIUM"},
+      {"component": "Date presets", "issue": "On first load '7D' is highlighted, but the applied range is the shared range (Today 2026-11-18 to 2026-11-18). activePreset is hard-coded to '7D' and does not match sharedFrom/sharedTo.", "selector": "[data-testid='audit-presets']", "priority": "LOW"},
+      {"component": "FY preset", "issue": "handlePreset('FY') does not call setSharedFrom/setSharedTo, unlike the other presets, so the range is not shared across Insights pages. Also, computePresetRange('FY') returns the previous completed FY (2025-04-01..2026-03-31 in Nov 2026), not the current FY. Confirm this is intended.", "selector": "[data-testid='audit-presets']", "priority": "LOW"},
+      {"component": "Error shield", "issue": "After a timeout, the stale KPI/card data from the previous range (zeros) stays on screen under the error banner while the date inputs show the new range. This can mislead users.", "selector": "audit-kpi-bar", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Wide date range (30D/FY)", "issue": "Request aborted at 60s (net::ERR_ABORTED), and the UI shows 'timeout of 60000ms exceeded'. Root cause: backend latency. Consider a longer timeout for this report, or ask the backend to optimise.", "affected_selectors": ["audit-presets"]}
+    ],
+    "design_issues": [
+      {"screen": "Audit Report empty state", "issues": ["When there are 0 events, the RiskBar renders 'No high-risk cancellations' without data-testid 'audit-card1-risk-bar', and DrillDownTable renders 'No events' without its table testid ('audit-card3-table'). Testability is lost in the empty state; add the testids to the empty-state wrappers."]}
+    ]
+  },
+  "passed_checks": [
+    "Login with owner@cafe103.com lands on /dashboard after the /loading bootstrap (~20s)",
+    "/reports-module/audit-log renders audit-report-page; audit-header contains 'Audit Report'",
+    "KPI bar has exactly 4 cards: Total Events, Made Unpaid, Pay Method Changed, Post-Print Edits; no 'Order Edit After Print'",
+    "Cards in order card1 'High Risk Cancellations', card2 'Leakage After Unpaid', card3 'Leakage After Print', each with an 'N events' header",
+    "Card 3 toggle expands; Post-Print Edits KPI (0) == Card 3 rows (0); 'No events' shown",
+    "Card 2 expanded: both placeholders present with the 'Awaiting backend delivery (NEW-1)' and '(NEW-2)' text",
+    "Download menu: Excel + PDF enabled; Email/WhatsApp/SMS disabled",
+    "Excel download produced Audit_Report_2026-11-12_2026-11-18.xls; page did not crash",
+    "audit-card1-link navigates to /reports-module/cancellations",
+    "No pageerrors / red screen; the only console error is the nested-button DOM warning"
+  ],
+  "not_verifiable": [
+    "Card 3 Type badge labels (Item Cancel / Order Cancel / Discount Applied / Discount Removed (Post-Print)): no rows in the data. Code review confirms the EVENT_BADGE mapping matches the spec.",
+    "Overlap pills on audit-drill-row-{i}: no rows",
+    "audit-card1-risk-bar: only rendered when card1 has events (0 here)",
+    "Rupee leakage amount on card headers: only shown when leakage > 0"
+  ],
+  "test_report_links": [],
+  "action_items": [
+    "Fix the nested <button> in the Card 1 header (audit-card1-link inside audit-card1-toggle)",
+    "Raise the client timeout for insights-dashboard on the Audit Report, or get preprod to optimise the endpoint (43s for 1-7 days; 30D/FY time out)",
+    "Initialise activePreset from the actual shared range instead of hard-coding '7D'",
+    "Make the FY preset call setSharedFrom/setSharedTo, and confirm whether FY should be the current or the previous FY",
+    "Add testids to the empty-state RiskBar and DrillDownTable wrappers",
+    "Provide test data (an account/date with post-print item/order cancels and discounts) so the CR-528/CR-546 badge rendering can be checked end-to-end"
+  ],
+  "critical_code_review_comments": [
+    "AuditLogMockup.jsx is ~450 lines, the file name says 'Mockup' but it is the production page; consider renaming",
+    "Card 3 headline has no overlap info, while Cards 1 and 2 show it (asymmetric D9 Approach C headlines)",
+    "classifyEvent marks late_cancel/card2 events as card3 when bill_printed_at is set, but card3Events only filters CARD_3_TYPES. Overlap pills can show 'After Print' for rows that are not counted in Card 3 or the Post-Print KPI. Verify this matches D9.",
+    "The backend returns per-type counts (item_cancel_after_print_count etc.) that the frontend ignores; postPrintCount is derived only from orders[]. This is fine if orders[] is complete, but it diverges if the backend ever paginates or truncates orders.",
+    "audit-drill-row-{i} testids repeat across cards (only one card is expanded at a time, so this is OK today)"
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend only)", "frontend": "~85% of the checks that could be run passed (structure, KPIs, cards, placeholders, download, link); 30D/FY presets failed on backend timeout; badge/pill/risk-bar checks not verifiable with 0 data"},
+  "test_credentials": "owner@cafe103.com from the review request (not listed in /app/memory/test_credentials.md, which lists owner@ruby.com and owner@palmhouse.com)",
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "A direct page.goto to /reports-module/audit-log after login redirects to /loading. Wait for /dashboard, then navigate client-side with history.pushState + a popstate event. The insights-dashboard call takes ~43s; wait until the audit-presets buttons are no longer disabled. Use a short range (Today/7D); 30D/FY time out at 60s. The cafe103 account currently has 0 audit events, so seed post-print events (or use another account) to verify the badges and pills."
+}
