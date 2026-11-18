@@ -20730,7 +20730,7 @@
       "id": "BUG-319",
       "title": "Printer Config — Footer text 'Powered by MyGenie' hardcoded in print agent device (ignores FE-configured value)",
       "type": "BUG",
-      "priority": "P0",
+      "priority": "P1",
       "risk": "LOW",
       "status": "GATE 2 COMPLETE — BACKEND-BLOCKED. Impact Analysis: memory/impact/BUG-315-319_PRINTER_IMPACT_ANALYSIS.md",
       "gate": "2",
@@ -29290,7 +29290,7 @@
         }
       ],
       "area": "Aggregator / Sockets",
-      "assignee": "Parth",
+      "assignee": "Gyan",
       "priority": "P0",
       "release_date": ""
     },
@@ -30258,7 +30258,7 @@
       "classification": "PRINTER_AGENT_BUG | CONFIG_ISSUE",
       "notes": "After switching to Direct Print mode in Printer Agent, both Bill and KOT stopped printing entirely. Likely Direct Print requires different config (IP/port) that was not set, or Direct Print mode has a regression.",
       "assignee": "Piyush",
-      "priority": "P0"
+      "priority": "P1"
     },
     {
       "id": "BUG-477",
@@ -32588,7 +32588,7 @@
       "registered_by": "INTAKE agent",
       "risk": "MEDIUM",
       "assignee": "Piyush",
-      "priority": "P0"
+      "priority": "P1"
     },
     {
       "id": "BUG-544",
@@ -35521,7 +35521,7 @@
       "notes": "BACKEND issue. Net Sales KPI shows ₹13,61,162 which is MORE than Gross Revenue ₹13,33,222 because backend total_sales includes GST+VAT+SC. Standard Net Sales = Gross - Discount (should be ₹12,96,586). Backend must send correct net figure excluding tax. FE label 'after disc+GST' is technically accurate for what backend sends but the definition itself is wrong. | 2026-10-31: Backend brief: backend_briefs/BACKEND_BRIEF_BUG-630_NET_SALES_2026_10_31.md",
       "open_decisions": [],
       "blocked_by": "BACKEND",
-      "assignee": "Gyan",
+      "assignee": "Abhishek",
       "release_date": ""
     },
     {
@@ -35993,7 +35993,7 @@
       "type": "CR",
       "title": "Multiple counter logins — two users operating simultaneously at the same counter",
       "severity": "P0",
-      "priority": "P0",
+      "priority": "P1",
       "risk": "HIGH",
       "area": "Permissions / Security",
       "status": "GATE_2_PLANNING — multiple counter logins, backend dependency",
@@ -36959,7 +36959,8 @@
           "type": "intake"
         }
       ],
-      "registered_date": "2026-11-06"
+      "registered_date": "2026-11-06",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -36967,7 +36968,7 @@
       "sprint_key": "TBD",
       "title": "On Update Order: Running Order Print in KOT (Printer Agent Team — Tracking Only)",
       "status": "GATE_1_INTAKE_COMPLETE — TRACKING ONLY. Printer Agent team owns implementation.",
-      "priority": "P0",
+      "priority": "P1",
       "risk": "MEDIUM",
       "area": "Printing / Printer Agent",
       "files": "",
@@ -37935,7 +37936,8 @@
       "gate": "GATE_1",
       "current_gate": 1,
       "registered": "2026-11-12",
-      "assignee": "Piyush"
+      "assignee": "Piyush",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-520",
@@ -38026,7 +38028,7 @@
       "type": "CR",
       "title": "Reconcile Amount Range Should Be Customizable Per Restaurant",
       "status": "GATE_2.5_DESIGN_APPROVED 2026-11-15 (Batch B; Gate 2 IA closed; mockup M6 (0% = no check) approved). Next: Gate 3 plan. Backend brief BACKEND_BRIEF_BATCH-B_2026_11_15.",
-      "priority": "P0",
+      "priority": "P1",
       "severity": "P2",
       "risk": "HIGH",
       "area": "Payments / Coupons / Credit",
@@ -39096,7 +39098,8 @@
       ],
       "description": "order_amount in running-orders never includes discount. Dashboard tile, Order Entry Collect Bill button, and CartPanel all show pre-discount total. Only CollectPaymentPanel shows correct discounted amount.",
       "priority": "P0",
-      "area": "Payments / Coupons / Credit"
+      "area": "Payments / Coupons / Credit",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-551",
@@ -39127,7 +39130,8 @@
       ],
       "description": "No backend API for editing variations/add-ons on placed items. EDIT_ORDER_ITEM in constants.js is TBD. PlacedItemRow has no customize button. Workaround: cancel + re-add. Backend endpoint needed first, then 7 FE files.",
       "priority": "P0",
-      "area": "Menu / Order Entry"
+      "area": "Menu / Order Entry",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-681",
