@@ -39628,7 +39628,7 @@
       "id": "BUG-687",
       "type": "BUG",
       "title": "Audit Log report does not match CR-528 spec (renders CR-546 design) \u2014 SPEC-CR528",
-      "status": "GATE_2_IA_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE \u2014 OWNER: WORKING AS DESIGNED (recommend CLOSE)",
       "priority": "P2",
       "severity": "P2",
       "risk": "MEDIUM",
@@ -39647,7 +39647,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MAJOR",
       "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint) | QA 2026-11-18: implementation matches LOCKED v3 design doc (D1-D19); mismatch was vs stale CR-528 plan. Recommend owner reconcile/close as \"works per approved v3 design\" \u2014 no code defect.",
-      "notes": "QA Nov Sprint FAIL \u2014 SPEC-CR528. Needs CR-528 vs CR-546 spec reconciliation before code. | Gate 2 IA 2026-11-18: likely working-as-designed (CR-546 v3 LOCKED). Owner decision OD-687-01 (keep v3 vs revert CR-528) before any code. Batch same-file with BUG-691/695-700. See impact/BUG-687_BUG-691_AUDIT_LOG_IMPACT_ANALYSIS.md.",
+      "notes": "QA Nov Sprint FAIL \u2014 SPEC-CR528. Needs CR-528 vs CR-546 spec reconciliation before code. | Gate 2 IA 2026-11-18: likely working-as-designed (CR-546 v3 LOCKED). Owner decision OD-687-01 (keep v3 vs revert CR-528) before any code. Batch same-file with BUG-691/695-700. See impact/BUG-687_BUG-691_AUDIT_LOG_IMPACT_ANALYSIS.md. | OWNER DECISION OD-687-01 = A (keep CR-546 v3 locked design). Working-as-designed -> recommend CLOSE and retire stale CR-528 spec. No code.",
       "intake_doc": "change_requests/BUG-687_AUDIT_LOG_SPEC_MISMATCH_CR528_INTAKE.md",
       "artifact_refs": [
         {
@@ -39742,7 +39742,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint)",
-      "notes": "QA Nov Sprint MINOR-2 (noted during BUG-229 PASS). | Gate 2 IA 2026-11-18: generateEmail hard-appends .com + strips name. Owner decision OD-689-01 (intended domain). LOW. See impact/BUG-689_IMPACT_ANALYSIS.md.",
+      "notes": "QA Nov Sprint MINOR-2 (noted during BUG-229 PASS). | Gate 2 IA 2026-11-18: generateEmail hard-appends .com + strips name. Owner decision OD-689-01 (intended domain). LOW. See impact/BUG-689_IMPACT_ANALYSIS.md. | OWNER DECISION OD-689-01 = use the restaurant's REAL domain (not hard-coded .com). Gate 3: source domain from restaurant record/config; confirm existing logins unaffected.",
       "intake_doc": "change_requests/BUG-689_AUTOGEN_EMPLOYEE_EMAIL_EXTRA_DOTCOM_INTAKE.md",
       "artifact_refs": [
         {
@@ -39884,7 +39884,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint)",
-      "notes": "QA Nov Sprint MINOR-5. | Gate 2 IA 2026-11-18: likely env (REACT_APP_BUILD_ID vs version.json mismatch); banner persistent by design (OD-661-04). Owner decision OD-692-01. LOW. See impact/BUG-692_IMPACT_ANALYSIS.md.",
+      "notes": "QA Nov Sprint MINOR-5. | Gate 2 IA 2026-11-18: likely env (REACT_APP_BUILD_ID vs version.json mismatch); banner persistent by design (OD-661-04). Owner decision OD-692-01. LOW. See impact/BUG-692_IMPACT_ANALYSIS.md. | OWNER DECISION OD-692-01 = A (preview build-id/env artifact, not a code defect). Fix env REACT_APP_BUILD_ID vs version.json; persistent banner kept by design. Likely no code.",
       "intake_doc": "change_requests/BUG-692_NEW_VERSION_BANNER_ON_EVERY_PAGE_INTAKE.md",
       "artifact_refs": [
         {
@@ -39929,7 +39929,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint)",
-      "notes": "QA Nov Sprint MINOR-6 (environment-dependent; unconfirmed cause). | Gate 2 IA 2026-11-18: GENIE_LOGO_URL remote asset fails to load (intermittent/env). Owner decision OD-693-01 (bundle vs URL). LOW. See impact/BUG-693_IMPACT_ANALYSIS.md.",
+      "notes": "QA Nov Sprint MINOR-6 (environment-dependent; unconfirmed cause). | Gate 2 IA 2026-11-18: GENIE_LOGO_URL remote asset fails to load (intermittent/env). Owner decision OD-693-01 (bundle vs URL). LOW. See impact/BUG-693_IMPACT_ANALYSIS.md. | OWNER DECISION OD-693-01 = A (bundle the logo as a static asset). Gate 3: replace remote GENIE_LOGO_URL with a bundled asset import.",
       "intake_doc": "change_requests/BUG-693_LOGIN_PAGE_LOGO_BLANK_INTAKE.md",
       "artifact_refs": [
         {
@@ -39958,7 +39958,7 @@
       "id": "BUG-694",
       "type": "BUG",
       "title": "Direct URL after fresh login routes through /loading for >10s",
-      "status": "GATE_2_IA_COMPLETE",
+      "status": "GATE_2_IA_COMPLETE \u2014 ROUTE TO INVESTIGATION",
       "priority": "P2",
       "severity": "P2",
       "risk": "MEDIUM",
@@ -39974,7 +39974,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_1_INTAKE (new defect from QA Nov Sprint)",
-      "notes": "QA Nov Sprint MINOR-7. | Gate 2 IA 2026-11-18: boot loader chain has sequential awaits >10s on cold cache. Owner decision OD-694-01 (boot budget/blocking loaders). MEDIUM. See impact/BUG-694_IMPACT_ANALYSIS.md.",
+      "notes": "QA Nov Sprint MINOR-7. | Gate 2 IA 2026-11-18: boot loader chain has sequential awaits >10s on cold cache. Owner decision OD-694-01 (boot budget/blocking loaders). MEDIUM. See impact/BUG-694_IMPACT_ANALYSIS.md. | OWNER DECISION OD-694-01: loaders already parallel; owner wants the actual sequential/slow loader confirmed -> ROUTE TO INVESTIGATION (not Gate 3 yet).",
       "intake_doc": "change_requests/BUG-694_POST_LOGIN_LOADING_ROUTE_SLOW_INTAKE.md",
       "artifact_refs": [
         {
@@ -40066,7 +40066,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MAJOR",
       "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 timeout; backend brief (Gyan) + FE per-request timeout on fetchInsightsDashboard (NOT global axios). Risk MEDIUM. OD-696-01 max wait.",
-      "notes": "QA CR-528/CR-546: wide ranges time out (error shield). Root cause external backend latency; FE can raise timeout. Backend brief needed. Blocked wide-range QA of post-print events.",
+      "notes": "QA CR-528/CR-546: wide ranges time out (error shield). Root cause external backend latency; FE can raise timeout. Backend brief needed. Blocked wide-range QA of post-print events. | OWNER DECISION OD-696-01 = file backend brief to Gyan (DONE: backend_briefs/BACKEND_BRIEF_BUG-696_2026-11-18.md). FE per-request timeout deferred pending backend outcome; global axios.js:60000 untouched.",
       "intake_doc": "change_requests/BUG-696_AUDIT_REPORT_INSIGHTS_DASHBOARD_TIMEOUT_INTAKE.md",
       "artifact_refs": [
         {
@@ -40154,7 +40154,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 FY branch add setSharedFrom/To; FY window gated on OD-698-01 (current vs previous FY). Risk LOW.",
-      "notes": "QA CR-528/CR-546 MINOR: FY omits shared setters; FY window = previous completed FY (confirm intent, OD-698-01).",
+      "notes": "QA CR-528/CR-546 MINOR: FY omits shared setters; FY window = previous completed FY (confirm intent, OD-698-01). | OWNER DECISION OD-698-01 = PREVIOUS COMPLETED FY (current behaviour is correct). Gate 3: ONLY add setSharedFrom/setSharedTo to the FY branch for shared-range parity; do NOT change computePresetRange('FY').",
       "intake_doc": "change_requests/BUG-698_AUDIT_REPORT_FY_PRESET_NO_SHARE_INTAKE.md",
       "artifact_refs": [
         {
@@ -40198,7 +40198,7 @@
       "completeness": "1/7",
       "qa_finding_severity": "MINOR",
       "qa_gate_status": "GATE_2_IA_COMPLETE \u2014 clear/label stale rawData on error. Risk LOW. OD-699-01 blank vs label.",
-      "notes": "QA CR-528/CR-546 MINOR: on error, previous range KPI/card data retained under error banner (misleading). Related BUG-696.",
+      "notes": "QA CR-528/CR-546 MINOR: on error, previous range KPI/card data retained under error banner (misleading). Related BUG-696. | OWNER DECISION OD-699-01: owner asked if stale data is from missing backend data -> NO. Trigger is the BUG-696 timeout/error; defect is FE not clearing prior rawData on error. Gate 3: clear data on error (blank).",
       "intake_doc": "change_requests/BUG-699_AUDIT_REPORT_STALE_DATA_UNDER_ERROR_INTAKE.md",
       "artifact_refs": [
         {

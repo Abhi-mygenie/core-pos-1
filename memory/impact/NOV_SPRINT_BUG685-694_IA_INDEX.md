@@ -20,8 +20,12 @@ All 10 bugs are now `GATE_2_IA_COMPLETE` in `registry.json`.
 ## Conflict
 BUG-687 + BUG-691 + existing BUG-695…700 all edit `AuditLogMockup.jsx` → Gate 3 must batch in one pass.
 
-## Owner decisions open
-OD-687-01 (keep CR-546 v3 or revert to CR-528), OD-689-01 (email domain), OD-692-01 (banner real vs env), OD-693-01 (logo asset vs URL), OD-694-01 (boot budget).
+## Owner decisions — RESOLVED 2026-11-18
+- **OD-687-01 = A** keep CR-546 v3 (locked). BUG-687 working-as-designed → recommend CLOSE, retire CR-528 spec. No code.
+- **OD-689-01 = restaurant's REAL domain** (not hard-coded `.com`). Gate 3: source domain from restaurant record/config.
+- **OD-692-01 = A** preview build-id/env artifact, not a code defect. Fix env `REACT_APP_BUILD_ID` vs `version.json`.
+- **OD-693-01 = A** bundle the logo as a static asset (replace remote `GENIE_LOGO_URL`).
+- **OD-694-01 = INVESTIGATION** loaders already parallel; confirm the real sequential/slow loader before any fix. Route to INVESTIGATION, not Gate 3.
 
 ## Next
 Owner review → Gate 3 Implementation Plans. Start with BUG-685 (BLOCKER) + BUG-686 (MAJOR).

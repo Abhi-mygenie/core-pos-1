@@ -102,7 +102,10 @@
 | OD-698-01 | BUG-698 | FY = current in-progress FY or previous completed FY? (affects all FY reports) |
 | OD-699-01 | BUG-699 | On load error, blank the stale data or keep-but-label it? (recommend blank) |
 
-Also required before BUG-696 code: **file a backend brief to Gyan** for `insights-dashboard` latency.
+**Owner decisions RESOLVED 2026-11-18:**
+- **OD-696-01** → backend brief FILED: `backend_briefs/BACKEND_BRIEF_BUG-696_2026-11-18.md` (Gyan). FE per-request timeout deferred pending backend outcome; global `axios.js:60000` untouched.
+- **OD-698-01** → **PREVIOUS COMPLETED FY** (current behaviour correct). Gate 3: only add `setSharedFrom/setSharedTo` to the FY branch for shared-range parity; do NOT change `computePresetRange('FY')`.
+- **OD-699-01** → clear stale data on error (blank). Confirmed NOT caused by missing backend data — trigger is the BUG-696 timeout; defect is FE not clearing `rawData` on error.
 
 ---
 
