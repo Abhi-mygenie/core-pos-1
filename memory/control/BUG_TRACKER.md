@@ -1,3 +1,16 @@
+**CURRENT 2026-11-18 — INTAKE (POS investigations bundle — 3 defects registered P0; CR-547 upgraded P2→P0. Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.)**
+
+| ID | Title | Sev | Risk | Status | Doc |
+|---|---|---|---|---|---|
+| **BUG-701** | Room edit-confirm popup (ScanOrderPopOut) disappears on item-cancel — `isWebOrder` recomputed false (room `order_from` pos/null) | **P0** | **HIGH** | GATE_1_INTAKE_COMPLETE — full Gate 2-3 (sockets+order flow hotspots). Guard exists in `useOrderPollingReconciliation.js` L170-177 (BUG-082), missing in socket handlers + single-order transform | `change_requests/BUG-701_ROOM_EDIT_CONFIRM_POPUP_DISAPPEARS_ON_ITEM_CANCEL_INTAKE.md` |
+| **BUG-702** | ScanOrderPopOut shows partial variation (group name only; `v.values[].label/optionPrice` not read) | **P0** | **LOW** | GATE_1_INTAKE_COMPLETE — RELATED to BUG-573 (DISTINCT component); mirror `CartPanel.jsx` L111-124. Display-only, 1 file | `change_requests/BUG-702_SCANORDERPOPOUT_PARTIAL_VARIATION_DISPLAY_INTAKE.md` |
+| **BUG-703** | Table View: accepted aggregator order has no open/expand path (`TableCard.jsx:312` no-op + `AggregatorOrderPopOut` gated to status 0/7) | **P0** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — Related CR-106. OD-703-01 (read-only view vs expand affordance) | `change_requests/BUG-703_TABLEVIEW_ACCEPTED_AGGREGATOR_ORDER_NO_OPEN_PATH_INTAKE.md` |
+
+Source: investigations `INV-ROOM-CANCEL-POPUP_INVESTIGATION_REPORT_2026-11-18.md` (+ `_API_BRIEF.md`) and `INV-POS-3BUGS_INVESTIGATION_REPORT.md` (acct pms@macha.com, RID 69). Evidence: `evidence/BUG-701/`, `evidence/INV-POS-3BUGS/`. Also: **CR-547** (ScanOrderPopOut KOT item selection — Issue 3) upgraded **P2→P0**, risk LOW→HIGH, release 2026-11-17 (see CR_REGISTRY). Secondary empty-poll eviction finding overlaps existing **BUG-686** — no new filing. Next: owner answers ODs → Gate 2 IA (BUG-701 highest risk; BUG-702 cheapest).
+
+---
+
+
 **CURRENT 2026-11-18 — IMPLEMENTATION (Gate 4) Nov Sprint batch: BUG-685/686/688/690/691/695/697/698/700 → GATE_5A_IMPLEMENTED; BUG-693 CLOSED (verified, no code). AuditLog 691/695/697/698/700 batched in one pass on AuditLogMockup.jsx. QA handover: `handover/QA_HANDOVER_NOV_SPRINT_BATCH_2026-11-18.md`. Held: BUG-689 (real-domain source). webpack OK.**
 
 

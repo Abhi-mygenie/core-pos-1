@@ -1,3 +1,8 @@
+**CURRENT 2026-11-18 — INTAKE (POS investigations bundle).** **CR-547** (ScanOrderPopOut: KOT Button — Item Selection Before Print) **upgraded P2 → P0** (owner directive), risk **LOW → HIGH** (touches print payload + popup state; needs print-path validation), assignee **Abhishek**, target release **2026-11-17**. Re-confirmed as Issue 3 of INVESTIGATION `investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md`: banner KOT is order-level (`DashboardPage.handleScanPrintKOT` L1737-1747 → `printOrder` all stations); per-item cancel exists (`ScanOrderPopOut` L596-606) but there is no per-item KOT selection state; KOT footer button L737-749. Sibling P0 bugs filed same session: **BUG-701** (room popup disappears on item-cancel), **BUG-702** (ScanOrderPopOut partial variation), **BUG-703** (Table View accepted aggregator no open path) — see BUG_TRACKER.
+
+---
+
+
 **BATCH B — GATE 2 IA CLOSED · GATE 2.5 DESIGN APPROVED 2026-11-15 (M1–M9 + M4b)** — Payments · Credit · GST (10 P0). Owner R1–R5 answered.
 Sources: `impact/BATCH-B_IMPACT_ANALYSIS_SUMMARY_2026_11_14.md`, `change_requests/BATCH_B_OWNER_DECISIONS_2026_11_14.md`, `backend_briefs/BACKEND_BRIEF_BATCH-B_2026_11_15.md` (Gyan, BB-01..BB-12), mockups `design/BATCH-B_GATE2_5_MOCKUPS_2026_11_15.html` (M1–M9 + M4b, ALL APPROVED 2026-11-15). Next: Gate 3.
 
