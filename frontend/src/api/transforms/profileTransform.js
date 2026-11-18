@@ -76,7 +76,7 @@ export const fromAPI = {
     // `printerAgents` field on the canonical restaurant object.
     // BUG-523: v1 also places `payment_types` at ROOT level — pass it as override so
     // fromAPI.restaurant uses root array (includes 'partial') over restaurants[0].payment_types.
-    restaurant: fromAPI.restaurant(api.restaurants?.[0], api.print_agent, api.restaurant_discount_type, api.payment_types),
+    restaurant: fromAPI.restaurant(api.restaurants?.[0], api.print_agent, api.restaurant_discount_type, api.payment_types, api.vat_info), // BUG-683: pass top-level vat_info
     permissions: api.role || [],
   }),
 
@@ -105,7 +105,7 @@ export const fromAPI = {
    *   override 2026-05-08.
    * @param {Array} [paymentTypesOverride] - ROOT-LEVEL `payment_types` array. BUG-523.
    */
-  restaurant: (api, printAgent, discountTypesOverride, paymentTypesOverride) => { // BUG-523
+  restaurant: (api, printAgent, discountTypesOverride, paymentTypesOverride, vatInfo) => { // BUG-523 + BUG-683
     if (!api) return null;
     return {
       id: api.id,
@@ -185,6 +185,7 @@ export const fromAPI = {
         // BulkEditor's tax-required validation is silently disabled (safe
         // fallback per OQ-F3-3). Consumer: `restaurant.tax.gstStatus`.
         gstStatus: api.gst_status === true,
+        vatStatus: vatInfo?.status === true, // BUG-683: top-level vat_info.status (boolean)
       },
       
       // Payment types

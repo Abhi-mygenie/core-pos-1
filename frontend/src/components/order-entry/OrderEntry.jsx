@@ -1149,7 +1149,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
     // BUG-647: skip tax when restaurant toggle is OFF
     const taxType = (item.tax?.type || 'GST').toUpperCase();
     if (taxType === 'GST' && !restaurant?.tax?.gstStatus) return sum;
-    if (taxType === 'VAT' && !restaurant?.settings?.vatEnabled) return sum;
+    if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return sum; // BUG-683
     const isInclusive = item.tax?.calculation === 'Inclusive';
     return sum + (isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100));
   }, 0);
@@ -1164,7 +1164,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
     // BUG-647: skip tax when restaurant toggle is OFF
     const taxType = (item.tax?.type || 'GST').toUpperCase();
     if (taxType === 'GST' && !restaurant?.tax?.gstStatus) return sum;
-    if (taxType === 'VAT' && !restaurant?.settings?.vatEnabled) return sum;
+    if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return sum; // BUG-683
     const isInclusive = item.tax?.calculation === 'Inclusive';
     return sum + (isInclusive ? linePrice - (linePrice / (1 + taxPct / 100)) : linePrice * (taxPct / 100));
   }, 0);
@@ -1336,7 +1336,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
           printerAgents: printerAgents || [],
           // BUG-052: profile-driven round-off gate.
           roundOffEnabled: restaurant?.totalRound !== false,
-          taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false }, // BUG-647
+          taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-647 + BUG-683
         });
 
         // Start listening for socket engage BEFORE firing API
@@ -1399,7 +1399,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
             // BUG-052: profile-driven round-off gate.
             roundOffEnabled: restaurant?.totalRound !== false,
             // BUG-647: thread tax flags for GST/VAT zeroing when toggle is OFF
-            taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false },
+            taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-683
             // CR-018: Schedule Order
             scheduled: isScheduled,
             scheduleAt }
@@ -1733,7 +1733,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
             deliveryChargeGstPct: restaurant?.deliveryChargeGstPct || 0,
             printerAgents: printerAgents || [],
             roundOffEnabled: restaurant?.totalRound !== false,
-            taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false }, // BUG-647
+            taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-647 + BUG-683
             // CR-018: Schedule Order
             scheduled: isScheduled,
             scheduleAt,
@@ -1883,7 +1883,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
           autoBill: qsrAutoBill,
           waiterId: user?.employeeId || '',
           restaurantName: restaurant?.name || '',
-          taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false }, // BUG-647
+          taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-647 + BUG-683
         });
         console.log('[QSR Pay] collect-bill payload:', JSON.stringify(payload, null, 2));
 
@@ -2512,7 +2512,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
                         printerAgents: printerAgents || [],
                         // BUG-052: profile-driven round-off gate.
                         roundOffEnabled: restaurant?.totalRound !== false,
-                        taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false }, // BUG-647
+                        taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-647 + BUG-683
                         // CR-018: Schedule Order
                         scheduled: isScheduled,
                         scheduleAt }
@@ -2616,7 +2616,7 @@ const OrderEntry = ({ table, onClose, orderData, orderType = "delivery", onOrder
                       autoBill: printAllBill,
                       waiterId: user?.employeeId || '',
                       restaurantName: restaurant?.name || '',
-                      taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.settings?.vatEnabled !== false }, // BUG-647
+                      taxFlags: { gstEnabled: restaurant?.tax?.gstStatus !== false, vatEnabled: restaurant?.tax?.vatStatus !== false }, // BUG-647 + BUG-683
                     });
                     console.log('[CollectBill] payload:', JSON.stringify(payload, null, 2));
 

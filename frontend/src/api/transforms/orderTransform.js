@@ -1314,6 +1314,7 @@ export const toAPI = {
   placeOrderWithPayment: (table, cartItems, customer, orderType, paymentData, options = {}) => {
     const { restaurantId, orderNotes = [], printAllKOT = true, userId = '', addressId = null, deliveryAddress = null, serviceChargePercentage = 0, autoBill = false, serviceChargeTaxPct = 0, deliveryChargeGstPct = 0, printerAgents = [], roundOffEnabled = true, scheduled = false, scheduleAt = null, taxFlags = {} } = options;
     const { method = 'cash', transactionId = '', splitPayments = [], tip = 0, deliveryCharge = 0, discounts = {}, tabContact } = paymentData; // BUG-672: add tabContact
+    const { gstEnabled = true, vatEnabled = true } = taxFlags; // BUG-683: for per-item tax zeroing in cart builder
 
     // BUG-672: Detect TAB payment (mirrors collectBillExisting L1539)
     const isTab = method === 'credit' || (typeof method === 'string' && method.toLowerCase() === 'tab');
@@ -1348,8 +1349,8 @@ export const toAPI = {
       return {
         ...rest,
         discount_amount: String(discAmt.toFixed(2)),
-        gst_amount: String((isGst ? newTax : 0).toFixed(2)),
-        vat_amount: String((!isGst ? newTax : 0).toFixed(2)),
+        gst_amount: String((isGst && gstEnabled ? newTax : 0).toFixed(2)), // BUG-683
+        vat_amount: String((!isGst && vatEnabled ? newTax : 0).toFixed(2)), // BUG-683
       };
     });
     // BUG-006 (AD-101): pass discount/tip/delivery so SC and GST compute on post-discount base
@@ -1680,8 +1681,8 @@ export const toAPI = {
         return {
           ...item,
           discount_amount: String(discAmt.toFixed(2)),
-          gst_amount: String((isGst ? newTax : 0).toFixed(2)),
-          vat_amount: String((!isGst ? newTax : 0).toFixed(2)),
+          gst_amount: String((isGst && gstEnabled ? newTax : 0).toFixed(2)), // BUG-683
+          vat_amount: String((!isGst && vatEnabled ? newTax : 0).toFixed(2)), // BUG-683
         };
       });
     })();

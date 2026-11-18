@@ -321,6 +321,8 @@ const CollectPaymentPanel = ({
       if (taxType === 'GST' && restaurant?.tax?.gstStatus === false) return;
       // BUG-338: skip GST on room orders when roomGstApplicable is OFF
       if (taxType === 'GST' && isRoom && restaurant?.settings?.roomGstApplicable === false) return;
+      // BUG-683: skip VAT items when restaurant has VAT disabled (mirrors GST skip at L321)
+      if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return;
       const linePrice = getItemLinePrice(item);
       const isDiscountable = item.giveDiscount !== false; // BUG-304
       let taxAmt;
@@ -471,6 +473,7 @@ const CollectPaymentPanel = ({
     (orderType === 'dineIn' || orderType === 'walkIn' || isRoom)
     && serviceChargePercentage > 0
     && !!restaurant?.autoServiceCharge
+    && !isPrepaid // BUG-678: prepaid orders should not auto-apply SC
   );
 
   // BUG-277: Manual bill print state
@@ -819,9 +822,9 @@ const CollectPaymentPanel = ({
   const itemGstPostDiscount =
     taxTotals.dGstTotal * (1 - discountableRatio)   // BUG-666: discountable, reduced by ratio
     + (taxTotals.gstTotal - taxTotals.dGstTotal);   // BUG-666: non-discountable, unchanged
-  const scGst               = serviceCharge  * scTaxRate;
-  const tipGst              = tip            * scTaxRate;
-  const deliveryGst         = deliveryCharge * delTaxRate;
+  const scGst               = restaurant?.tax?.gstStatus !== false ? serviceCharge  * scTaxRate : 0; // BUG-683: zero SC GST display when GST OFF
+  const tipGst              = restaurant?.tax?.gstStatus !== false ? tip            * scTaxRate : 0; // BUG-683
+  const deliveryGst         = restaurant?.tax?.gstStatus !== false ? deliveryCharge * delTaxRate : 0; // BUG-683
 
   const totalGst = itemGstPostDiscount + scGst + tipGst + deliveryGst;
   const sgst = Math.round((totalGst / 2) * 100) / 100;

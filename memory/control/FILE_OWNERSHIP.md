@@ -2363,3 +2363,13 @@ NOT touched: `insightsService.js` · `InsightsCacheContext.jsx` · `reportExport
 ## FILE_OWNERSHIP — BUG-679 + CR-545 OBS-5 IMPL (2026-11-17) — markers `// BUG-679`, `// CR-545 OBS-5`
 | `frontend/src/components/dashboard/ScanOrderPopOut.jsx` | E1 L466: `isCancelled` check (status=cancelled OR foodStatus=3). E2 L473: cancelled row opacity 0.5. E3 L480-487: strikethrough + grey + "(Cancelled)" label. E4 L527: hide cancel X for cancelled. E5+E6 L509-525: cancelled→hide price, APS→"Price TBD" orange pill, normal→₹ amount. | BUG-679 + CR-545 OBS-5 |
 NOT touched: `DashboardPage.jsx` · `CartPanel.jsx` · `orderTransform.js` · any service, context, or transform.
+
+## FILE_OWNERSHIP — BUG-683 + BUG-678 IMPL (2026-11-18) — markers `// BUG-683`, `// BUG-678`
+| File | Changes | Item |
+|------|---------|------|
+| `src/api/transforms/profileTransform.js` | E1a L79: +api.vat_info 5th arg. E1b L108: +vatInfo param. E1c L188: vatStatus: vatInfo?.status === true | BUG-683 E1 |
+| `src/components/order-entry/OrderEntry.jsx` | E2a-f: 6 taxFlags sites restaurant?.settings?.vatEnabled→restaurant?.tax?.vatStatus. E2g-h: L1152+L1167 localTax/unplacedTax inverted check fixed | BUG-683 E2 |
+| `src/components/order-entry/CartPanel.jsx` | E3a L434: VAT skip check fixed. E3b L455: useMemo dep fixed | BUG-683 E3 |
+| `src/components/order-entry/CollectPaymentPanel.jsx` | E4 L325: VAT skip check added. E7 L822-824: scGst/tipGst/deliveryGst gated on gstStatus. E8 L474: +!isPrepaid on serviceChargeEnabled | BUG-683 E4+E7 + BUG-678 E8 |
+| `src/api/transforms/orderTransform.js` | E5a L1317: gstEnabled/vatEnabled destructure. E5b-c L1352-1353: placeOrderWithPayment per-item gate. E6a-b L1684-1685: collectBillExisting per-item gate | BUG-683 E5+E6 |
+NOT touched: `DashboardPage.jsx` · `RestaurantSettingsPage.jsx` · `restaurantSettingsTransform.js` · any context, service, hook, utility, CSS, config, test, or backend file.

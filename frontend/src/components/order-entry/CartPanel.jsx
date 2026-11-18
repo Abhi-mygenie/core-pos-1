@@ -431,7 +431,7 @@ const QsrBillingSection = ({
       // BUG-647: skip tax when restaurant toggle is OFF
       const taxType = (tax.type || 'GST').toUpperCase();
       if (taxType === 'GST' && !restaurant?.tax?.gstStatus) return;
-      if (taxType === 'VAT' && !restaurant?.settings?.vatEnabled) return;
+      if (taxType === 'VAT' && restaurant?.tax?.vatStatus === false) return; // BUG-683
       const linePrice = getItemLinePrice(item);
       const isDiscountable = item.giveDiscount !== false; // BUG-304
       let taxAmt;
@@ -452,7 +452,7 @@ const QsrBillingSection = ({
       sgst: Math.round(sgst * 100) / 100, cgst: Math.round(cgst * 100) / 100, vat: Math.round(vat * 100) / 100,
       dSgst: Math.round(dSgst * 100) / 100, dCgst: Math.round(dCgst * 100) / 100, dVat: Math.round(dVat * 100) / 100, // BUG-304
     };
-  }, [billableItems, restaurant?.tax?.gstStatus, restaurant?.settings?.vatEnabled]);
+  }, [billableItems, restaurant?.tax?.gstStatus, restaurant?.tax?.vatStatus]); // BUG-683
 
   // Discount
   // CR-028: % discounts computed on discountableTotal (excludes give_discount='No' items)
