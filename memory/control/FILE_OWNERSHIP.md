@@ -52,6 +52,7 @@ NOT touched: `socketHandlers.js` · `orderTransform.js` · `useOrderPollingRecon
 | `src/pages/DashboardPage.jsx` | **BUG-703 IMPL 2026-11-19:** `aggregatorViewOrder` state + `handleAggregatorView` + `viewOrder`/`onCloseView` on AggregatorOrderPopOut + `onAggregatorView` to 2 TableSection mounts & grid TableCard. Same file as CR-547/CR-552 (additive). | BUG-703 IMPL 2026-11-19 |
 | `src/components/cards/TableCard.jsx` | **BUG-703 IMPL 2026-11-19:** L314 onClick — aggregator tile w/ order → `onAggregatorView(table.order)` (engaged + non-aggregator paths unchanged); +prop +PropTypes. marker `// BUG-703` | BUG-703 IMPL 2026-11-19 |
 | `src/components/cards/TableCard.jsx` | **CR-525 IMPL 2026-11-19:** L148 `showCollect` flag; L305 `handleCardClick` → `onBillClick(table)` when showCollect; L664-778 fOS5 block wrapped `showCollect ? <Collect Bill> : <existing>`. markers `// CR-525` | CR-525 IMPL 2026-11-19 |
+| `src/pages/DashboardPage.jsx` | **CR-525 IMPL 2026-11-19 (QA follow-up):** added `paymentType: order.paymentType \|\| ''` to the take-away (L~1153) and delivery (L~1172) table-card list entries so TableCard `showCollect` prepaid exclusion works in table view. marker `// CR-525` | CR-525 IMPL 2026-11-19 |
 
 > ⚠ Overlap with CR-552 (GATE_5A_IMPLEMENTED) on `ScanOrderPopOut.jsx` / `DashboardPage.jsx` — sequence Gate-3 edits after CR-552 settles.
 

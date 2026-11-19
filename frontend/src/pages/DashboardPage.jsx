@@ -1150,6 +1150,7 @@ const DashboardPage = () => {
           orderId: order.orderId,
           fOrderStatus: order.fOrderStatus,
           waiter: order.waiter || '',
+          paymentType: order.paymentType || '', // CR-525: needed for showCollect prepaid exclusion
           billPrinted: order.billPrinted || false, // BUG-583
         });
       });
@@ -1169,6 +1170,7 @@ const DashboardPage = () => {
           orderId: order.orderId,
           fOrderStatus: order.fOrderStatus,
           waiter: order.waiter || '',
+          paymentType: order.paymentType || '', // CR-525: needed for showCollect prepaid exclusion
           billPrinted: order.billPrinted || false, // BUG-583
         });
       });
