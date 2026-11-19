@@ -1,0 +1,26 @@
+{
+  "summary": "CR-525 follow-up re-test (frontend only, preview URL with the preprod backend, owner@themealbreak.com). All regression checks pass. Login works. The dashboard loads with no page errors. IN 1 (table 8740 / order 1578920) shows only collect-bill-btn-8740, with no print-btn. On the order card it shows collect-bill-btn-1578920 with no print-kot-btn or bill-btn. Both buttons open collect-payment-panel; no payment was taken. The non-printed dine-in orders (tables 8749/8756/8773, orders 1578662/1577920/1575116) still show print-btn + collect-btn in table view and print-kot-btn + bill-btn in order view. Status view (group-toggle) renders 4 Served cards correctly. The TakeAway and Delivery channels are enabled (filter-channel-takeAway and filter-channel-delivery exist), but the restaurant has 0 running take-away or delivery orders (POS 4, Web 0, all dine-in), so no take-away or delivery card could be rendered. TARGET FIX (prepaid take-away shows Settle, not Collect Bill): NOT REACHABLE live. No prepaid take-away order exists, and making one would mean creating and paying for a real order on preprod, which the brief forbids. Code review finding: the edited DashboardPage.jsx gridItems block (L1153/L1173) only feeds the legacy layout. That layout renders only when USE_CHANNEL_LAYOUT is false, and the flag is true in constants/featureFlags.js. The live channel and status views build cards with adaptOrder (L816) and adaptOrderForStatus (L957), and both already passed paymentType: order.paymentType. So the prepaid exclusion was already in place on the live path before this fix. The edit is harmless and defensive, but it has no effect at runtime under the current flags.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dashboard", "issues": ["A persistent 'New version available / Update now' toast sits bottom-center over the content (cosmetic, environment-related)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "None blocking. Note: the L1153/L1173 edit is in the legacy gridItems path, which does not run while USE_CHANNEL_LAYOUT=true. The live path (adaptOrder / adaptOrderForStatus) already carried paymentType, so the original gap only existed in the legacy grid.",
+    "To verify the prepaid take-away → Settle case live, a prepaid take-away order with a printed bill at Served must exist on preprod (create one manually)."
+  ],
+  "critical_code_review_comments": [
+    "DashboardPage.jsx gridItems/filteredGridItems is used only under !USE_CHANNEL_LAYOUT (L2092 onward). The fix is correct but sits in dead code under the current flags.",
+    "TableCard showCollect correctly checks paymentType !== 'prepaid', isDelivery, isAggregator and isRoom. paymentType comes from orderTransform (api.payment_type)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100% of reachable checks (target prepaid case not reachable)"},
+  "seed_data_creation": "None. No orders were created or paid.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Order 1578920 (IN 1 / table 8740) is still bill-printed and shows Collect Bill. The other dine-in Served orders are on tables 8749/8756/8773 and have no printed bill. There are no take-away, delivery, room or aggregator orders, so the exclusions still need a live order to test. group-toggle switches between Channel and Status view. view-toggle switches between Table and Order view."
+}

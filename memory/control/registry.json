@@ -38353,7 +38353,7 @@
       "id": "CR-525",
       "type": "CR",
       "title": "After Bill Print: Replace KOT and Bill Buttons with Collect Bill Button",
-      "status": "GATE_5B_QA_PASS 2026-11-19 — testing_agent verified on owner@themealbreak.com (order_edit_access=Yes): printed dine-in Served order shows single Collect Bill on table+order card, no KOT/Bill; Collect Bill button + card tap + Enter all open Collect Payment; non-printed orders unchanged; no render errors. V4-V8 (room/prepaid/delivery/aggregator/takeaway) code-review only (no live orders). Open follow-up: prepaid-takeaway exclusion needs paymentType plumbing in DashboardPage (out of CR-525 plan scope).",
+      "status": "GATE_5B_QA_PASS 2026-11-19 — testing_agent verified (owner@themealbreak.com, order_edit_access=Yes): printed dine-in Served order shows single Collect Bill on table+order card; Collect Bill button + card tap + Enter open Collect Payment; non-printed orders unchanged; no render errors; no regression after DashboardPage paymentType follow-up. NOTE: live path (adaptOrder/adaptOrderForStatus) already carried paymentType under USE_CHANNEL_LAYOUT=true, so the prepaid exclusion was already correct at runtime; the DashboardPage legacy-grid edit is defensive. Exclusions V4-V8 (room/prepaid/delivery/aggregator/takeaway) code-review only — no such live orders on account. Files: TableCard.jsx, OrderCard.jsx, DashboardPage.jsx.",
       "priority": "P0",
       "severity": "P2",
       "risk": "HIGH",
