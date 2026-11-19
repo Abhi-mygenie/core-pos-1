@@ -17,9 +17,9 @@ Incoming `BUG-713…732` collided with our `BUG-713…719`, so renumbered to **B
 
 | ID | Title | Sev | Risk | Area |
 |---|---|---|---|---|
-| **BUG-720** | Route permission bypass — low-rights user deep-links /settings,/menu,/employees,/inventory-*,/pms/* (ProtectedRoute not PermissionRoute); /employees exposes PII + editable password/role | **P0** | CRITICAL | Auth/Routing |
+| **BUG-720** | Route permission bypass — low-rights user deep-links /settings,/menu,/employees,/inventory-*,/pms/* (ProtectedRoute not PermissionRoute); /employees exposes PII + editable password/role [OWNER 2026-11-19: gate per-page; team brief issued for key+role mapping — see backend_briefs/TEAM_BRIEF_2026_11_19_BUG-720_RESTRICTED_PAGE_GATING.md; BLOCKED on team input] | **P0** | CRITICAL | Auth/Routing |
 | **BUG-721** | Dashboard Print KOT / YTC Cancel not permission-gated (ChannelColumn→TableCard) | **P1** | HIGH | Permissions/Dashboard |
-| **BUG-722** | Audit 30D/LM/FY timeout (insights-dashboard 65-77s>60s) + stale KPIs & Download-enabled-on-error (overlaps BUG-696/BUG-719) | **P1** | MEDIUM | Reports/Analytics |
+| **BUG-722** | Audit 30D/LM/FY timeout (insights-dashboard 65-77s>60s) + stale KPIs & Download-enabled-on-error (overlaps BUG-696/BUG-719) [OWNER 2026-11-19: fix server-side perf, NOT FE timeout/chunk; backend brief issued — see backend_briefs/BACKEND_BRIEF_2026_11_19_INSIGHTS_DASHBOARD_TIMEOUT.md] | **P1** | MEDIUM | Reports/Analytics |
 | **BUG-723** | Insights preset chip hard-coded (Sales/Cancellations/Dashboard) | P2 | LOW | Reports/Insights |
 | **BUG-724** | Order Report Beta double-load / no abort guard → "0 orders" flash | **P1** | MEDIUM | Reports/Order Beta |
 | **BUG-725** | Order Report Beta Payment column raw lowercase | P2 | LOW | Reports/Order Beta |
