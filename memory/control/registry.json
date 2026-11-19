@@ -40389,7 +40389,7 @@
       "title": "ScanOrderPopOut confirmation popup shows partial variation (group name only; v.values[].label/optionPrice not read)",
       "priority": "P0",
       "risk": "LOW",
-      "status": "GATE_3_PLAN_COMPLETE",
+      "status": "GATE_5A_IMPLEMENTED",
       "sprint_key": "nov_cr_batch",
       "area": "Dashboard / Order display",
       "assignee": "Abhishek",
@@ -40398,7 +40398,7 @@
       "intake_doc": "change_requests/BUG-702_SCANORDERPOPOUT_PARTIAL_VARIATION_DISPLAY_INTAKE.md",
       "duplicate_check": "RELATED to BUG-573 (DISTINCT component)",
       "blocked_on": null,
-      "notes": "2026-11-18 INTAKE. ScanOrderPopOut L475-482 and L609-631 render v.name / Number(v.price) (group name + non-existent price); backend shape is v.values=[{label,optionPrice}] (orderTransform.js L705-737, stored raw L136). Correct reference renderer CartPanel.jsx L111-124 / L213-216 / L417-419 — popup should mirror it. RELATED to BUG-573 (same data shape) but DISTINCT: BUG-573 fixed OrderCard variant parser (CLOSED), this is the ScanOrderPopOut popup, never patched. Risk LOW (display-only, 1 file). Evidence: evidence/INV-POS-3BUGS/. Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 2). | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-702_IMPACT_ANALYSIS.md). OD-702-01=Option A (selected option name(s) + each price, mirror CartPanel). Design approved (design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html). Risk LOW. Same-file as CR-547 (batch ScanOrderPopOut edits). RELATED BUG-573 (OrderCard, distinct). | 2026-11-18 PLANNING Gate 3: line-by-line impl plan complete (plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md). 1 file (ScanOrderPopOut.jsx), 3 edit sites: 2 module helpers + collapsed L481 + expanded L609-631. Marker // BUG-702. Batch with CR-547 (same file). No code changed.",
+      "notes": "2026-11-18 INTAKE. ScanOrderPopOut L475-482 and L609-631 render v.name / Number(v.price) (group name + non-existent price); backend shape is v.values=[{label,optionPrice}] (orderTransform.js L705-737, stored raw L136). Correct reference renderer CartPanel.jsx L111-124 / L213-216 / L417-419 — popup should mirror it. RELATED to BUG-573 (same data shape) but DISTINCT: BUG-573 fixed OrderCard variant parser (CLOSED), this is the ScanOrderPopOut popup, never patched. Risk LOW (display-only, 1 file). Evidence: evidence/INV-POS-3BUGS/. Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 2). | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-702_IMPACT_ANALYSIS.md). OD-702-01=Option A (selected option name(s) + each price, mirror CartPanel). Design approved (design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html). Risk LOW. Same-file as CR-547 (batch ScanOrderPopOut edits). RELATED BUG-573 (OrderCard, distinct). | 2026-11-18 PLANNING Gate 3: line-by-line impl plan complete (plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md). 1 file (ScanOrderPopOut.jsx), 3 edit sites: 2 module helpers + collapsed L481 + expanded L609-631. Marker // BUG-702. Batch with CR-547 (same file). No code changed. | 2026-11-18 IMPLEMENTATION (Gate 5A): ScanOrderPopOut.jsx — added getSelectedVariationOptions + flattenVariationOptions helpers; collapsed + expanded render show selected option label + (+optionPrice) per Option A. Compile PASS (no new warning), 4 // BUG-702 markers, helper logic self-tested. Browser verification on a live web-edit order PENDING (needs RID-69 edit order). 1 file.",
       "registered_date": "2026-11-18",
       "release_date": "2026-11-17"
     },

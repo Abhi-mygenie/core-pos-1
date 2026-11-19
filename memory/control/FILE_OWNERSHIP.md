@@ -1,3 +1,25 @@
+## FILE_OWNERSHIP — BUG-702 IMPL (2026-11-18) — marker `// BUG-702`
+
+| File | Change | Owner |
+|------|--------|-------|
+| `src/components/dashboard/ScanOrderPopOut.jsx` | Added `getSelectedVariationOptions(v)` + `flattenVariationOptions(variations)` helpers (~L67). Collapsed "new items" summary and expanded list now render each **selected option label + `(+₹optionPrice)`** (mirrors CartPanel L112-124) instead of group `v.name` / `Number(v.price)`. Option A. | BUG-702 IMPL 2026-11-18 |
+
+NOT touched: `orderTransform.js` · `CartPanel.jsx` (read-only ref) · `DashboardPage.jsx` · any socket/context/transform.
+
+---
+
+
+## FILE_OWNERSHIP — BUG-702 IMPL (2026-11-18) — marker `// BUG-702`
+
+| File | Change | Owner |
+|------|--------|-------|
+| `src/components/dashboard/ScanOrderPopOut.jsx` | Added `getSelectedVariationOptions(v)` + `flattenVariationOptions(variations)` helpers (~L67). Collapsed "new items" summary and expanded list now render each **selected option label + `(+₹optionPrice)`** (mirrors CartPanel L112-124) instead of group `v.name` / `Number(v.price)`. Option A. | BUG-702 IMPL 2026-11-18 |
+
+NOT touched: `orderTransform.js` · `CartPanel.jsx` (read-only ref) · `DashboardPage.jsx` · any socket/context/transform.
+
+---
+
+
 **2026-11-18 — Nov Sprint batch (Gate 4):**
 - `components/order-entry/CartPanel.jsx` — BUG-685 (onEdit prop)
 - `hooks/useOrderPollingReconciliation.js` — BUG-686 (skip reconcile on rejected POS fetch)

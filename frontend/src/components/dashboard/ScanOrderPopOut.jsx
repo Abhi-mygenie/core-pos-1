@@ -65,6 +65,28 @@ export const hasUnconfirmedWebEditItems = (order) =>
   order.fOrderStatus !== 7 &&
   Array.isArray(order.items) && order.items.some((it) => it?.isNotConfirmed && it?.status !== 'cancelled');
 
+// BUG-702: Extract SELECTED variation options (label + per-option price) from a
+// single variation group. Tolerates both shapes the app produces:
+//   RESPONSE shape → values: [{label, optionPrice}]   (running-orders / socket)
+//   REQUEST  shape → values: {label: [...]}            (place/update payload — no price)
+// Returns [{ label, price }]. Mirrors CartPanel.jsx:112-124 label logic.
+export const getSelectedVariationOptions = (v) => {
+  if (Array.isArray(v?.values)) {
+    return v.values
+      .filter((opt) => opt && opt.label != null)
+      .map((opt) => ({ label: String(opt.label), price: parseFloat(opt.optionPrice) || 0 }));
+  }
+  if (Array.isArray(v?.values?.label)) {
+    return v.values.label.filter(Boolean).map((label) => ({ label: String(label), price: 0 }));
+  }
+  const fallback = v?.label || v?.name;
+  return fallback ? [{ label: String(fallback), price: parseFloat(v?.price) || 0 }] : [];
+};
+
+// BUG-702: Flatten selected options across all variation groups on an item.
+export const flattenVariationOptions = (variations) =>
+  (Array.isArray(variations) ? variations : []).flatMap(getSelectedVariationOptions);
+
 // Pure helper — derives a tableEntry-shaped object for handleTableClick from
 // any web YTC order, regardless of channel. Mirrors the entry shapes the
 // existing DashboardPage handlers already build elsewhere (delivery/takeaway
@@ -473,12 +495,17 @@ const ScanOrderPopOut = ({
                         const lineTotal = unit * qty;
                         const isComp = Boolean(it?.isComplementary || it?.isComplementaryRuntime);
                         const variations = Array.isArray(it?.variation) ? it.variation : [];
+                        const variationOptions = flattenVariationOptions(variations); // BUG-702
                         const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
                         return (
                           <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" data-testid={`popout-new-item-${idx}`}>
                             <span className="flex-1 text-sm" style={{ color: COLORS.darkText }}>
                               {it?.name || it?.foodName || ''}
-                              {variations.length > 0 && <span className="text-xs text-gray-400 ml-1">({variations.map(v => v.name).join(', ')})</span>}
+                              {variationOptions.length > 0 && (
+                                <span className="text-xs text-gray-400 ml-1" data-testid={`popout-new-item-variation-${idx}`}>
+                                  ({variationOptions.map(o => o.price > 0 ? `${o.label} (+${currencySymbol}${o.price.toFixed(2)})` : o.label).join(', ')})
+                                </span>
+                              )}
                               {addOns.length > 0 && <span className="text-xs text-gray-400 ml-1">+{addOns.map(a => a.name).join(', ')}</span>}
                             </span>
                             <span className="text-xs text-gray-500 whitespace-nowrap">×{qty}</span>
@@ -534,6 +561,7 @@ const ScanOrderPopOut = ({
                     const isComp = Boolean(it?.isComplementary || it?.isComplementaryRuntime);
                     const isCancelled = it?.status === 'cancelled' || Number(it?.foodStatus ?? it?.food_status) === 3; // BUG-679
                     const variations = Array.isArray(it?.variation) ? it.variation : [];
+                    const variationOptions = flattenVariationOptions(variations); // BUG-702
                     const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
                     return (
                       <li
@@ -606,23 +634,23 @@ const ScanOrderPopOut = ({
                           ) : null}
                         </div>
                         {/* row 2: variations */}
-                        {variations.length > 0 ? (
+                        {variationOptions.length > 0 ? (
                           <div
                             className="mt-1 pl-3 border-l-2"
                             style={{ borderColor: COLORS.borderGray }}
                           >
-                            {variations.map((v, vIdx) => (
+                            {variationOptions.map((o, vIdx) => (
                               <div
                                 key={`var-${vIdx}`}
                                 className="text-xs"
                                 style={{ color: COLORS.grayText }}
                                 data-testid={`popout-item-variation-${idx}-${vIdx}`}
                               >
-                                {v?.name || v?.label || ''}
-                                {Number(v?.price) > 0 ? (
+                                {o.label}
+                                {o.price > 0 ? (
                                   <span className="ml-1">
                                     (+{currencySymbol}
-                                    {Number(v.price).toFixed(2)})
+                                    {o.price.toFixed(2)})
                                   </span>
                                 ) : null}
                               </div>

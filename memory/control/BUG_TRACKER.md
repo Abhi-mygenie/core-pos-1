@@ -1,3 +1,13 @@
+**CURRENT 2026-11-18 — IMPLEMENTATION Gate 5A (BUG-702).** DONE → status **GATE_5A_IMPLEMENTED**. 1 file `ScanOrderPopOut.jsx`, 3 edit sites (2 helpers + collapsed L482 + expanded L610). Selected variation option(s) now show as `Oat milk (+₹40.00), Large (+₹20.00)` (Option A). Compile PASS (no new warning); 4 `// BUG-702` markers; helper logic self-tested (6 cases ✓). **Browser verification on a live web-edit order (RID 69) still PENDING.** Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Next: QA handover / batch with CR-547 (same file).
+
+---
+
+
+**CURRENT 2026-11-18 — IMPLEMENTATION Gate 5A (BUG-702).** DONE → status **GATE_5A_IMPLEMENTED**. 1 file `ScanOrderPopOut.jsx`, 3 edit sites (2 helpers + collapsed L482 + expanded L610). Selected variation option(s) now show as `Oat milk (+₹40.00), Large (+₹20.00)` (Option A). Compile PASS (no new warning); 4 `// BUG-702` markers; helper logic self-tested (6 cases ✓). **Browser verification on a live web-edit order (RID 69) still PENDING.** Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Next: QA handover / batch with CR-547 (same file).
+
+---
+
+
 **CURRENT 2026-11-18 — PLANNING Gate 3 (BUG-702).** Line-by-line implementation plan complete → status **GATE_3_PLAN_COMPLETE**. Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Scope: **1 file** `ScanOrderPopOut.jsx`, **3 edit sites** — E-1 two module helpers (`getSelectedVariationOptions` + `flattenVariationOptions`, mirror CartPanel L112-124), E-2 collapsed summary L481, E-3 expanded list L609-631. Renders Option A `Oat milk (+₹40.00), Large (+₹20.00)` (selected option(s) + each price). Display-only, LOW risk; line totals untouched. Marker `// BUG-702`. **Batch with CR-547** (same file) and sequence after CR-552. No code changed.
 
 ---
