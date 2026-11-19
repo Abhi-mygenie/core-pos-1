@@ -40646,9 +40646,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE 2026-11-19 — registered; awaiting Gate 2 IA",
-      "gate": "GATE_1",
-      "current_gate": 1,
+      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
+      "gate": "GATE_2",
+      "current_gate": 2,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40663,7 +40663,8 @@
       "notes": "GAP B. CR-524 added Punch Time + Duration only to CancellationsMockup.jsx; CancelDetailMockup.jsx (/reports-module/cancel-detail) still shows Item/Qty/Loss/Stage/Reason/By/Order/Date (L136-143) with no Punch Time, no Duration. Data available (created_at + cancel_time_full; duration = FE calc). Owner wants parity.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
-      "ia_doc": ""
+      "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
+      "code_reality": "NONE"
     },
     {
       "id": "CR-555",
@@ -40672,9 +40673,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE 2026-11-19 — registered; awaiting Gate 2 IA",
-      "gate": "GATE_1",
-      "current_gate": 1,
+      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
+      "gate": "GATE_2",
+      "current_gate": 2,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40690,7 +40691,8 @@
       "notes": "GAP D. Risk tier exists only in AuditLogMockup.jsx getRiskTier (L68-74, CR-543: doubt>=5, risk>=15, high_risk>=30 min). Neither CancellationsMockup.jsx (raw Duration number) nor CancelDetailMockup.jsx (nothing) shows a badge. Add FE-duration-driven badge consistent across both screens. Gate-2 alignment note: Audit derives risk from duration_minutes/risk_level; CR-524 derives from created_at->cancel_time_full — confirm field-source consistency before badging.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
-      "ia_doc": ""
+      "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
+      "code_reality": "NONE"
     },
     {
       "id": "CR-556",
@@ -40699,9 +40701,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE 2026-11-19 — registered; awaiting Gate 2 IA",
-      "gate": "GATE_1",
-      "current_gate": 1,
+      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
+      "gate": "GATE_2",
+      "current_gate": 2,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40717,13 +40719,14 @@
       "notes": "Owner's primary ask ('filters for these columns in both reports'). CancellationsMockup.jsx detail table has no inline column filters; CancelDetailMockup.jsx only has Stage + Reason (testids s28-filter-stage, s28-filter-reason). Owner wants filters for Stage, Scope, Reason, Cancelled By, and Duration/risk-tier on both screens.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
-      "ia_doc": ""
+      "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
+      "code_reality": "PARTIAL"
     },
     {
       "id": "BUG-713",
       "type": "BUG",
       "title": "Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside overflow-x container)",
-      "status": "GATE_1_INTAKE 2026-11-19 — registered (GAP A RE-OPENED after revalidation); awaiting Gate 2 IA",
+      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
       "priority": "P0",
       "severity": "P0",
       "risk": "LOW",
@@ -40740,12 +40743,16 @@
       ],
       "notes": "GAP A (visibility) CONFIRMED on revalidation 2026-11-19. CancellationsMockup.jsx: Punch Time (th L944 / td L980) + Duration (min) (th L945 / td L981) + Station are columns 11-13 of 13, placed after 'Cancelled By', inside <div overflow-x-auto> L930 / <table w-full> L931. On a normal viewport the user only sees through 'Cancelled By' and must scroll horizontally to reach Punch Time/Duration -> effectively invisible by default. Owner confirms not visible on screen. Handover had WITHDRAWN GAP A on a scrolled/wide screenshot; that withdrawal is REVERSED. Matches original investigation GAP A. Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns, responsive layout, or place near Date/Stage). Relates CR-524 (added the cols), CR-554 (detail-screen parity).",
       "registered_date": "2026-11-19",
-      "release_date": "2026-11-17"
+      "release_date": "2026-11-17",
+      "gate": "GATE_2",
+      "current_gate": 2,
+      "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
+      "code_reality": "FULL"
     }
   ],
   "meta": {
     "last_updated": "2026-11-19",
-    "last_action": "Revalidation + re-open: registered BUG-713 (Cancellation Report Punch Time/Duration columns off-screen, GAP A re-opened; reverses handover withdrawal) at GATE_1_INTAKE, P0, assignee Abhishek, release_date 2026-11-17. No application code changed.",
+    "last_action": "Gate 2 Impact Analysis for BUG-713 + CR-554/555/556 (cancellation reports). FE-only; live preprod probe confirms created_at/cancel_time_full + all filter fields present. IA: impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md. 3 owner decisions queued -> Gate 3. No code.",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",

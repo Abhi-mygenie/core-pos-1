@@ -1,3 +1,8 @@
+**CURRENT 2026-11-19 — PLANNING Gate 2 (IA): BUG-713 → GATE_2_IA_COMPLETE (with CR-554/555/556).** GAP A confirmed; fix is pure FE layout — Punch Time/Duration are cols 11-12 of 13 in `CancellationsMockup.jsx` inside `overflow-x-auto` (L930). Fix directions (owner picks at Gate 3): reorder cols left / merge low-value cols / sticky-pin / responsive-hide. Single file. Coordinate with CR-554 (same overflow once CancelDetail gains columns) and open **BUG-708** (same file). Risk LOW. IA: `impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md`. No code written.
+
+---
+
+
 **CURRENT 2026-11-19 — INTAKE / RE-OPEN (GAP A revalidated).** Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.
 
 | ID | Title | Sev | Risk | Status | Doc |
