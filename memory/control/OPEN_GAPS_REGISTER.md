@@ -1,5 +1,29 @@
 # Layer 9 — Open Gaps Register
 
+## 2026-11-19 — Investigation ingest (3 reports: INV-5ISSUES, INV-PAYLATER-VAT-LM, INV-DATEFMT-CR523-CR515)
+
+Findings from `investigations/INV-5ISSUES-2026-11-18.md`, `investigations/INV-PAYLATER-VAT-LM-2026-11-18.md`, and `investigations/INV_DATEFMT_CR523_CR515_2026_11_19.md`. All read-only; no code written. Registered here as OPEN gaps pending owner intake/Gate decisions.
+
+| ID | Priority | Status | Gap | Classification | Owner / Next |
+|---|---|---|---|---|---|
+| OG-CR515-001 | P0 | OPEN | OrderReportBetaPage L779 Reprint (prints bill) gated only by `f_order_status===6` — missing `hasPermission('print_icon')`. No-print role can reprint bills from Order Report. (= INV-5ISSUES I-1.) CR-515 incomplete. | CODE_ERROR (HIGH) | 1-line fix, LOW risk, planning-skip eligible. Owner approve. |
+| OG-CR515-002 | P2 | OPEN | Collect-Bill/payment flow prints a bill gated by `clear_payment`, not `print_icon`. Collect-only role can trigger a bill print during collection. | DESIGN DECISION | Owner: should Collect flow additionally require `print_icon`? |
+| OG-CR515-003 | P1 | OPEN | Dashboard "Print Bill" (OrderEntry L2878) + cart "Re-Print" (CartPanel L1315/L1379) ARE gated by `print_icon` in code. If visible for a no-print role, that role likely HAS `print_icon`. Unconfirmed. | NEEDS LIVE PROBE | Login as the specific no-print role; inspect permissions for `print_icon`. |
+| OG-CR523-001 | P0 | OPEN | Customer name not capturing. FE save verified correct (POSTs `f_name` to `user-check-create`; order-id guard passes). On reopen name hydrates from `api.user_name`/`user.f_name` — returns blank while phone persists → backend read-back gap. | BACKEND READ-BACK (MED-HIGH) | Live read-only probe of `SINGLE_ORDER` for a customer-linked order; likely backend brief. |
+| OG-DATE-001 | P2 | OPEN | CancellationsMockup renders two date formats in one table: raw API strings `{orderDate} {orderTime}` (L736/L954) vs `toLocaleString` Punch Time (L980). App-wide inconsistency (no shared date formatter). | CODE_ERROR (HIGH) | Standardize to one shared formatter. Display-only, LOW risk. Planning-skip eligible. |
+| OG-INV5-002 | P1 | OPEN | Cancellation report "Notes" always "—": `cancelNote` never mapped in CancellationsMockup transform; `notes` field from `insights-cancellations` API unconfirmed. | CODE_ERROR + DATA_GAP | FE: add `cancelNote: i.cancel_note`. Backend: probe `notes` field. |
+| OG-INV5-003 | P2 | OPEN | Keyboard search auto-selects first item: `useEffect` dep `filteredItems.length` (not `filteredItems`); items with no `itemCode` → `exactIdx=-1` → index 0. Relates to BUG-673 (GATE_5A). | CODE_ERROR (HIGH) | FE 1-line dep fix; ensure menus have `itemCode`. Re-open BUG-673? |
+| OG-INV5-004 | P1 | OPEN | Audit log misses `make_unpaid` events after order later cancelled; `insights-audit` drops them. FE filter correct. | BACKEND_BUG | Backend brief: audit events must be immutable/append-only. |
+| OG-INV5-005 | P2 | OPEN | Discount applied after bill print not shown in report. FE reads `restaurant_discount_amount` correctly; live probe timed out. | NEEDS LIVE PROBE | Probe priti orders: `restaurant_discount_amount` value in order-logs-report. |
+| OG-PAYL-001 | P1 | OPEN | OrderBeta PayLater collect shows only Cash/UPI/Card: `CollectBillPanelDrawer` L300 hardcodes `allowedMethods=['cash','card','upi']` (from BUG-042-A), reused by CR-503 → `isHoldContext` hides Row 2 (Split/Credit/ToRoom/dynamic). | CODE_ERROR (HIGH) | Owner decision: Option A remove allowedMethods / Option B caller-driven prop. ≤5 lines. |
+| OG-PAYL-002 | P1 | OPEN | VAT amount labelled "GST" in OrderBeta (L501/L699/L881 hardcoded); `profileTransform` exposes no `taxType`. CPP shows "VAT" correctly. | LABEL / CODE_ERROR | 2 files (profileTransform + OrderBeta). Backend: confirm `tax_type` field. Full gate cycle. |
+| OG-PAYL-003 | P2 | OPEN | "Last Month" (and "FY") preset not persistent in Item Sales Ledger: `handlePreset` LM branch early-returns before `setSharedFrom/setSharedTo` (L164 vs L175) → remount resets to today. Data confirmed (49 Oct rows). | CODE_ERROR (HIGH) | FE 1-line (add setShared in LM + FY branches). LOW risk. Planning-skip eligible. |
+
+**Decisions (2026-11-19):** (1) OG-CR515-001 and OG-DATE-001 confirmed CODE_ERRORs, planning-skip-eligible — await owner approve before any edit (INVESTIGATION role wrote no code). (2) OG-CR523-001 and OG-CR515-003 require a live preprod probe before classification is final; owner@cafe103 has all perms so cannot reproduce the no-print role — need that role's credentials. (3) No new CR/BUG IDs minted — these stay as OG-* until owner intake assigns IDs. (4) No remote push (owner directive).
+
+---
+
+
 ## 2026-09-28 — CR-390 MM recovery / Gate 3 draft (OPEN)
 
 Owner accepts option 3b: **OD-390-25 LOCKED FOR PLANNING** (read-only discovery first); 1a/2a retained. **Gate 3 OPEN / OWNER REVIEW; no Gate 4 GO**, no access/discovery permission. Current presentation: `handover/SESSION_HANDOVER_2026_09_28_CR390_OPTION3B_ACCEPTED_PRESENTATION.md`. These implementation/evidence gaps remain OPEN despite decision acceptance.
