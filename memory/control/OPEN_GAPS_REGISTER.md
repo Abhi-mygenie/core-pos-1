@@ -21,6 +21,8 @@ Findings from `investigations/INV-5ISSUES-2026-11-18.md`, `investigations/INV-PA
 
 **Decisions (2026-11-19):** (1) OG-CR515-001 and OG-DATE-001 confirmed CODE_ERRORs, planning-skip-eligible — await owner approve before any edit (INVESTIGATION role wrote no code). (2) OG-CR523-001 and OG-CR515-003 require a live preprod probe before classification is final; owner@cafe103 has all perms so cannot reproduce the no-print role — need that role's credentials. (3) No new CR/BUG IDs minted — these stay as OG-* until owner intake assigns IDs. (4) No remote push (owner directive).
 
+**Registered 2026-11-19 (INTAKE):** OG-PAYL-003→BUG-704 · OG-PAYL-001→BUG-705 · OG-PAYL-002→BUG-706 · OG-DATE-001→BUG-707 · OG-INV5-002→BUG-708 · OG-INV5-004→BUG-709 · OG-INV5-005→BUG-710 · OG-CR515-001→BUG-711 · OG-CR523-001→BUG-712 · OG-CR515-002→CR-553. OG-INV5-003→noted on existing BUG-673 (re-open candidate). OG-CR515-003→NOT filed (needs live probe). Intake doc: `change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md`.
+
 ---
 
 
