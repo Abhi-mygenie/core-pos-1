@@ -1,28 +1,18 @@
-**CURRENT 2026-11-18 — IMPLEMENTATION Gate 5A (BUG-702).** DONE → status **GATE_5A_IMPLEMENTED**. 1 file `ScanOrderPopOut.jsx`, 3 edit sites (2 helpers + collapsed L482 + expanded L610). Selected variation option(s) now show as `Oat milk (+₹40.00), Large (+₹20.00)` (Option A). Compile PASS (no new warning); 4 `// BUG-702` markers; helper logic self-tested (6 cases ✓). **Browser verification on a live web-edit order (RID 69) still PENDING.** Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Next: QA handover / batch with CR-547 (same file).
+**CURRENT 2026-11-19 — CR-547 GATE 3 CLOSED.** Blocker RESOLVED via curl probe (Order #1578881, thegoankitchen). Backend `order-temp-store` is a pass-through — stores `billFoodList` as-is. **CR-547 is 100% frontend-only.** Line-by-line plan: `plans/CR-547_IMPLEMENTATION_PLAN.md` (9 edits, 2 files: `ScanOrderPopOut.jsx` + `DashboardPage.jsx`, ~50 net lines). Next: owner GO → Gate 4 implementation.
 
 ---
 
 
-**CURRENT 2026-11-18 — IMPLEMENTATION Gate 5A (BUG-702).** DONE → status **GATE_5A_IMPLEMENTED**. 1 file `ScanOrderPopOut.jsx`, 3 edit sites (2 helpers + collapsed L482 + expanded L610). Selected variation option(s) now show as `Oat milk (+₹40.00), Large (+₹20.00)` (Option A). Compile PASS (no new warning); 4 `// BUG-702` markers; helper logic self-tested (6 cases ✓). **Browser verification on a live web-edit order (RID 69) still PENDING.** Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Next: QA handover / batch with CR-547 (same file).
-
----
-
-
-**CURRENT 2026-11-18 — PLANNING Gate 3 (BUG-702).** Line-by-line implementation plan complete → status **GATE_3_PLAN_COMPLETE**. Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Scope: **1 file** `ScanOrderPopOut.jsx`, **3 edit sites** — E-1 two module helpers (`getSelectedVariationOptions` + `flattenVariationOptions`, mirror CartPanel L112-124), E-2 collapsed summary L481, E-3 expanded list L609-631. Renders Option A `Oat milk (+₹40.00), Large (+₹20.00)` (selected option(s) + each price). Display-only, LOW risk; line totals untouched. Marker `// BUG-702`. **Batch with CR-547** (same file) and sequence after CR-552. No code changed.
-
----
-
-
-**CURRENT 2026-11-19 — BUG-701 IMPLEMENTED. Gate 3 plan + code complete. QA handover at `plans/BUG-701_IMPLEMENTATION_PLAN.md`.** BUG-702/703/CR-547 remain at GATE_2_5. IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
+**CURRENT 2026-11-19 — BUG-701 IMPLEMENTED. Gate 3 plan + code complete. QA handover at `plans/BUG-701_IMPLEMENTATION_PLAN.md`.** BUG-702 at GATE_5A_IMPLEMENTED (browser verification pending). BUG-703 at GATE_2_5. CR-547 at GATE_3_PLAN_COMPLETE. IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
 
 | ID | Risk | Status | Decision |
 |---|---|---|---|
-| **BUG-701** | HIGH | **IMPLEMENTED** | FE guard added in `OrderContext.updateOrder` L147-158 (BUG-701 comment). Single file, 12 lines. Compile: clean (0 new warnings). Plan: `plans/BUG-701_IMPLEMENTATION_PLAN.md`. |
-| **BUG-702** | LOW | GATE_2_5_DESIGN_APPROVED | Option A — selected option name(s) + each price (mirror CartPanel). `impact/BUG-702_IMPACT_ANALYSIS.md` |
+| **BUG-701** | HIGH | **GATE_5A_IMPLEMENTED** | FE guard added in `OrderContext.updateOrder` L147-158 (BUG-701 comment). Single file, 12 lines. Compile: clean (0 new warnings). Plan: `plans/BUG-701_IMPLEMENTATION_PLAN.md`. |
+| **BUG-702** | LOW | **GATE_5A_IMPLEMENTED** | Option A — selected option name(s) + each price (mirror CartPanel). `impact/BUG-702_IMPACT_ANALYSIS.md`. Browser verification pending. |
 | **BUG-703** | MEDIUM | GATE_2_5_DESIGN_APPROVED | Option A — tap tile → read-only AggregatorOrderPopOut (no Accept/Reject). `impact/BUG-703_IMPACT_ANALYSIS.md` |
-| **CR-547** | HIGH | GATE_2_5_DESIGN_APPROVED | Checkboxes → one KOT, only selected items' stations; KOT disabled when none ticked. `impact/CR-547_IMPACT_ANALYSIS.md` |
+| **CR-547** | HIGH | **GATE_3_PLAN_COMPLETE** | Checkboxes → one KOT, only selected items' stations; KOT disabled when none ticked. Blocker RESOLVED: backend uses `billFoodList` from payload (curl-verified). Plan: `plans/CR-547_IMPLEMENTATION_PLAN.md`. |
 
-**Sequencing (R5):** BUG-702 + CR-547 share `ScanOrderPopOut.jsx`; CR-547 + BUG-703 share `DashboardPage.jsx`; all three overlap files just changed by **CR-552 (GATE_5A_IMPLEMENTED)** → batch the ScanOrderPopOut edits, sequence after CR-552 settles. BUG-701 edits `OrderContext.jsx` only (parallel-safe). **CR-547 Gate-3 blocker:** verify KOT print payload is item-driven (else backend brief). Next: owner GO → Gate 3 implementation plans.
+**Sequencing (R5):** BUG-702 + CR-547 share `ScanOrderPopOut.jsx`; CR-547 + BUG-703 share `DashboardPage.jsx`; all three overlap files just changed by **CR-552 (GATE_5A_IMPLEMENTED)** → batch the ScanOrderPopOut edits, sequence after CR-552 settles. BUG-701 edits `OrderContext.jsx` only (parallel-safe). **CR-547 Gate-3 blocker: ✅ RESOLVED** — curl probe Probe A/B/C confirm backend `order-temp-store` is pass-through (stores `billFoodList` as-is). No backend change needed. Next: owner GO → Gate 4 implementation.
 
 ---
 
