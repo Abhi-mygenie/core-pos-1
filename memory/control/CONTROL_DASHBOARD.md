@@ -317,3 +317,5 @@ ng-only during Gate 2.5) |
 - **Blank registry values:** Skip on push — do not write blank/empty over a Sheet value that has content.
 - **All other fields:** Push from registry → Sheet normally.
 - Decision recorded in: `AGENT_PROMPT_ALPHA.md` Role 13 (Sheet Push Agent) — "Push Field Rules" section.
+
+**2026-11-19 — CR-525 REVISED (HIDE-ONLY, owner):** CR-525 moved to **HIDE-ONLY** — after bill print replace KOT+Bill+Ready/Serve with one **Collect Bill** button (card tap/Enter → Collect Payment), **no restore after later edit**. **BD-01 DROPPED → CR-525 is FE-only and UNBLOCKED** (BD-01 is no longer a release blocker for CR-525). Status **GATE_2_IA_CLOSED → ready for Gate 3**; Gate 4 GO required. Files: `components/cards/TableCard.jsx`, `components/cards/OrderCard.jsx` (DashboardPage unchanged). Docs: `impact/CR-525_IMPACT_ANALYSIS.md` (Revision 2026-11-19), intake §9.
