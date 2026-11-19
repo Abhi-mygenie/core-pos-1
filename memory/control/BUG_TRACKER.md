@@ -13,11 +13,11 @@
 ---
 
 
-**CURRENT 2026-11-18 — PLANNING Gate 2 / 2.5 (POS investigations batch). All owner decisions resolved; no code changed.** IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
+**CURRENT 2026-11-19 — BUG-701 IMPLEMENTED. Gate 3 plan + code complete. QA handover at `plans/BUG-701_IMPLEMENTATION_PLAN.md`.** BUG-702/703/CR-547 remain at GATE_2_5. IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
 
 | ID | Risk | Status | Decision |
 |---|---|---|---|
-| **BUG-701** | HIGH | GATE_2_IA_COMPLETE | FE guard centralised in `OrderContext.updateOrder` merge (OD-701-02) + backend brief (OD-701-01). `impact/BUG-701_IMPACT_ANALYSIS.md` |
+| **BUG-701** | HIGH | **IMPLEMENTED** | FE guard added in `OrderContext.updateOrder` L147-158 (BUG-701 comment). Single file, 12 lines. Compile: clean (0 new warnings). Plan: `plans/BUG-701_IMPLEMENTATION_PLAN.md`. |
 | **BUG-702** | LOW | GATE_2_5_DESIGN_APPROVED | Option A — selected option name(s) + each price (mirror CartPanel). `impact/BUG-702_IMPACT_ANALYSIS.md` |
 | **BUG-703** | MEDIUM | GATE_2_5_DESIGN_APPROVED | Option A — tap tile → read-only AggregatorOrderPopOut (no Accept/Reject). `impact/BUG-703_IMPACT_ANALYSIS.md` |
 | **CR-547** | HIGH | GATE_2_5_DESIGN_APPROVED | Checkboxes → one KOT, only selected items' stations; KOT disabled when none ticked. `impact/CR-547_IMPACT_ANALYSIS.md` |

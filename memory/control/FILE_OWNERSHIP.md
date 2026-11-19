@@ -30,6 +30,16 @@ NOT touched: `orderTransform.js` · `CartPanel.jsx` (read-only ref) · `Dashboar
 # Layer 7 — File Ownership Map
 
 
+## FILE_OWNERSHIP — BUG-701 IMPL (2026-11-19) — marker `// BUG-701`
+
+| File | Change | Agent |
+|------|--------|-------|
+| `src/contexts/OrderContext.jsx` | **E-1 L147-158:** Added BUG-701 guard in `updateOrder` else-branch. `const existing = prev.find(o => o.orderId === orderId)`. `if (existing && existing.isWebOrder && !updatedOrder.isWebOrder) { merged = { ...updatedOrder, orderFrom: existing.orderFrom, isWebOrder: true }; }`. Preserves web-origin across all socket-driven re-transforms for room orders. Single file, 12 lines added. | BUG-701 IMPL 2026-11-19 |
+
+NOT touched: `socketHandlers.js` · `orderTransform.js` · `useOrderPollingReconciliation.js` · `ScanOrderPopOut.jsx` · `DashboardPage.jsx` · any financial/payment/print file.
+
+---
+
 ## FILE_OWNERSHIP — POS INVEST BATCH GATE_2 PLANNING (2026-11-18) — BUG-701/702/703, CR-547
 
 | File | Planned change | Planning agent |

@@ -144,8 +144,20 @@ export const OrderProvider = ({ children }) => {
         console.log('[OrderContext] updateOrder: Order not found, adding', orderId);
         next = [...prev, updatedOrder];
       } else {
+        // BUG-701: preserve web-origin across socket-driven re-transforms.
+        // Room orders return order_from='pos'/null on every socket path and
+        // get-single-order-new → isWebOrder recomputed false after each update,
+        // even when the order was web-edited (e.g. food_status=7 lines present).
+        // Mirror the BUG-082 guard from useOrderPollingReconciliation.js L174-177:
+        // carry prior orderFrom / isWebOrder when the incoming update lacks web
+        // origin but the existing stored order had it. Never upgrades non-web → web.
+        const existing = prev.find(o => o.orderId === orderId);
+        let merged = updatedOrder;
+        if (existing && existing.isWebOrder && !updatedOrder.isWebOrder) {
+          merged = { ...updatedOrder, orderFrom: existing.orderFrom, isWebOrder: true };
+        }
         console.log('[OrderContext] updateOrder: Updating order', orderId);
-        next = prev.map(o => o.orderId === orderId ? updatedOrder : o);
+        next = prev.map(o => o.orderId === orderId ? merged : o);
       }
       ordersRef.current = next;
       return next;
