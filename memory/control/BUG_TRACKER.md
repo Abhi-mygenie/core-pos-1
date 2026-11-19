@@ -1,3 +1,8 @@
+**CURRENT 2026-11-18 — PLANNING Gate 3 (BUG-702).** Line-by-line implementation plan complete → status **GATE_3_PLAN_COMPLETE**. Plan: `plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md`. Scope: **1 file** `ScanOrderPopOut.jsx`, **3 edit sites** — E-1 two module helpers (`getSelectedVariationOptions` + `flattenVariationOptions`, mirror CartPanel L112-124), E-2 collapsed summary L481, E-3 expanded list L609-631. Renders Option A `Oat milk (+₹40.00), Large (+₹20.00)` (selected option(s) + each price). Display-only, LOW risk; line totals untouched. Marker `// BUG-702`. **Batch with CR-547** (same file) and sequence after CR-552. No code changed.
+
+---
+
+
 **CURRENT 2026-11-18 — PLANNING Gate 2 / 2.5 (POS investigations batch). All owner decisions resolved; no code changed.** IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
 
 | ID | Risk | Status | Decision |
