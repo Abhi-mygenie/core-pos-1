@@ -70,3 +70,6 @@ IA re-verified against current source after fresh `main` re-pull and after CR-54
 - `AggregatorOrderPopOut.jsx:15-18` queue predicate (now named `isUnconfirmedAggregatorOrder`) — logic identical; props `L36-42` still `onAccept/onReject/currencySymbol/suppressed` only (no `readOnly`/`viewOrder` yet); mounted in `DashboardPage.jsx:1927`.
 - `DashboardPage.jsx:1490` `handleTableClick` — unchanged line number.
 Code Reality for the fix: **NONE** (no `readOnly`/`viewOrder`/`onAggregatorView` in code). Bug still reproducible. Status stays **GATE_2_5_DESIGN_APPROVED (Option A)**; IA accurate and ready for Gate 3.
+
+## Live probe confirmation (2026-11-19)
+Probed preprod as `owner@thegoankitchen.com` (role Owner). `GET /urbanpiper/get-order-list` → HTTP 200, **1 aggregator order with `f_order_status = 1` (ACCEPTED)** (id 72283, urban 2742935). Since the popup queue admits only fOrderStatus 0/7, this accepted order has no open path in Table View → bug reproduced with **live data**. Evidence: `evidence/BUG-703/PROBE_NOTE_2026-11-19.md` (+ `aggregator_order_list.json`).
