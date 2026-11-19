@@ -1,0 +1,52 @@
+{
+  "summary": "QA probe (frontend only, no app code modified) of cancellation-reports batch BUG-713, BUG-708, CR-554, CR-555, CR-556 + Audit regression. Logged in as owner@cafe103.com on preprod, date window 2026-10-01..2026-11-19 (65 cancelled lines, 147 qty, Rs 70,682). Everything requested works in the live UI. Gaps: (1) on the Cancellation Report a Scope filter picked on the 'All' tab stays active after switching tabs, while its select is hidden, so you can get 0 rows with no visible cause; (2) Punch Time is shown in the browser's timezone, but the Order column shows the cancel time from server-local strings, so the two disagree when the browser is not on IST; (3) the Audit Report cannot load the full 50-day window because the backend endpoint takes about 78 s, longer than the 60 s axios timeout. This is not caused by the refactor. Plus minor polish items.",
+  "results_per_item": {
+    "BUG-713": "PASS. The header is exactly [Order, Item, Reason / Notes, Stage, Loss, Personnel, Timing & Risk] and every row has 7 tds. Punch Time and Duration show in Timing & Risk. No horizontal overflow: scrollWidth == clientWidth at 1920 (1784/1784), 1366 (1230/1230) and 1280 (1144/1144).",
+    "BUG-708": "PASS. No 'Cancel Note' text anywhere in the table. The Notes text (blue icon) still renders on 8 rows. The empty-state row has colSpan=7 and its width equals the table width (1784px).",
+    "CR-555": "PASS on both screens. 65 rows checked: tier dist doubt 13 / risk 3 / high_risk 33 / under 5 min with no badge 16, and 0 badges disagreed with the 5/15/30 thresholds. Labels Doubt/Risk/High Risk; colours amber/orange/red. The data has no rows with unknown duration, so 'no badge when unknown' is checked by code review only (RiskBadge returns null when mins==null). Detail screen has an identical distribution and the same per-row values as the report (e.g. #019208 6 min Doubt, #019541 24 min Risk).",
+    "CR-556 report": "PASS with one gap. Each filter narrows correctly: stage After Serving 23, scope order 11 / item 54, reason Duplicate 19, staff Geetika 17, risk 13/3/33. Combined filters AND correctly (stage+risk = 1). Clear resets to 65 and hides itself. The record count updates. GAP: hidden scopeFilter persists across tabs (see ui_bugs).",
+    "CR-554 + CR-556 detail": "PASS. 7 groups [Order, Item, Stage, Loss, Reason, By, Timing & Risk]. All 5 filters plus Clear work (high_risk+After Serving 22; Geetika+Duplicate 8; scope item 54 / order 11). The Excel export (.xls) includes 'Punch Time' and 'Duration (min)' columns with values. The back button goes to /reports-module/cancellations. The tfoot colspans add up to 7.",
+    "Audit regression": "PASS (rendering). The Cancellation Report Audit tab renders (65 lines scanned, All Clear). /reports-module/audit-log with 2026-11-01..11-07 renders the KPI bar and card1 risk bar (Doubt 1 / Risk 1 / High Risk 5), cards 2 and 3 render, and there are no console errors. With the full 2026-10-01..11-19 window the page shows 'Failed to load report data — timeout of 60000ms exceeded', caused by backend latency."
+  },
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST preprod /api/v2/vendoremployee/report/insights-dashboard", "issue": "Slow backend, not this batch. Measured with curl: 50.5 s for a 7-day window and 78.6 s for 2026-10-01..2026-11-19. The full window goes past the 60 s FE axios timeout, so the Audit Report shows a 'Failed to load' banner with empty cards. Owned by the backend, or raise the timeout for this endpoint."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CancellationsMockup CR-556 filter bar", "issue": "scopeFilter is not reset when the scope tab changes. Repro: on the All tab set cx-filter-scope=Full Order, then click the Item-Level tab. Result: 0 records and 'No cancellations match the current filter'. The scope select is hidden (it only renders on the 'all' tab) and only Clear is visible, so the user cannot see why there are no rows. Fix: reset scopeFilter in the tab onClick, or ignore scopeFilter when activeScope !== 'all'.", "selector": "[data-testid=cx-filter-scope], [data-testid=cancellations-scope-item]", "priority": "MEDIUM"},
+      {"component": "Timing & Risk punch time (both screens)", "issue": "Punch Time uses new Date(created_at).toLocaleString() with no timeZone, so it shows in the browser's timezone. The Order column (report) and the cancel_date/cancel_time (detail) are IST wall-clock strings. In a UTC browser #019208 shows Order '01 Oct, 10:23 pm' but Punch '01 Oct, 04:47 pm' (created_at 22:17+05:30), so the punch looks about 5.5 h before the cancel even though Duration says 6 min. Pass timeZone:'Asia/Kolkata' (or the restaurant's timezone) when formatting.", "selector": "td:last-child of [data-testid^=cancellations-row-] / [data-testid^=s28-row-]", "priority": "LOW-MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Audit Report full date range", "issue": "The insights-dashboard request times out after 60 s for the 50-day window, so the cards show 0 events under an error banner. Pre-existing backend latency; not caused by the getRiskTier refactor.", "affected_selectors": ["[data-testid=audit-card1]", "[data-testid=audit-kpi-bar]"]}
+    ],
+    "design_issues": [
+      {"screen": "Item Cancellation Detail (s28)", "issues": ["The subtitle still says 'filterable by stage & reason' but there are now 5 filters", "There is no empty-state row when filters match nothing: tbody renders empty with only the TOTAL footer (the report has a colSpan=7 message)", "The Order cell shows a raw '2026-10-01 22:23' string, while the report shows the formatted '01 Oct, 10:23 pm'", "Scope option order is Item-Level then Full Order; the report uses Full Order then Item-Level"]},
+      {"screen": "Exports", "issues": ["The Punch Time export column holds the raw ISO string '2026-10-01T22:17:29+05:30' (both reports); consider a human-readable format"]},
+      {"screen": "Global", "issues": ["A 'New version available — Update now' toast stays over the bottom-center of every report page and covers the table rows"]}
+    ]
+  },
+  "test_report_links": ["/app/tests/probe_cancellations_api.sh", "/app/tests/probe_audit_api.sh"],
+  "action_items": [
+    "CancellationsMockup: reset scopeFilter on scope-tab change, or apply it only when activeScope==='all'",
+    "Format punchTime with an explicit timeZone (Asia/Kolkata / restaurant timezone) in both CancellationsMockup and CancelDetailMockup so it matches the Order/cancel time column",
+    "CancelDetailMockup: add an empty-state row (colSpan 7) and update the subtitle text",
+    "Optional: format Punch Time in the exports; raise the timeout or ask backend to optimise insights-dashboard (78 s for 50 days)"
+  ],
+  "critical_code_review_comments": [
+    "CancellationsMockup L291-295 still has its own inline duration calculation instead of using the shared durationMins() from utils/riskTier, so the logic exists twice (CancelDetailMockup uses the util)",
+    "CancellationsMockup is 1043 lines, over the 700-line guideline",
+    "durationMins relies on Date.parse of ISO strings with an offset. That is fine for the current backend format, but returns null for strings like 'YYYY-MM-DD HH:mm:ss' in Safari",
+    "RiskBadge calls getRiskTier twice; trivial"
+  ],
+  "updated_files": ["/app/tests/probe_cancellations_api.sh", "/app/tests/probe_audit_api.sh"],
+  "success_rate": {"backend": "N/A (frontend-only; read-only API probes)", "frontend": "92% (all 6 items pass core checks; 1 medium + 1 low-medium gap)"},
+  "test_credentials": "owner@cafe103.com / Qplazm@10 (from /app/memory/test_credentials.md) - works",
+  "seed_data_creation": "None. Read-only probe; no data created or modified.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Login: wait for /dashboard, then goto /reports-module/cancellations. IMPORTANT: wait for [data-testid=cancellations-date-from]:not([disabled]) (the initial today-range fetch) BEFORE filling dates; otherwise Apply can race and show 0 rows. Then fill 2026-10-01/2026-11-19 and Apply (65 rows). The detail route is /reports-module/cancel-detail (s28-* testids, same 65 rows). For the Audit route /reports-module/audit-log use a window of 7 days or less (e.g. 2026-11-01..07); longer windows go past the 60 s timeout. Browser runs in UTC, which is why punch times show in UTC.",
+  "rca of the issue": "Hidden scope filter: the scopeFilter state is independent of activeScope, and the select is only rendered when activeScope==='all', yet filteredTable always applies scopeFilter. Punch time mismatch: toLocaleString with no timeZone formats the ISO created_at in the client's timezone, while the Order column builds a Date from IST-local date/time strings without an offset. Audit timeout: backend insights-dashboard latency grows with the window (50 s for 7 days, 78 s for 50 days) against the 60 s axios timeout."
+}
