@@ -330,6 +330,8 @@ const ScanOrderPopOut = ({
   const isEditMode = hasUnconfirmedWebEditItems(activeOrder);
   const newItems   = isEditMode ? (activeOrder.items || []).filter(it => it.isNotConfirmed && it.status !== 'cancelled') : [];
   const prevItems  = isEditMode ? (activeOrder.items || []).filter(it => !it.isNotConfirmed) : [];
+  // CR-547: selected items that STILL exist on the order — drives KOT badge, disabled, and payload
+  const kotSelectedItems = (activeOrder.items || []).filter(it => selectedItemIds.has(it.id));
   const isUnderlyingSnoozed =
     snoozedOrders && typeof snoozedOrders.has === 'function' && snoozedOrders.has(idStr);
   const total = Number(activeOrder.amount || 0).toFixed(2);
@@ -887,17 +889,16 @@ const ScanOrderPopOut = ({
               type="button"
               data-testid={`popout-print-kot-${idStr}`}
               onClick={() => {
-                // CR-547: Pass only selected items
-                const selected = (activeOrder.items || []).filter(it => selectedItemIds.has(it.id));
-                onPrintKOT(activeOrder, selected);
+                // CR-547: Pass only selected items that still exist on the order
+                onPrintKOT(activeOrder, kotSelectedItems);
               }}
-              disabled={isAccepting || selectedItemIds.size === 0}
+              disabled={isAccepting || kotSelectedItems.length === 0}
               className="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-semibold bg-white disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ borderColor: COLORS.borderGray, color: COLORS.darkText }}
-              title={selectedItemIds.size === 0 ? 'Select items for KOT' : `Print KOT for ${selectedItemIds.size} item(s)`}
+              title={kotSelectedItems.length === 0 ? 'Select items for KOT' : `Print KOT for ${kotSelectedItems.length} item(s)`}
             >
               <Printer className="w-4 h-4" />
-              <span>KOT{selectedItemIds.size > 0 ? ` (${selectedItemIds.size})` : ''}</span>
+              <span>KOT{kotSelectedItems.length > 0 ? ` (${kotSelectedItems.length})` : ''}</span>
             </button>
           ) : null}
           <button

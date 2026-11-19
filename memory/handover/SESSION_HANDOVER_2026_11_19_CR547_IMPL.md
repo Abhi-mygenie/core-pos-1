@@ -25,3 +25,12 @@ All 9 edits match `memory/plans/CR-547_IMPLEMENTATION_PLAN.md` exactly. Frontend
 ## Next
 - QA / owner smoke on preprod (needs a real restaurant login + a live scan/web-edit order).
 - No test credentials in this pod (`memory/test_credentials.md` gitignored/empty).
+
+## Post-QA hardening (2026-11-19, testing-agent follow-up)
+- Testing agent verified CR-547 UI via a fresh jest suite `src/__tests__/components/dashboard/CR547_SelectiveKOT.test.jsx` — 6/6 PASS (app health also PASS; live E2E BLOCKED by missing creds).
+- Fixed MEDIUM finding: KOT badge/disabled/onClick now driven by `kotSelectedItems` (selected items STILL present on the order) instead of raw `selectedItemIds.size`. Prevents a stale badge + an enabled button resolving to an empty selection and falling back to a full-order print. Compile clean, 6/6 jest still pass.
+
+## Owner decisions surfaced (NOT implemented — scope beyond approved plan)
+1. Should an item that arrives by socket for the order already on screen be auto-selected? (Currently selection resets only on order switch, per plan edge-case table.)
+2. CRITICAL to confirm on preprod: the Laravel KOT print template must render from `billFoodList` (filtered payload) and NOT from DB order items by `order_id` — otherwise the KOT will still show every item. This is the main real-world risk of CR-547 and can only be verified on a real printer/agent.
+

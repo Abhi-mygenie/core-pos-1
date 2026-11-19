@@ -1,0 +1,35 @@
+{
+  "summary": "CR-547 Selective KOT. App health check PASSED: the preview URL loads the MyGenie login screen (login-email, login-password, login-button), with 0 console errors, no page errors and no webpack overlay. I could NOT test the live ScanOrderPopOut flow: /app/memory/test_credentials.md does not exist and the popout needs a real preprod.mygenie.online login plus a live scan/web-edit order. I did not guess credentials. To make up for this, I wrote a new jest suite with fresh fixtures (CR547_SelectiveKOT.test.jsx) that renders the real ScanOrderPopOut and checks the CR-547 UI in normal mode and edit mode. All 6 tests pass. I also reviewed handleScanPrintKOT in DashboardPage and printOrder in orderService.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ScanOrderPopOut selection state", "issue": "Selection is reset only when the active orderId changes (useEffect deps [_kotOrderId]). If a socket update adds an item to the order already on screen, the new item is NOT auto-selected and the badge stays 'KOT (2)' (confirmed in jest). Staff could print a KOT that leaves out the newest item without noticing. Also, if an item is removed or cancelled after it was selected, selectedItemIds.size still counts it, so the badge can be too high (the print payload drops it, so the print itself is correct).", "selector": "[data-testid^='popout-print-kot-']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Selective KOT -> printOrder", "issue": "NOT VERIFIED end to end. The frontend filters billFoodList (rawOrderDetails) and derives station_kot from the selected items correctly, but it still sends the same order_id. If the Laravel print template reads items from the DB by order_id instead of billFoodList, the KOT will still show every item. This needs a check on a real printer or agent.", "affected_selectors": ["[data-testid^='popout-print-kot-']"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/frontend/src/__tests__/components/dashboard/CR547_SelectiveKOT.test.jsx"],
+  "action_items": [
+    "Add test credentials to /app/memory/test_credentials.md so the live ScanOrderPopOut flow can be tested",
+    "Decide whether items that arrive by socket for the order already on screen should be auto-selected; at minimum, add new item ids to the selection or show a hint",
+    "Base the KOT (N) badge and the disabled check on the selected ids that are still present and selectable, not on raw selectedItemIds.size",
+    "Confirm on preprod that the KOT printer prints from billFoodList and not from DB order items (the main risk of CR-547)",
+    "Small behaviour change: with every item selected, cancelled lines are now filtered out of billFoodList, while the old full-order print sent all rawOrderDetails. This is probably fine but should be confirmed"
+  ],
+  "critical_code_review_comments": [
+    "item.id comes from detail.id (orderTransform L115), so filtering rawOrderDetails by d.id is consistent",
+    "Items without an id are dropped by filter(Boolean). Their checkbox can then never be ticked, and the select-all 'every' check stays false, so the header reads 'Select all' forever",
+    "Normal-mode select-all repeats the same filter (status !== 'cancelled' && foodStatus !== 3) 4 times plus once in the useEffect; extract a selectable-items memo",
+    "ScanOrderPopOut.jsx is 934 lines (over the 700-line guideline)",
+    "handleScanPrintKOT falls back to the full order when selectedItems is empty. That is safe, because the button is disabled when 0 items are selected"
+  ],
+  "updated_files": ["/app/frontend/src/__tests__/components/dashboard/CR547_SelectiveKOT.test.jsx"],
+  "success_rate": {"backend": "N/A (not requested)", "frontend": "App health 100%; CR-547 jest 6/6; live E2E BLOCKED"},
+  "test_credentials": "MISSING: /app/memory/test_credentials.md does not exist; no preprod login available",
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run with: cd /app/frontend && CI=true npx craco test --watchAll=false src/__tests__/components/dashboard/CR547_SelectiveKOT.test.jsx. The older ScanOrderPopOut.test.jsx fails 22/29 because of stale fixtures; this was already true before CR-547. Once credentials exist, log in and wait for a scan or web-edit order to bring up the popout. Then check popout-kot-select-all, popout-kot-check-<idx> / popout-kot-check-new-<idx> and popout-print-kot-<orderId>, and confirm the printed KOT contains only the selected items."
+}
