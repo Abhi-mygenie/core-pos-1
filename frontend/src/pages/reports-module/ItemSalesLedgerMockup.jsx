@@ -6,7 +6,7 @@
 // Tabs: All Items | By Category | By Station | Complementary
 //
 // Key decisions (all owner-confirmed):
-//   - Rank col: highest Net Sales first (index+1 from backend sort)
+//   - Rank col: highest Total Sales first (index+1 from backend's total_sales DESC sort)
 //   - Export: uses visibleColList — both PDF and Excel respect column chooser
 //   - No date range limit (unlike Order Ledger's 60-day cap)
 //   - Presets: Today/7D/30D/MTD/1Y/FY — all enabled
@@ -472,7 +472,7 @@ const ItemSalesLedgerMockup = () => {
               { label: 'Units Sold',    value: kpis.totalQty,    sub: 'servings',      icon: Tag,          fmt: 'count', testId: 'kpi-units-sold'                  },
               { label: 'Discount',      value: kpis.discount,    sub: 'applied',       icon: Percent,      fmt: 'inr',   testId: 'kpi-discount'                    },
               { label: 'Net Sales',     value: kpis.netSales,    sub: 'before taxes',  icon: IndianRupee,  fmt: 'inr',   testId: 'kpi-net-sales',  accent: true    }, // BUG-630 OD-630-01
-              { label: 'Tax',           value: kpis.tax,         sub: 'GST + SC',      icon: Receipt,      fmt: 'inr',   testId: 'kpi-tax'                         }, // BUG-630 OD-630-05
+              { label: 'Tax',           value: kpis.tax,         sub: 'GST + VAT + SC', icon: Receipt,      fmt: 'inr',   testId: 'kpi-tax'                         }, // BUG-630 OD-630-05
               { label: 'Total Sales',   value: kpis.totalSales,  sub: 'incl. tax',     icon: IndianRupee,  fmt: 'inr',   testId: 'kpi-total-sales'                 }, // BUG-630 OD-630-04
             ].map(({ label, value, sub, icon: Icon, fmt, testId, accent }) => (
               <div key={label}

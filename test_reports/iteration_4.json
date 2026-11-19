@@ -1,0 +1,27 @@
+{
+  "summary": "BUG-630 Phase B (E1) verification. Unit suite topFoodSalesService.test.js passes 6/6 (netSales=r.net_sales, totalSales=r.total_sales, tax=gst+vat+sc, net+tax==total identity, discount reflected, missing net_sales->0). App loads at preview URL (MyGenie POS login page), no webpack overlay, no page errors. Code review of ItemSalesLedgerMockup confirms KPIs Net Sales('before taxes')/Tax/Total Sales present, Gross Revenue KPI removed, Total Sales column in COLUMNS, kpis aggregate netSales & totalSales separately. Live Item Sales Ledger render BLOCKED: no preprod employee credentials (/app/memory/test_credentials.md missing).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [{"flow": "Item Sales Ledger live render", "issue": "BLOCKED - no employee credentials available; distinct Net vs Total values on live data not visually verified", "affected_selectors": ["[data-testid='kpi-net-sales']", "[data-testid='kpi-tax']", "[data-testid='kpi-total-sales']"]}],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/frontend/src/__tests__/api/services/topFoodSalesService.test.js"],
+  "action_items": [
+    "Provide preprod employee credentials in /app/memory/test_credentials.md to allow live verification of Item Sales Ledger",
+    "Minor: Tax KPI subtitle 'GST + SC' omits VAT although tax = gst + vat + service_charge (consider 'GST + VAT + SC' or 'Taxes & SC')",
+    "Minor: Tax KPI and Total Sales subtitle 'incl. tax' - service charge is not a tax; consider 'incl. tax & SC' for clarity"
+  ],
+  "critical_code_review_comments": [
+    "Stale comments: header says 'Rank col: highest Net Sales first' and row comment 'highest netSales first', but backend sorts by total_sales DESC; rank = index+1 so rank follows total_sales order. Harmless now but could diverge from Net Sales ordering when SC differs per item.",
+    "grandTotal (netSales sum) used for pctOfTotal - consistent with Net Sales column; OK.",
+    "ItemSalesLedgerMockup.jsx is large (>700 lines) - consider splitting."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100% of testable items (unit 6/6, app health pass); live render blocked"},
+  "test_credentials": "MISSING - /app/memory/test_credentials.md does not exist",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run: cd /app/frontend && CI=true yarn test --watchAll=false --testPathPattern=topFoodSalesService. Live page requires preprod.mygenie.online employee login; once creds exist, navigate to Item Sales Ledger and compare kpi-net-sales < kpi-total-sales and kpi-net-sales + kpi-tax == kpi-total-sales."
+}

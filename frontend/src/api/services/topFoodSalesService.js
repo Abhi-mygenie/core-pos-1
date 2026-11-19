@@ -34,7 +34,7 @@ export const parseTopFoodSalesRow = (r, index) => {
   const tax             = gst + vat + serviceCharge;                 // BUG-630: derived — FE sum of existing API fields
 
   return {
-    rank:            index + 1,                                      // 1-based, highest netSales first
+    rank:            index + 1,                                      // 1-based; backend sorts by total_sales DESC (BUG-630)
     foodItem:        r.food_item        || '',
     stationName:     r.station_name     || '',
     categoryName:    r.category_name    || '',
