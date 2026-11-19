@@ -1,0 +1,28 @@
+{
+  "summary": "CR-525 frontend test on preview (preprod backend), account owner@themealbreak.com. Login works. The profile API returns order_edit_access=\"Yes\", so the positive path could be reached. At the start all 4 running dine-in orders (IN 1, IN 10 and 2 more, all at Served) had bill_print=No and showed KOT + Bill. The tester pressed 'Bill' on the IN 1 table card (table 8740, order 1578920, #001221, Rs 711). This printed the bill. The socket update arrived and the card changed live to a single 'Collect Bill' button (collect-bill-btn-8740) with no KOT. The order-card view shows the same: collect-bill-btn-1578920 only, with no print-kot-btn and no bill-btn. These all open the Collect Payment panel (collect-payment-panel): the Collect Bill button on the table card, the Collect Bill button on the order card, a tap on the table card body, a tap on the order card header or items area, and Enter on either card (keyboard shortcuts turned on through localStorage). The 3 orders without a printed bill still show print-btn + collect-btn (table view) and print-kot-btn + cancel + bill-btn (order view), and tapping them still opens order edit, not CPP. The printed card has the orange #FFEDD5 background (CR-521 changed it from the BUG-583 green) and a green border. No page errors or render errors. Exclusions V4-V7 (room, prepaid, delivery, aggregator) and V8 (takeaway/walk-in) could NOT be tested live: this restaurant has no such running orders (POS 4, Web 0, all dine-in). They were checked by code review only.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Order card (bill printed)", "issues": ["A tap on the timeline row (header row 2) does nothing because that row has its own onClick stopPropagation. This existed before CR-525, but it means a 'tap anywhere on card -> Collect Payment' only works on the header, items and footer areas."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "LOW/robustness: In DashboardPage.jsx, the takeAway and delivery entries pushed to the table-card list (around L1141-1175) do not include paymentType. TableCard's showCollect checks table.paymentType !== 'prepaid', so a PREPAID takeaway with billPrinted=true in Table view would wrongly show 'Collect Bill' instead of Settle. Fix: add paymentType: order.paymentType || '' to those entries, or read table.order?.paymentType / getOrderById in TableCard. (The existing Settle branch uses table.paymentType too, so it has the same gap.)",
+    "Optional: handleCardClick and the OrderCard onClick redirect to Collect Payment whenever showCollect is true, at any fOrderStatus. The button swap only applies at fOS 5. If a bill can be printed before Served, the card tap opens CPP while the card still shows Ready/Serve buttons. Consider gating the redirect with fOrderStatus === 5 if that is not intended."
+  ],
+  "critical_code_review_comments": [
+    "The showCollect flags in TableCard L149 and OrderCard L124 match the spec: orderEditAccess && billPrinted && !room && paymentType !== 'prepaid' && !delivery && !aggregator.",
+    "In OrderCard, the Collect Bill button sits inside the existing canBill gate, so users without bill permission will not see it. This is consistent with the old Bill button.",
+    "Cancel, merge and shift are hidden on the printed card because of the existing CR-489 isEditLocked rule. This is not part of CR-525."
+  ],
+  "updated_files": ["/app/test_reports/iteration_6.json"],
+  "success_rate": {"backend": "N/A (frontend only)", "frontend": "100% of reachable cases (V1, V3, V9, V10 and the order-card variants passed); V4-V8 not reachable live"},
+  "seed_data_creation": "DATA CHANGE ON PREPROD: the tester printed the bill on the existing order 1578920 (table IN 1 / 8740, customer 'Owner', #001221, Rs 711) using the table-card Bill button. bill_print is now Yes, and under CR-525 this cannot be undone (hide-only). A bill print job was also sent for that order. No other data was changed; no payment was collected. The keyboard-shortcut localStorage flag was set only inside the test browser and then removed.",
+  "test_credentials": "owner@themealbreak.com / Qplazm@10 (order_edit_access=Yes)",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Order 1578920 (IN 1, table 8740) is now bill-printed and shows collect-bill-btn-8740 / collect-bill-btn-1578920. The other dine-in orders with unprinted bills are on tables 8749, 8756 and 8773 (orders 1578662, 1577920, 1575116). To test room, prepaid, delivery, aggregator or takeaway exclusions, someone must first create those orders. The order view is opened with data-testid='view-toggle' and resets on reload. To enable the keyboard Enter path, set localStorage mygenie_keyboard_shortcuts_enabled='true'. The table-card 'Bill' (collect-btn-*) prints the bill directly; it does not open CPP."
+}

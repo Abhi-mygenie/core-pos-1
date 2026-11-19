@@ -38353,7 +38353,7 @@
       "id": "CR-525",
       "type": "CR",
       "title": "After Bill Print: Replace KOT and Bill Buttons with Collect Bill Button",
-      "status": "GATE_5A_IMPLEMENTED 2026-11-19 — 7 edits, 2 files (TableCard.jsx + OrderCard.jsx). showCollect flag + fOS5 button swap + card tap/Enter redirect. FE-only, HIDE-ONLY. Compiled clean. Gate 4 GO given; awaiting QA.",
+      "status": "GATE_5B_QA_PASS 2026-11-19 — testing_agent verified on owner@themealbreak.com (order_edit_access=Yes): printed dine-in Served order shows single Collect Bill on table+order card, no KOT/Bill; Collect Bill button + card tap + Enter all open Collect Payment; non-printed orders unchanged; no render errors. V4-V8 (room/prepaid/delivery/aggregator/takeaway) code-review only (no live orders). Open follow-up: prepaid-takeaway exclusion needs paymentType plumbing in DashboardPage (out of CR-525 plan scope).",
       "priority": "P0",
       "severity": "P2",
       "risk": "HIGH",
