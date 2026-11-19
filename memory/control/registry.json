@@ -40760,8 +40760,8 @@
       "type": "BUG",
       "title": "Cancellation Report — scope filter persists across scope tabs (hidden select → 0 rows with no visible cause)",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found gap in CR-556 filters",
-      "priority": "P2",
-      "severity": "P2",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
@@ -40773,7 +40773,7 @@
       "relates_to": [
         "CR-556"
       ],
-      "notes": "On the All tab set cx-filter-scope=Full Order then switch to Item-Level tab → 0 rows + 'No cancellations match'. scope select only renders on 'all' tab so stale scopeFilter is invisible; only Clear shows. Fix: reset scopeFilter on scope-tab change OR apply it only when activeScope==='all'. File CancellationsMockup.jsx.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] On the All tab set cx-filter-scope=Full Order then switch to Item-Level tab → 0 rows + 'No cancellations match'. scope select only renders on 'all' tab so stale scopeFilter is invisible; only Clear shows. Fix: reset scopeFilter on scope-tab change OR apply it only when activeScope==='all'. File CancellationsMockup.jsx.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40786,8 +40786,8 @@
       "type": "BUG",
       "title": "Punch Time rendered in browser timezone, disagrees with Order/cancel time (both cancellation screens)",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found gap",
-      "priority": "P2",
-      "severity": "P2",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
@@ -40801,7 +40801,7 @@
         "CR-554",
         "CR-555"
       ],
-      "notes": "Punch Time uses new Date(created_at).toLocaleString() with no timeZone → browser TZ, while Order/cancel columns are IST wall-clock strings. UTC browser: #019208 Order '10:23 pm' vs Punch '04:47 pm' though Duration=6 min. Fix: pass timeZone 'Asia/Kolkata'/restaurant tz. Files CancellationsMockup.jsx + CancelDetailMockup.jsx.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] Punch Time uses new Date(created_at).toLocaleString() with no timeZone → browser TZ, while Order/cancel columns are IST wall-clock strings. UTC browser: #019208 Order '10:23 pm' vs Punch '04:47 pm' though Duration=6 min. Fix: pass timeZone 'Asia/Kolkata'/restaurant tz. Files CancellationsMockup.jsx + CancelDetailMockup.jsx.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40814,8 +40814,8 @@
       "type": "BUG",
       "title": "Item Cancellation Detail — no empty-state row when filters match nothing (empty tbody + lone TOTAL footer)",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found gap in CR-556 filters",
-      "priority": "P3",
-      "severity": "P3",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
@@ -40827,7 +40827,7 @@
       "relates_to": [
         "CR-556"
       ],
-      "notes": "When the 5 s28 filters exclude all rows, tbody renders empty with only the TOTAL footer; report screen has a colSpan=7 message, detail does not. Fix: add empty-state row (colSpan 7). File CancelDetailMockup.jsx.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] When the 5 s28 filters exclude all rows, tbody renders empty with only the TOTAL footer; report screen has a colSpan=7 message, detail does not. Fix: add empty-state row (colSpan 7). File CancelDetailMockup.jsx.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40840,8 +40840,8 @@
       "type": "BUG",
       "title": "Item Cancellation Detail — polish: stale subtitle, raw Order timestamp, scope option order mismatch",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found cosmetic bundle",
-      "priority": "P3",
-      "severity": "P3",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
@@ -40854,7 +40854,7 @@
         "CR-554",
         "CR-556"
       ],
-      "notes": "(a) subtitle still 'filterable by stage & reason' but 5 filters now; (b) Order cell shows raw '2026-10-01 22:23' vs report formatted '01 Oct, 10:23 pm'; (c) scope option order Item-Level/Full Order vs report Full Order/Item-Level. File CancelDetailMockup.jsx.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] (a) subtitle still 'filterable by stage & reason' but 5 filters now; (b) Order cell shows raw '2026-10-01 22:23' vs report formatted '01 Oct, 10:23 pm'; (c) scope option order Item-Level/Full Order vs report Full Order/Item-Level. File CancelDetailMockup.jsx.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40867,8 +40867,8 @@
       "type": "BUG",
       "title": "Item Cancellation Detail export — Punch Time column holds raw ISO string",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found gap in CR-554 export",
-      "priority": "P3",
-      "severity": "P3",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "LOW",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics (export)",
@@ -40880,7 +40880,7 @@
       "relates_to": [
         "CR-554"
       ],
-      "notes": "New Punch Time export column outputs raw '2026-10-01T22:17:29+05:30' instead of a friendly value. Fix: pre-format punchTime for export rows (keep tz consistent w/ BUG-715). File CancelDetailMockup.jsx buildExportPayload.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] New Punch Time export column outputs raw '2026-10-01T22:17:29+05:30' instead of a friendly value. Fix: pre-format punchTime for export rows (keep tz consistent w/ BUG-715). File CancelDetailMockup.jsx buildExportPayload.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40893,8 +40893,8 @@
       "type": "BUG",
       "title": "Audit Report — full 50-day range times out (insights-dashboard ~78s > 60s axios timeout)",
       "status": "GATE_1_INTAKE 2026-11-19 — QA-found, BACKEND-BLOCKED, pre-existing (not from refactor)",
-      "priority": "P1",
-      "severity": "P1",
+      "priority": "P0",
+      "severity": "P0",
       "risk": "MEDIUM",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics (backend latency)",
@@ -40908,7 +40908,7 @@
         "CR-546",
         "CR-528"
       ],
-      "notes": "audit-log 2026-10-01..11-19 → 'timeout of 60000ms exceeded'; narrow ranges load fine. Backend insights-dashboard ~78s for 50 days. NOT caused by getRiskTier refactor (Audit renders fine on normal ranges). Fix: backend optimise endpoint; optionally raise client timeout / paginate. Owner to route to backend.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] audit-log 2026-10-01..11-19 → 'timeout of 60000ms exceeded'; narrow ranges load fine. Backend insights-dashboard ~78s for 50 days. NOT caused by getRiskTier refactor (Audit renders fine on normal ranges). Fix: backend optimise endpoint; optionally raise client timeout / paginate. Owner to route to backend.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "gate": "GATE_1",
@@ -40935,7 +40935,7 @@
       "priority": "P0",
       "risk": "CRITICAL",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MAJOR] Low-rights user can deep-link to /settings, /menu, /employees, /inventory-*, /pms/* — App.js L253-289 use ProtectedRoute not PermissionRoute. /employees exposes all staff email+phone with editable password/role/status. Only reports routes are gated. QA Group 4.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Low-rights user can deep-link to /settings, /menu, /employees, /inventory-*, /pms/* — App.js L253-289 use ProtectedRoute not PermissionRoute. /employees exposes all staff email+phone with editable password/role/status. Only reports routes are gated. QA Group 4.",
       "severity": "P0"
     },
     {
@@ -40954,11 +40954,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-721",
       "title": "Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel",
-      "priority": "P1",
+      "priority": "P0",
       "risk": "HIGH",
       "duplicate_check": "RELATED BUG-711, CR-515",
-      "notes": "[QA severity MAJOR] Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel. ChannelColumn L321 does not pass canPrintBill/canCancelOrder to TableCard (OrderCard is gated). Captain could print/cancel. QA Group 4.",
-      "severity": "P1"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel. ChannelColumn L321 does not pass canPrintBill/canCancelOrder to TableCard (OrderCard is gated). Captain could print/cancel. QA Group 4.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -40976,11 +40976,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-722",
       "title": "Audit report 30D/LM/FY: preprod insights-dashboard 65-77s exceeds 60s axios timeout -> error",
-      "priority": "P1",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "RELATED BUG-696",
-      "notes": "[OVERLAP: existing BUG-696 + our BUG-719 are the same Audit insights-dashboard latency; registered separately per owner — consolidate during Impact if confirmed] [QA severity MAJOR] Audit report 30D/LM/FY: preprod insights-dashboard 65-77s exceeds 60s axios timeout -> error. On error rawData keeps previous range KPIs on screen and Download stays enabled -> would export stale data under the new range label. QA Group 1.",
-      "severity": "P1",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [OVERLAP: existing BUG-696 + our BUG-719 are the same Audit insights-dashboard latency; registered separately per owner — consolidate during Impact if confirmed] [QA severity MAJOR] Audit report 30D/LM/FY: preprod insights-dashboard 65-77s exceeds 60s axios timeout -> error. On error rawData keeps previous range KPIs on screen and Download stays enabled -> would export stale data under the new range label. QA Group 1.",
+      "severity": "P0",
       "relates_to": [
         "BUG-696",
         "BUG-719"
@@ -41002,11 +41002,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-723",
       "title": "Sales/Cancellations/Dashboard preset chip hard-coded useState(7D)/Today (SalesMockup L121, CancellationsMockup L199); does not match the FY/LM range shared from Audit",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-697, BUG-704",
-      "notes": "[QA severity MAJOR] Sales/Cancellations/Dashboard preset chip hard-coded useState(7D)/Today (SalesMockup L121, CancellationsMockup L199); does not match the FY/LM range shared from Audit. matchPreset fix landed only in AuditLogMockup. SalesMockup FY branch (L157) also omits setSharedFrom/To. QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Sales/Cancellations/Dashboard preset chip hard-coded useState(7D)/Today (SalesMockup L121, CancellationsMockup L199); does not match the FY/LM range shared from Audit. matchPreset fix landed only in AuditLogMockup. SalesMockup FY branch (L157) also omits setSharedFrom/To. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41024,11 +41024,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-724",
       "title": "OrderReportBetaPage",
-      "priority": "P1",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MAJOR] OrderReportBetaPage.fetchData has no request-id/AbortController guard and fires the initial load twice; applying a range within ~3s shows 0 orders / Rs0 while the API returns the real rows (seen 374 orders hidden). QA Group 1.",
-      "severity": "P1"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] OrderReportBetaPage.fetchData has no request-id/AbortController guard and fires the initial load twice; applying a range within ~3s shows 0 orders / Rs0 while the API returns the real rows (seen 374 orders hidden). QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41046,11 +41046,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-725",
       "title": "Payment column shows raw lowercase card/upi/room/merge; getPaymentBadge (L36-47) lacks these keys and backend Tab falls through (map has TAB)",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-626",
-      "notes": "[QA severity MINOR] Payment column shows raw lowercase card/upi/room/merge; getPaymentBadge (L36-47) lacks these keys and backend Tab falls through (map has TAB). Status column itself is OK (BUG-626). QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Payment column shows raw lowercase card/upi/room/merge; getPaymentBadge (L36-47) lacks these keys and backend Tab falls through (map has TAB). Status column itself is OK (BUG-626). QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41068,11 +41068,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-726",
       "title": "Cancelled rows misalign: cancel-reason <td> (L745-749) added before Actions with no header -> 13 cells vs 12 headers, reason text under ACTIONS",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Cancelled rows misalign: cancel-reason <td> (L745-749) added before Actions with no header -> 13 cells vs 12 headers, reason text under ACTIONS. QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Cancelled rows misalign: cancel-reason <td> (L745-749) added before Actions with no header -> 13 cells vs 12 headers, reason text under ACTIONS. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41090,11 +41090,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-727",
       "title": "React console error whitespace text node child of <tr> from \"</th> {/* CR-349 */}\" at L704",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] React console error whitespace text node child of <tr> from \"</th> {/* CR-349 */}\" at L704. QA Group 1.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] React console error whitespace text node child of <tr> from \"</th> {/* CR-349 */}\" at L704. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41112,11 +41112,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-728",
       "title": "Cancelled KPI (41) != Cancelled tab rows (25); Cancelled-tab day headers still show whole-day Revenue/Sales",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Cancelled KPI (41) != Cancelled tab rows (25); Cancelled-tab day headers still show whole-day Revenue/Sales. QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Cancelled KPI (41) != Cancelled tab rows (25); Cancelled-tab day headers still show whole-day Revenue/Sales. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41134,11 +41134,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-729",
       "title": "Daily Cancellation Trend x-axis labels clipped to \"2026-\" (BUG-691 pattern); Revenue Loss by Stage chart rendered empty while stage cards had data",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-691",
-      "notes": "[QA severity MINOR] Daily Cancellation Trend x-axis labels clipped to \"2026-\" (BUG-691 pattern); Revenue Loss by Stage chart rendered empty while stage cards had data. QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Daily Cancellation Trend x-axis labels clipped to \"2026-\" (BUG-691 pattern); Revenue Loss by Stage chart rendered empty while stage cards had data. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41156,11 +41156,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-730",
       "title": "Audit Card-1 drill-down shows High Risk badge on every row incl doubt/risk tiers; no Risk-tier or Duration column in UI (only Excel); multi-day rows not time-ordered",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "RELATED CR-543, CR-555",
-      "notes": "[QA severity MINOR] Audit Card-1 drill-down shows High Risk badge on every row incl doubt/risk tiers; no Risk-tier or Duration column in UI (only Excel); multi-day rows not time-ordered. QA Group 1.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Audit Card-1 drill-down shows High Risk badge on every row incl doubt/risk tiers; no Risk-tier or Duration column in UI (only Excel); multi-day rows not time-ordered. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41178,11 +41178,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-731",
       "title": "Check-in marker line (\"check in x1 Rs0",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "RELATED CR-547",
-      "notes": "[QA severity MINOR] Check-in marker line (\"check in x1 Rs0.00\") shown and KOT-selectable in popup; header \"19 items\" counts cancelled + marker lines. orderTransform says isCheckInMarker must be filtered. QA Group 3.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Check-in marker line (\"check in x1 Rs0.00\") shown and KOT-selectable in popup; header \"19 items\" counts cancelled + marker lines. orderTransform says isCheckInMarker must be filtered. QA Group 3.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41200,11 +41200,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-732",
       "title": "After in-place cart edit the edited row jumps to the bottom of the cart",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-685",
-      "notes": "[QA severity MINOR] After in-place cart edit the edited row jumps to the bottom of the cart. QA Group 2.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] After in-place cart edit the edited row jumps to the bottom of the cart. QA Group 2.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41222,11 +41222,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-733",
       "title": "Native browser date input on Credit sheet and Order Report Beta instead of shadcn calendar",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Native browser date input on Credit sheet and Order Report Beta instead of shadcn calendar. QA Groups 2 & 4.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Native browser date input on Credit sheet and Order Report Beta instead of shadcn calendar. QA Groups 2 & 4.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41244,11 +41244,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-734",
       "title": "Credit/remove flow shows [null] item names; a Remove failure is not surfaced to the user (no toast)",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Credit/remove flow shows [null] item names; a Remove failure is not surfaced to the user (no toast). Split-payment inputs overflow; card needs 4-digit txn id with no hint. QA Group 2.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Credit/remove flow shows [null] item names; a Remove failure is not surfaced to the user (no toast). Split-payment inputs overflow; card needs 4-digit txn id with no hint. QA Group 2.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41266,11 +41266,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-735",
       "title": "Order Report Beta shows Change-Method/Mark-Unpaid on a split/partial row (#023874) while Audit hides them for split orders (BUG-671) -> inconsistent gating",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "RELATED BUG-671, CR-515",
-      "notes": "[QA severity MINOR] Order Report Beta shows Change-Method/Mark-Unpaid on a split/partial row (#023874) while Audit hides them for split orders (BUG-671) -> inconsistent gating. QA Group 4.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Order Report Beta shows Change-Method/Mark-Unpaid on a split/partial row (#023874) while Audit hides them for split orders (BUG-671) -> inconsistent gating. QA Group 4.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41288,11 +41288,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-736",
       "title": "New version available / Update now toast pinned bottom-center overlaps table rows on every page",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] New version available / Update now toast pinned bottom-center overlaps table rows on every page. QA Group 1.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] New version available / Update now toast pinned bottom-center overlaps table rows on every page. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41310,11 +41310,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-737",
       "title": "Leftover CR-003 diagnostic console",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Leftover CR-003 diagnostic console.log of user permissions at AllOrdersReportPage.jsx L147. QA Group 4.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Leftover CR-003 diagnostic console.log of user permissions at AllOrdersReportPage.jsx L147. QA Group 4.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41332,11 +41332,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-738",
       "title": "Channel/amount mismatch: order #1578881 has order_in=RM (table 9239); dashboard places it under the Room column at Rs8,622 but the ScanOrderPopOut labels it Dine-In at Rs411 and OrderEntry shows raw table id 9239",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Channel/amount mismatch: order #1578881 has order_in=RM (table 9239); dashboard places it under the Room column at Rs8,622 but the ScanOrderPopOut labels it Dine-In at Rs411 and OrderEntry shows raw table id 9239. QA Group 3.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Channel/amount mismatch: order #1578881 has order_in=RM (table 9239); dashboard places it under the Room column at Rs8,622 but the ScanOrderPopOut labels it Dine-In at Rs411 and OrderEntry shows raw table id 9239. QA Group 3.",
+      "severity": "P0"
     },
     {
       "type": "BUG",
@@ -41354,11 +41354,11 @@
       "release_date": "2026-11-17",
       "id": "BUG-739",
       "title": "Audit Total Events KPI counts unique orders (38) not events (misleading label); Excel Summary leaves Restaurant ID and Generated By empty and exports Risk as raw high_risk",
-      "priority": "P3",
+      "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[QA severity MINOR] Audit Total Events KPI counts unique orders (38) not events (misleading label); Excel Summary leaves Restaurant ID and Generated By empty and exports Risk as raw high_risk. QA Group 1.",
-      "severity": "P3"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Audit Total Events KPI counts unique orders (38) not events (misleading label); Excel Summary leaves Restaurant ID and Generated By empty and exports Risk as raw high_risk. QA Group 1.",
+      "severity": "P0"
     },
     {
       "type": "CR",
@@ -41376,11 +41376,11 @@
       "release_date": "2026-11-17",
       "id": "CR-557",
       "title": "Extract a shared <PopoutItemRow> so web-EDIT (Mode B) reuses the full renderer",
-      "priority": "P1",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "RELATED BUG-679, BUG-702, CR-545, CR-552",
-      "notes": "[QA severity MAJOR] Extract a shared <PopoutItemRow> so web-EDIT (Mode B) reuses the full renderer. Mode B lost cancelled styling (BUG-679), variation/option display (BUG-702) and APS/Price-TBD (CR-545) which exist only in Mode A. QA Group 3.",
-      "severity": "P1"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Extract a shared <PopoutItemRow> so web-EDIT (Mode B) reuses the full renderer. Mode B lost cancelled styling (BUG-679), variation/option display (BUG-702) and APS/Price-TBD (CR-545) which exist only in Mode A. QA Group 3.",
+      "severity": "P0"
     },
     {
       "type": "CR",
@@ -41398,16 +41398,16 @@
       "release_date": "2026-11-17",
       "id": "CR-558",
       "title": "Add true per-item Accept in ScanOrderPopOut web-edit",
-      "priority": "P2",
+      "priority": "P0",
       "risk": "MEDIUM",
       "duplicate_check": "RELATED CR-552",
-      "notes": "[QA severity MAJOR] Add true per-item Accept in ScanOrderPopOut web-edit. Today Accept is order-level confirmOrder and ignores the KOT selection; Reject modal uses items[0] only. Owner decision on desired behaviour. QA Group 3.",
-      "severity": "P2"
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Add true per-item Accept in ScanOrderPopOut web-edit. Today Accept is order-level confirmOrder and ignores the KOT selection; Reject modal uses items[0] only. Owner decision on desired behaviour. QA Group 3.",
+      "severity": "P0"
     }
   ],
   "meta": {
     "last_updated": "2026-11-19",
-    "last_action": "MERGE QA Nov Sprint intake into main: +22 items renumbered BUG-720..739 + CR-557/558 (collision with our BUG-713..719 resolved by renumbering incoming). Applied 8 reopen/status updates (BUG-684/679/702 REOPEN, CR-551 REOPEN, CR-552 drift, BUG-671/CR-526 RETEST, BUG-712/CR-523 confirmed). Batch E retests + env observations logged in merge doc, no IDs. No app code changed.",
+    "last_action": "OWNER OVERRIDE: forced P0 on all 28 QA-intake items (BUG-714..739 + CR-557/558), release 2026-11-17. Risk fields unchanged. No app code changed.",
     "current_gate": "1",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
