@@ -212,6 +212,39 @@ const ScanOrderPopOut = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAccepting, setIsAccepting] = useState(false);
 
+  // CR-547: Selective KOT — set of item.id values for items user wants on KOT
+  const [selectedItemIds, setSelectedItemIds] = useState(new Set());
+
+  // CR-547: Derive active order ID so selection resets only on order switch
+  const _kotOrderId = queue[Math.min(currentIndex, Math.max(0, queue.length - 1))]?.orderId;
+
+  useEffect(() => {
+    if (!_kotOrderId || queue.length === 0) {
+      setSelectedItemIds(new Set());
+      return;
+    }
+    const order = queue[Math.min(currentIndex, Math.max(0, queue.length - 1))];
+    if (!order) { setSelectedItemIds(new Set()); return; }
+    const items = order.items || [];
+    const editMode = hasUnconfirmedWebEditItems(order);
+    // Edit mode: default-select only NEW unconfirmed items; Normal: all non-cancelled items
+    const selectable = editMode
+      ? items.filter(it => it.isNotConfirmed && it.status !== 'cancelled')
+      : items.filter(it =>
+          it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3);
+    setSelectedItemIds(new Set(selectable.map(it => it.id).filter(Boolean)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_kotOrderId]);
+
+  // CR-547: Toggle a single item's KOT selection
+  const toggleKotItem = useCallback((itemId) => {
+    setSelectedItemIds(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId); else next.add(itemId);
+      return next;
+    });
+  }, []);
+
   // Clamp currentIndex whenever queue length changes so it stays valid.
   useEffect(() => {
     if (queue.length === 0) {
@@ -488,6 +521,32 @@ const ScanOrderPopOut = ({
                 {/* CR-552 Mode B: new web-edit items on top (actionable) + prev items greyed below */}
                 {isEditMode ? (
                   <>
+                    {/* CR-547: Select-all header for KOT selection (edit mode) */}
+                    {onPrintKOT && newItems.length > 0 && (
+                      <label
+                        data-testid="popout-kot-select-all"
+                        className="flex items-center gap-2 px-3 py-1.5 cursor-pointer border-b"
+                        style={{ borderColor: COLORS.borderGray, backgroundColor: COLORS.sectionBg }}
+                      >
+                        <input
+                          type="checkbox"
+                          className="accent-[#2E7D32]"
+                          checked={newItems.length > 0 && newItems.every(it => selectedItemIds.has(it.id))}
+                          onChange={() => {
+                            const allIds = newItems.map(it => it.id).filter(Boolean);
+                            setSelectedItemIds(prev =>
+                              allIds.every(id => prev.has(id))
+                                ? new Set([...prev].filter(id => !allIds.includes(id)))
+                                : new Set([...prev, ...allIds])
+                            );
+                          }}
+                        />
+                        <span className="text-xs font-semibold" style={{ color: COLORS.grayText }}>
+                          {newItems.every(it => selectedItemIds.has(it.id)) ? 'Deselect all' : 'Select all'}
+                          {' '}({newItems.length})
+                        </span>
+                      </label>
+                    )}
                     <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
                       {newItems.map((it, idx) => {
                         const qty = Number(it?.qty ?? it?.quantity) || 1;
@@ -499,6 +558,16 @@ const ScanOrderPopOut = ({
                         const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
                         return (
                           <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" data-testid={`popout-new-item-${idx}`}>
+                            {/* CR-547: Per-item KOT select */}
+                            {onPrintKOT && (
+                              <input
+                                type="checkbox"
+                                className="mt-0.5 flex-shrink-0 accent-[#2E7D32]"
+                                checked={selectedItemIds.has(it.id)}
+                                onChange={() => toggleKotItem(it.id)}
+                                data-testid={`popout-kot-check-new-${idx}`}
+                              />
+                            )}
                             <span className="flex-1 text-sm" style={{ color: COLORS.darkText }}>
                               {it?.name || it?.foodName || ''}
                               {variationOptions.length > 0 && (
@@ -548,6 +617,43 @@ const ScanOrderPopOut = ({
                     )}
                   </>
                 ) : (
+                <>
+                {/* CR-547: Select-all header for KOT selection (normal mode) */}
+                {onPrintKOT && (activeOrder.items || []).some(it =>
+                  it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3
+                ) && (
+                  <label
+                    data-testid="popout-kot-select-all"
+                    className="flex items-center gap-2 px-3 py-1.5 cursor-pointer border-b"
+                    style={{ borderColor: COLORS.borderGray, backgroundColor: COLORS.sectionBg }}
+                  >
+                    <input
+                      type="checkbox"
+                      className="accent-[#2E7D32]"
+                      checked={
+                        (activeOrder.items || [])
+                          .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3)
+                          .every(it => selectedItemIds.has(it.id))
+                      }
+                      onChange={() => {
+                        const selectable = (activeOrder.items || [])
+                          .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3);
+                        const allIds = selectable.map(it => it.id).filter(Boolean);
+                        setSelectedItemIds(prev =>
+                          allIds.every(id => prev.has(id)) ? new Set() : new Set(allIds)
+                        );
+                      }}
+                    />
+                    <span className="text-xs font-semibold" style={{ color: COLORS.grayText }}>
+                      {(activeOrder.items || [])
+                        .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3)
+                        .every(it => selectedItemIds.has(it.id))
+                        ? 'Deselect all' : 'Select all'}
+                      {' '}({(activeOrder.items || [])
+                        .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3).length})
+                    </span>
+                  </label>
+                )}
                 <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
                   {/* CR-545: APS items (₹1) sort to top so staff sees them first */}
                   {[...(activeOrder.items || [])].sort((a, b) => {
@@ -566,10 +672,21 @@ const ScanOrderPopOut = ({
                     return (
                       <li
                         key={`${it?.id ?? it?.foodId ?? idx}-${idx}`}
-                        className="px-3 py-2 text-sm"
+                        className="px-3 py-2 text-sm flex items-start gap-2"
                         style={{ opacity: isCancelled ? 0.5 : 1 }} // BUG-679
                         data-testid={`popout-item-row-${idx}`}
                       >
+                        {/* CR-547: Per-item KOT select — skip cancelled */}
+                        {onPrintKOT && !isCancelled && (
+                          <input
+                            type="checkbox"
+                            className="mt-1 flex-shrink-0 accent-[#2E7D32]"
+                            checked={selectedItemIds.has(it.id)}
+                            onChange={() => toggleKotItem(it.id)}
+                            data-testid={`popout-kot-check-${idx}`}
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
                         {/* row 1: qty + name + comp tag + line total */}
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
@@ -691,10 +808,12 @@ const ScanOrderPopOut = ({
                             &quot;{it.notes}&quot;
                           </div>
                         ) : null}
+                        </div>
                       </li>
                     );
                   })}
                 </ul>
+                </>
                 )} {/* CR-552: end Mode A (!isEditMode) */}
               </div>
             ) : null}
@@ -762,19 +881,23 @@ const ScanOrderPopOut = ({
             <Eye className="w-4 h-4" />
             <span>Edit</span>
           </button>
-          {/* CR-545: KOT print button */}
+          {/* CR-545 + CR-547: KOT print button with selection count */}
           {onPrintKOT ? (
             <button
               type="button"
               data-testid={`popout-print-kot-${idStr}`}
-              onClick={() => onPrintKOT(activeOrder)}
-              disabled={isAccepting}
+              onClick={() => {
+                // CR-547: Pass only selected items
+                const selected = (activeOrder.items || []).filter(it => selectedItemIds.has(it.id));
+                onPrintKOT(activeOrder, selected);
+              }}
+              disabled={isAccepting || selectedItemIds.size === 0}
               className="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-semibold bg-white disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ borderColor: COLORS.borderGray, color: COLORS.darkText }}
-              title="Print KOT"
+              title={selectedItemIds.size === 0 ? 'Select items for KOT' : `Print KOT for ${selectedItemIds.size} item(s)`}
             >
               <Printer className="w-4 h-4" />
-              <span>KOT</span>
+              <span>KOT{selectedItemIds.size > 0 ? ` (${selectedItemIds.size})` : ''}</span>
             </button>
           ) : null}
           <button

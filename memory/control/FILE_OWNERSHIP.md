@@ -45,8 +45,8 @@ NOT touched: `socketHandlers.js` · `orderTransform.js` · `useOrderPollingRecon
 | File | Planned change | Planning agent |
 |------|---------------|----------------|
 | `src/contexts/OrderContext.jsx` | `updateOrder` merge: preserve prior `orderFrom`/`isWebOrder` when incoming order lacks web origin (BUG-701) | BUG-701 PLANNING 2026-11-18 |
-| `src/components/dashboard/ScanOrderPopOut.jsx` | BUG-702 GATE_5A_IMPLEMENTED. CR-547 GATE_3_PLAN_COMPLETE: 8 edits (E-1 to E-8) — `selectedItemIds` state, reset effect, toggleKotItem, select-all rows, per-item checkboxes, KOT button with count+disabled. **Batch both; same file as CR-552/CR-545.** | BUG-702 IMPL + CR-547 GATE3 2026-11-19 |
-| `src/pages/DashboardPage.jsx` | CR-547 E-9: `handleScanPrintKOT(order, selectedItems=null)` — filters rawOrderDetails by selected item IDs, derives stations from selection. BUG-703 at GATE_2_5. **Same file as CR-552/CR-545.** | CR-547 GATE3 + BUG-703 DESIGN 2026-11-19 |
+| `src/components/dashboard/ScanOrderPopOut.jsx` | BUG-702 GATE_5A_IMPLEMENTED. **CR-547 IMPLEMENTED (2026-11-19):** E-1..E-8 landed — `selectedItemIds` Set state (L213), order-switch reset effect + `toggleKotItem`, select-all rows (edit L524-549 / normal L621-656), per-item checkboxes (new-item + normal-mode li wrapped in `flex-1 min-w-0`), KOT button shows count + disabled when none selected (L884-901). marker `// CR-547`. | CR-547 IMPL 2026-11-19 |
+| `src/pages/DashboardPage.jsx` | **CR-547 IMPLEMENTED (2026-11-19):** E-9 landed — `handleScanPrintKOT(order, selectedItems=null)` (L1738) filters `rawOrderDetails` by selected item IDs + derives stations from selection; backward-compat null/empty → full order. marker `// CR-547`. BUG-703 at GATE_2_5. **Same file as CR-552/CR-545.** | CR-547 IMPL 2026-11-19 |
 | `src/components/dashboard/AggregatorOrderPopOut.jsx` | View-only mode for accepted aggregator order, Accept/Reject hidden (BUG-703) | BUG-703 PLANNING 2026-11-18 |
 | `src/components/cards/TableCard.jsx` | L312: route aggregator tile click to view handler instead of no-op (BUG-703) | BUG-703 PLANNING 2026-11-18 |
 

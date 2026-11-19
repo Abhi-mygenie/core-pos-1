@@ -1733,14 +1733,25 @@ const DashboardPage = () => {
     }
   }, [scanCancelItem, printerAgents]);
 
-  // CR-545: KOT print from ScanOrderPopOut — reuses OrderCard pattern
-  const handleScanPrintKOT = useCallback(async (order) => {
-    const items = order?.items || [];
+  // CR-545 + CR-547: KOT print from ScanOrderPopOut — reuses OrderCard pattern
+  // CR-547: optional `selectedItems` for selective KOT (backward-compat: null/[] = all)
+  const handleScanPrintKOT = useCallback(async (order, selectedItems = null) => {
+    // CR-547: Use selectedItems if provided, else fallback to full order items
+    const items = selectedItems && selectedItems.length > 0 ? selectedItems : (order?.items || []);
     const stations = getStationsFromOrderItems(items, getProductById);
     if (stations.length === 0) return;
     try {
       const stationKot = stations.map(s => s.station).join(',');
-      await printOrder(order.orderId || order.id, 'kot', stationKot, order, 0, {}, printerAgents || []);
+      // CR-547: Filter rawOrderDetails to match selected items only
+      let printOrder$ = order;
+      if (selectedItems && selectedItems.length > 0) {
+        const selectedIds = new Set(items.map(it => it.id).filter(Boolean));
+        printOrder$ = {
+          ...order,
+          rawOrderDetails: (order.rawOrderDetails || []).filter(d => selectedIds.has(d.id)),
+        };
+      }
+      await printOrder(order.orderId || order.id, 'kot', stationKot, printOrder$, 0, {}, printerAgents || []);
     } catch (err) {
       console.error('[DashboardPage] CR-545: KOT print failed:', err?.message);
     }
