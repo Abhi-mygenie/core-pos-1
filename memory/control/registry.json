@@ -40524,7 +40524,7 @@
       "title": "Cancellation Report — staff cancel-note column always '—' (cancelNote not mapped)",
       "priority": "P0",
       "risk": "LOW",
-      "status": "GATE_2_IA_AWAITING_OWNER",
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-19 — folded into cancellation-reports batch; owner decision: REMOVE dead Cancel Note column; ready for build",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "assignee": "Abhishek",
@@ -40536,7 +40536,8 @@
       "notes": "CancellationsMockup transform never maps cancelNote (render L972 reads r.cancelNote → always undefined → '—'). Also 'notes' field from insights-cancellations API unconfirmed (backend probe). FE fix: add cancelNote: i.cancel_note. | IA (Gate 2) 2026-11-19: Cancellation Report has 2 note cols; Notes (reads notes) WORKS (8/65 rows); staff-note col reads unmapped r.cancelNote -> always dash. API cancel_item_note empty in all 65 rows. AWAITING OWNER: what should staff-note col show vs Notes col? | 2026-11-19: set P0, release 2026-11-17, assignee Abhishek (owner). Remaining open from nov_cr_batch session.",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
-      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md",
+      "plan_doc": "memory/plans/BATCH_2026_11_19_CANCELLATION_REPORTS_GATE3_IMPLEMENTATION_PLAN.md"
     },
     {
       "id": "BUG-709",
