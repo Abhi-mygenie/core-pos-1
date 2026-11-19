@@ -39,6 +39,8 @@ const AggregatorOrderPopOut = ({
   onReject,
   currencySymbol = '₹',
   suppressed = false,
+  viewOrder = null,   // BUG-703: explicitly-selected accepted order to show read-only
+  onCloseView,        // BUG-703: close the read-only view
 }) => {
   // Derived queue: aggregator orders needing action (status 0 or 7)
   const queue = useMemo(() => {
@@ -82,11 +84,11 @@ const AggregatorOrderPopOut = ({
   }, [queue.length, currentIndex]);
 
   // CR-109: Compute prep time from settings brackets + pre-select pill
-  const order = queue[currentIndex] || null;
+  const queueOrder = queue[currentIndex] || null;  // BUG-703: renamed from `order` (hook-level, mandatory-queue path)
   const computedPrepTime = useMemo(() => {
-    if (!order) return null;
-    return computeAggregatorPrepTime(order.items || [], settings || {});
-  }, [order, settings]);
+    if (!queueOrder) return null;
+    return computeAggregatorPrepTime(queueOrder.items || [], settings || {});
+  }, [queueOrder, settings]);
 
   // Reset prep time when order changes — pre-select computed value
   useEffect(() => {
@@ -144,22 +146,25 @@ const AggregatorOrderPopOut = ({
   // CR-109: Auto-accept when auto_prep_time_ack is enabled
   // Fires once per order after prep time is computed and pre-selected
   useEffect(() => {
-    if (!autoAcceptEnabled || !order || !effectivePrepTime || isAccepting) return;
-    if (autoAcceptFiredRef.current.has(order.orderId)) return; // already auto-accepted this order
-    autoAcceptFiredRef.current.add(order.orderId);
+    if (!autoAcceptEnabled || !queueOrder || !effectivePrepTime || isAccepting) return;
+    if (autoAcceptFiredRef.current.has(queueOrder.orderId)) return; // already auto-accepted this order
+    autoAcceptFiredRef.current.add(queueOrder.orderId);
     // Brief delay so staff sees the popup + selected time before it auto-accepts
     const timer = setTimeout(() => {
-      console.log(`[AggregatorPopOut] CR-109: Auto-accepting order ${order.orderId} with ${effectivePrepTime} min`);
+      console.log(`[AggregatorPopOut] CR-109: Auto-accepting order ${queueOrder.orderId} with ${effectivePrepTime} min`);
       handleAccept();
     }, 1500);
     return () => clearTimeout(timer);
-  }, [autoAcceptEnabled, order, effectivePrepTime, isAccepting, handleAccept]);
+  }, [autoAcceptEnabled, queueOrder, effectivePrepTime, isAccepting, handleAccept]);
 
   const goPrev = useCallback(() => setCurrentIndex((i) => Math.max(0, i - 1)), []);
   const goNext = useCallback(() => setCurrentIndex((i) => Math.min(queue.length - 1, i + 1)), [queue.length]);
 
-  // Don't render if queue empty or suppressed
-  if (queue.length === 0 || suppressed) return null;
+  // BUG-703: mandatory new-order queue (status 0/7) takes precedence; otherwise render a read-only view of a selected order
+  const showMandatory = queue.length > 0 && !suppressed;
+  const isViewOnly = !showMandatory && Boolean(viewOrder);
+  if (!showMandatory && !isViewOnly) return null;
+  const order = showMandatory ? queueOrder : viewOrder;  // BUG-703: display order (queue item OR selected view order)
   if (!order) return null;
 
   const source = order.source || 'aggregator';
@@ -199,8 +204,21 @@ const AggregatorOrderPopOut = ({
             </div>
           </div>
 
-          {/* Queue nav */}
-          {queue.length > 1 && (
+          {/* BUG-703: VIEW ONLY badge + close (read-only mode) OR queue nav (mandatory mode) */}
+          {isViewOnly ? (
+            <div className="flex items-center gap-2">
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md"
+                style={{ backgroundColor: `${sourceColor}20`, color: sourceColor }}
+                data-testid="aggregator-view-only-badge"
+              >
+                View Only
+              </span>
+              <button onClick={onCloseView} className="p-1 rounded hover:bg-white/50" data-testid="popout-close-view">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : queue.length > 1 ? (
             <div className="flex items-center gap-2">
               <button onClick={goPrev} disabled={currentIndex === 0} className="p-1 rounded hover:bg-white/50 disabled:opacity-30" data-testid="popout-prev">
                 <ChevronLeft className="w-4 h-4" />
@@ -212,7 +230,7 @@ const AggregatorOrderPopOut = ({
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* ── Body (scrollable) ── */}
@@ -331,7 +349,8 @@ const AggregatorOrderPopOut = ({
             </div>
           </div>
 
-          {/* CR-118: KOT/Bill print checkboxes */}
+          {/* CR-118: KOT/Bill print checkboxes — BUG-703: hidden in read-only view mode */}
+          {!isViewOnly && (
           <div className="flex items-center gap-6">
             <label className="flex items-center gap-2 cursor-pointer" data-testid="agg-print-kot-checkbox">
               <input
@@ -352,8 +371,10 @@ const AggregatorOrderPopOut = ({
               <span className="text-sm font-medium text-slate-700">Print Bill</span>
             </label>
           </div>
+          )}
 
-          {/* Prep time picker — OD-4: pills + manual input */}
+          {/* Prep time picker — OD-4: pills + manual input — BUG-703: hidden in read-only view mode */}
+          {!isViewOnly && (
           <div>
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
               Prep Time (required)
@@ -390,33 +411,63 @@ const AggregatorOrderPopOut = ({
               </div>
             </div>
           </div>
+          )}
         </div>
 
         {/* ── Footer — Actions ── */}
-        <div className="flex gap-3 px-5 py-4 border-t border-slate-200 bg-slate-50">
-          <button
-            onClick={handleReject}
-            className="flex-1 h-11 rounded-xl border-2 border-red-200 text-red-600 font-semibold text-sm hover:bg-red-50 hover:border-red-300 transition-all"
-            data-testid="popout-reject-btn"
-          >
-            <X className="w-4 h-4 inline-block mr-1 -mt-0.5" />
-            Reject
-          </button>
-          <button
-            onClick={handleAccept}
-            disabled={!effectivePrepTime || isAccepting}
-            className="flex-1 h-11 rounded-xl text-white font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
-            style={{ backgroundColor: effectivePrepTime ? sourceColor : '#9CA3AF' }}
-            data-testid="popout-accept-btn"
-          >
-            {isAccepting ? (
-              <Loader2 className="w-4 h-4 inline-block animate-spin mr-1" />
-            ) : (
-              <Check className="w-4 h-4 inline-block mr-1 -mt-0.5" />
-            )}
-            {isAccepting ? 'Accepting...' : effectivePrepTime ? `Accept (${effectivePrepTime} min)` : 'Select Prep Time'}
-          </button>
-        </div>
+        {isViewOnly ? (
+          /* BUG-703: read-only footer — Print KOT + Print Bill + Close (no Accept/Reject) */
+          <div className="flex gap-3 px-5 py-4 border-t border-slate-200 bg-slate-50">
+            <button
+              onClick={() => manuallyPrintAggregator(order.orderId, 'aggr_kot').catch(err => console.warn('[AggregatorPopOut] BUG-703: KOT print failed:', err?.message))}
+              className="flex-1 h-11 rounded-xl border-2 border-orange-200 text-orange-600 font-semibold text-sm hover:bg-orange-50 hover:border-orange-300 transition-all"
+              data-testid="popout-print-kot-btn"
+            >
+              <FileText className="w-4 h-4 inline-block mr-1 -mt-0.5" />
+              Print KOT
+            </button>
+            <button
+              onClick={() => manuallyPrintAggregator(order.orderId, 'aggr_bill').catch(err => console.warn('[AggregatorPopOut] BUG-703: Bill print failed:', err?.message))}
+              className="flex-1 h-11 rounded-xl border-2 border-green-200 text-green-600 font-semibold text-sm hover:bg-green-50 hover:border-green-300 transition-all"
+              data-testid="popout-print-bill-btn"
+            >
+              <FileText className="w-4 h-4 inline-block mr-1 -mt-0.5" />
+              Print Bill
+            </button>
+            <button
+              onClick={onCloseView}
+              className="flex-1 h-11 rounded-xl bg-slate-800 text-white font-semibold text-sm hover:bg-slate-900 transition-all shadow-sm"
+              data-testid="popout-close-btn"
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-3 px-5 py-4 border-t border-slate-200 bg-slate-50">
+            <button
+              onClick={handleReject}
+              className="flex-1 h-11 rounded-xl border-2 border-red-200 text-red-600 font-semibold text-sm hover:bg-red-50 hover:border-red-300 transition-all"
+              data-testid="popout-reject-btn"
+            >
+              <X className="w-4 h-4 inline-block mr-1 -mt-0.5" />
+              Reject
+            </button>
+            <button
+              onClick={handleAccept}
+              disabled={!effectivePrepTime || isAccepting}
+              className="flex-1 h-11 rounded-xl text-white font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+              style={{ backgroundColor: effectivePrepTime ? sourceColor : '#9CA3AF' }}
+              data-testid="popout-accept-btn"
+            >
+              {isAccepting ? (
+                <Loader2 className="w-4 h-4 inline-block animate-spin mr-1" />
+              ) : (
+                <Check className="w-4 h-4 inline-block mr-1 -mt-0.5" />
+              )}
+              {isAccepting ? 'Accepting...' : effectivePrepTime ? `Accept (${effectivePrepTime} min)` : 'Select Prep Time'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

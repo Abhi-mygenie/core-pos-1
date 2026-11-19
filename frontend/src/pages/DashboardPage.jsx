@@ -481,6 +481,7 @@ const DashboardPage = () => {
   // CR-106: Aggregator modal state
   const [aggregatorRejectOrder, setAggregatorRejectOrder] = useState(null);
   const [aggregatorDispatchOrder, setAggregatorDispatchOrder] = useState(null);
+  const [aggregatorViewOrder, setAggregatorViewOrder] = useState(null); // BUG-703: read-only view of a selected aggregator order
 
   // Req 2: Order Taking flag — when false, all card body clicks no-op via
   // early return in handleTableClick. Action buttons inside cards (Mark
@@ -1459,6 +1460,13 @@ const DashboardPage = () => {
     }
   }, []);
 
+  // BUG-703: open an accepted aggregator order in read-only view mode (Table View tile tap)
+  const handleAggregatorView = useCallback((tableOrder) => {
+    if (!tableOrder) return;
+    const full = (orders || []).find(o => o.orderId === tableOrder.orderId) || tableOrder;
+    setAggregatorViewOrder(full);
+  }, [orders]);
+
   const handleAggregatorDispatch = useCallback(async (riderName, riderPhone) => {
     if (!aggregatorDispatchOrder) return;
     try {
@@ -1930,6 +1938,8 @@ const DashboardPage = () => {
         onReject={(order) => setAggregatorRejectOrder(order)}
         currencySymbol={currencySymbol}
         suppressed={Boolean(orderEntryType) || Boolean(cancelOrderEntry)}
+        viewOrder={aggregatorViewOrder}
+        onCloseView={() => setAggregatorViewOrder(null)}
       />
       <AggregatorRejectModal
         open={!!aggregatorRejectOrder}
@@ -2096,6 +2106,7 @@ const DashboardPage = () => {
                         section={section}
                         onTableClick={handleTableClick}
                         onOpenModal={handleTableClick}
+                        onAggregatorView={handleAggregatorView}
                         onUpdateStatus={handleUpdateTableStatus}
                         onBillClick={handleBillClick}
                         onConfirmOrder={handleConfirmOrder}
@@ -2127,6 +2138,7 @@ const DashboardPage = () => {
                           section={section}
                           onTableClick={handleTableClick}
                           onOpenModal={handleTableClick}
+                          onAggregatorView={handleAggregatorView}
                           onUpdateStatus={handleUpdateTableStatus}
                           onBillClick={handleBillClick}
                           onConfirmOrder={handleConfirmOrder}
@@ -2161,6 +2173,7 @@ const DashboardPage = () => {
                         table={item}
                         onClick={handleTableClick}
                         onOpenModal={handleTableClick}
+                        onAggregatorView={handleAggregatorView}
                         onUpdateStatus={handleUpdateTableStatus}
                         onBillClick={handleBillClick}
                         onConfirmOrder={handleConfirmOrder}

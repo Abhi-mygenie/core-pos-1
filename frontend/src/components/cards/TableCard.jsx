@@ -56,6 +56,7 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
   // CR-106: Aggregator action handlers
   onAggregatorReady,
   onAggregatorDispatch,
+  onAggregatorView, // BUG-703: open accepted aggregator order in read-only view
   kbdEnabled = false, kbdHighlight = false, // CR-482 P18
   // BUG-029 (Apr-2026): callback invoked after successful prepaid settle so the
   // parent dashboard can clear any stale order-entry selection for this order.
@@ -309,7 +310,7 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
     <div
       data-testid={`table-card-${table.id}`}
       {...(kbdEnabled && !isEngaged && !isAggregator ? { tabIndex: 0, 'data-kbd-card': '', 'data-kbd-label': table.label || '' } : {})}
-      onClick={isEngaged || isAggregator ? undefined : handleCardClick} // CR-106: no-op for aggregator
+      onClick={isEngaged ? undefined : isAggregator ? (table.order ? () => onAggregatorView?.(table.order) : undefined) : handleCardClick} // CR-106 no-op kept for aggregator w/o order; BUG-703: tap opens read-only view
       onKeyDown={kbdEnabled && !isEngaged && !isAggregator ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(); } } : undefined}
       className={`relative rounded-2xl transition-all duration-200 ${isEngaged ? 'pointer-events-none' : 'cursor-pointer hover:shadow-md'} ${isSnoozed ? 'opacity-60' : ''} ${kbdEnabled ? 'kbd-focus' : ''} ${kbdHighlight ? 'kbd-highlight' : ''}`}
       style={cardStyle}
@@ -847,6 +848,7 @@ TableCard.propTypes = {
   }).isRequired,
   onClick: PropTypes.func.isRequired,
   onOpenModal: PropTypes.func,
+  onAggregatorView: PropTypes.func, // BUG-703
   onUpdateStatus: PropTypes.func,
   onBillClick: PropTypes.func,
   onConfirmOrder: PropTypes.func,
