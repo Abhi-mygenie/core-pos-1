@@ -40646,9 +40646,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-19 — single sequenced FE batch; ready for build",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40664,7 +40664,8 @@
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
-      "code_reality": "NONE"
+      "code_reality": "NONE",
+      "impl_plan_doc": "plans/BATCH_2026_11_19_CANCELLATION_REPORTS_GATE3_IMPLEMENTATION_PLAN.md"
     },
     {
       "id": "CR-555",
@@ -40673,9 +40674,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-19 — single sequenced FE batch; ready for build",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40692,7 +40693,8 @@
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
-      "code_reality": "NONE"
+      "code_reality": "NONE",
+      "impl_plan_doc": "plans/BATCH_2026_11_19_CANCELLATION_REPORTS_GATE3_IMPLEMENTATION_PLAN.md"
     },
     {
       "id": "CR-556",
@@ -40701,9 +40703,9 @@
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-19 — single sequenced FE batch; ready for build",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "client": "ALL",
@@ -40720,13 +40722,14 @@
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
-      "code_reality": "PARTIAL"
+      "code_reality": "PARTIAL",
+      "impl_plan_doc": "plans/BATCH_2026_11_19_CANCELLATION_REPORTS_GATE3_IMPLEMENTATION_PLAN.md"
     },
     {
       "id": "BUG-713",
       "type": "BUG",
       "title": "Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside overflow-x container)",
-      "status": "GATE_2_IA_COMPLETE 2026-11-19 — FE-only, data confirmed on live preprod; awaiting owner (3 decisions) -> Gate 3",
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-19 — single sequenced FE batch; ready for build",
       "priority": "P0",
       "severity": "P0",
       "risk": "LOW",
@@ -40744,15 +40747,16 @@
       "notes": "GAP A (visibility) CONFIRMED on revalidation 2026-11-19. CancellationsMockup.jsx: Punch Time (th L944 / td L980) + Duration (min) (th L945 / td L981) + Station are columns 11-13 of 13, placed after 'Cancelled By', inside <div overflow-x-auto> L930 / <table w-full> L931. On a normal viewport the user only sees through 'Cancelled By' and must scroll horizontally to reach Punch Time/Duration -> effectively invisible by default. Owner confirms not visible on screen. Handover had WITHDRAWN GAP A on a scrolled/wide screenshot; that withdrawal is REVERSED. Matches original investigation GAP A. Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns, responsive layout, or place near Date/Stage). Relates CR-524 (added the cols), CR-554 (detail-screen parity).",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "gate": "GATE_3",
+      "current_gate": 3,
       "ia_doc": "impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md",
-      "code_reality": "FULL"
+      "code_reality": "FULL",
+      "impl_plan_doc": "plans/BATCH_2026_11_19_CANCELLATION_REPORTS_GATE3_IMPLEMENTATION_PLAN.md"
     }
   ],
   "meta": {
     "last_updated": "2026-11-19",
-    "last_action": "Gate 2 Impact Analysis for BUG-713 + CR-554/555/556 (cancellation reports). FE-only; live preprod probe confirms created_at/cancel_time_full + all filter fields present. IA: impact/BATCH_2026_11_19_CANCELLATION_REPORTS_IA.md. 3 owner decisions queued -> Gate 3. No code.",
+    "last_action": "Gate 3 implementation plan for BUG-713 + CR-554/555/556 (cancellation reports) = single sequenced FE batch (riskTier util -> BUG-713+CR-554 layout -> CR-555 badge -> CR-556 filters). Ready for build. No code.",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
