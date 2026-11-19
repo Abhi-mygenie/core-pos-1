@@ -56,3 +56,15 @@ UI: no way to view the accepted order ❌
 
 ## Rollback
 Revert TableCard `L312` branch + the view-only prop; queue predicate unchanged → clean revert.
+
+---
+
+## Re-validation (2026-11-19, PLANNING — post re-pull @ origin/main 7490b89)
+IA re-verified against current source after fresh `main` re-pull and after CR-547/CR-552 landed in `DashboardPage.jsx`. All referenced lines still exact:
+- `TableCard.jsx:65` isAggregator `// CR-106` — unchanged.
+- `TableCard.jsx:312` `onClick={isEngaged || isAggregator ? undefined : handleCardClick} // CR-106` — unchanged.
+- `TableCard.jsx:300-306` `handleCardClick → onOpenModal(table)` — unchanged.
+- `TableCard.jsx:486/515` aggregator action buttons (fOS 1/2) — present (IA's L486-539 range holds).
+- `AggregatorOrderPopOut.jsx:15-18` queue predicate (now named `isUnconfirmedAggregatorOrder`) — logic identical; props `L36-42` still `onAccept/onReject/currencySymbol/suppressed` only (no `readOnly`/`viewOrder` yet); mounted in `DashboardPage.jsx:1927`.
+- `DashboardPage.jsx:1490` `handleTableClick` — unchanged line number.
+Code Reality for the fix: **NONE** (no `readOnly`/`viewOrder`/`onAggregatorView` in code). Bug still reproducible. Status stays **GATE_2_5_DESIGN_APPROVED (Option A)**; IA accurate and ready for Gate 3.
