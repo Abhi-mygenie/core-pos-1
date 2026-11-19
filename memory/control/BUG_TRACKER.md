@@ -1,3 +1,14 @@
+**CURRENT 2026-11-19 — INTAKE / RE-OPEN (GAP A revalidated).** Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.
+
+| ID | Title | Sev | Risk | Status | Doc |
+|---|---|---|---|---|---|
+| **BUG-713** | Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside `overflow-x-auto`; `CancellationsMockup.jsx` th L944-945 / td L980-981, container L930) | **P0** | **LOW** | GATE_1_INTAKE 2026-11-19 — GAP A RE-OPENED (reverses handover withdrawal); matches investigation GAP A; owner confirms not visible on screen | `change_requests/BATCH_INTAKE_2026_11_19_CR524_CANCELLATION_PARITY_RISKBADGE_FILTERS.md` |
+
+Source: `investigations/INV-CR524-BUG579-RISK-BADGE_2026_11_19.md` GAP A (visibility). Relates CR-524 (added the columns) + CR-554 (Item Cancellation Detail parity). Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns or responsive layout).
+
+---
+
+
 **CURRENT 2026-11-19 — CR-547 GATE 3 CLOSED.** Blocker RESOLVED via curl probe (Order #1578881, thegoankitchen). Backend `order-temp-store` is a pass-through — stores `billFoodList` as-is. **CR-547 is 100% frontend-only.** Line-by-line plan: `plans/CR-547_IMPLEMENTATION_PLAN.md` (9 edits, 2 files: `ScanOrderPopOut.jsx` + `DashboardPage.jsx`, ~50 net lines). Next: owner GO → Gate 4 implementation.
 
 ---

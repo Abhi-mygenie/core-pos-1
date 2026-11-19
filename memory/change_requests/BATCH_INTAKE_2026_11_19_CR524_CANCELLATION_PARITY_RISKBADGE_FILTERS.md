@@ -9,12 +9,20 @@
 ---
 
 ## Scope note (from investigation)
-- **GAP A — WITHDRAWN.** Owner's screenshot proved `CancellationsMockup.jsx` → "Cancellation Details" already shows the full column set incl. **Punch Time** and **Duration (min)**. Nothing registered for GAP A.
+- **GAP A — RE-OPENED as BUG-713 (revalidated 2026-11-19).** The Punch Time + Duration columns exist in the DOM but are the **11th/12th of 13 columns** (after "Cancelled By") inside `overflow-x-auto` (`CancellationsMockup.jsx` L930; headers L944-945, cells L980-981). On a normal viewport the user only sees through "Cancelled By" and must scroll horizontally to reach them → **effectively invisible**. The handover's withdrawal relied on a scrolled/wide screenshot; owner confirms not visible on screen. Matches the original investigation GAP A. Registered as **BUG-713** (P0, 2026-11-17).
 - **Backend fact:** backend returns only `created_at` (punch time) and `cancel_time_full` (cancel time); **Duration (min)** is a **frontend computation** (`created_at → cancel_time_full`). Any new duration/risk surface must reuse this FE calc, not expect a backend field.
 
 ---
 
 ## Registered items
+
+### BUG-713 — Cancellation Report: Punch Time + Duration columns off-screen / not visible (GAP A re-opened)
+- **Type:** BUG · **Priority:** P0 · **Risk:** LOW · **Area:** Reports / Analytics
+- **Gap:** GAP A (visibility), re-opened after revalidation 2026-11-19. CR-524 added Punch Time + Duration to `CancellationsMockup.jsx`, but they render as columns 11-12 of 13 (after "Cancelled By"), inside `<div overflow-x-auto>` (L930). On a normal viewport only columns through "Cancelled By" are visible; Punch Time/Duration/Station require horizontal scroll → effectively invisible by default.
+- **Evidence:** headers L944-945, cells L980-981, container L930 in `CancellationsMockup.jsx`. Owner confirms not visible on screen; matches investigation `INV-CR524-BUG579-RISK-BADGE_2026_11_19.md` GAP A.
+- **Reverses:** the GAP A withdrawal in `handover/HANDOVER_INTAKE_CR524_BUG579_RISKBADGE_GAPS_2026_11_19.md` (which relied on a scrolled/wide screenshot).
+- **Expected / fix direction (Gate 2+):** surface Punch Time + Duration without horizontal scroll (reorder or pin the columns, or responsive layout).
+- **Relates to:** CR-524 (added the columns), CR-554 (detail-screen parity).
 
 ### CR-554 — Item Cancellation Detail: add Punch Time + Duration columns (parity with CR-524)
 - **Type:** CR · **Priority:** P0 · **Risk:** MEDIUM · **Area:** Reports / Analytics

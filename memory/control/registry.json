@@ -40718,18 +40718,41 @@
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
       "ia_doc": ""
+    },
+    {
+      "id": "BUG-713",
+      "type": "BUG",
+      "title": "Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside overflow-x container)",
+      "status": "GATE_1_INTAKE 2026-11-19 — registered (GAP A RE-OPENED after revalidation); awaiting Gate 2 IA",
+      "priority": "P0",
+      "severity": "P0",
+      "risk": "LOW",
+      "sprint_key": "nov_cr_batch",
+      "area": "Reports / Analytics",
+      "client": "ALL",
+      "assignee": "Abhishek",
+      "source": "INV-CR524-BUG579-RISK-BADGE_2026_11_19.md GAP A (visibility) + owner revalidation 2026-11-19 (not visible on screen)",
+      "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_CR524_CANCELLATION_PARITY_RISKBADGE_FILTERS.md",
+      "duplicate_check": "DISTINCT — reverses GAP A withdrawal in handover/HANDOVER_INTAKE_CR524_BUG579_RISKBADGE_GAPS_2026_11_19.md",
+      "relates_to": [
+        "CR-524",
+        "CR-554"
+      ],
+      "notes": "GAP A (visibility) CONFIRMED on revalidation 2026-11-19. CancellationsMockup.jsx: Punch Time (th L944 / td L980) + Duration (min) (th L945 / td L981) + Station are columns 11-13 of 13, placed after 'Cancelled By', inside <div overflow-x-auto> L930 / <table w-full> L931. On a normal viewport the user only sees through 'Cancelled By' and must scroll horizontally to reach Punch Time/Duration -> effectively invisible by default. Owner confirms not visible on screen. Handover had WITHDRAWN GAP A on a scrolled/wide screenshot; that withdrawal is REVERSED. Matches original investigation GAP A. Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns, responsive layout, or place near Date/Stage). Relates CR-524 (added the cols), CR-554 (detail-screen parity).",
+      "registered_date": "2026-11-19",
+      "release_date": "2026-11-17"
     }
   ],
   "meta": {
     "last_updated": "2026-11-19",
-    "last_action": "Intake: registered CR-554 (Item Cancellation Detail punch-time+duration parity), CR-555 (per-row risk badge both cancellation screens, CR-543 thresholds), CR-556 (extend column filters both screens) at GATE_1_INTAKE. All P0, assignee Abhishek, release_date 2026-11-17. GAP C carried forward under BUG-579 (backend). No application code changed.",
+    "last_action": "Revalidation + re-open: registered BUG-713 (Cancellation Report Punch Time/Duration columns off-screen, GAP A re-opened; reverses handover withdrawal) at GATE_1_INTAKE, P0, assignee Abhishek, release_date 2026-11-17. No application code changed.",
     "current_gate": "5b",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
     "qa_group_c_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
     "gate_5b_complete": true,
-    "total": 1134,
-    "total_items": 1134,
+    "total": 1135,
+    "total_items": 1135,
     "last_session": "Batch B Gate 2 IA close 2026-11-15 — owner R5 answered, R5 read-only probes (RID 541). Handover at /app/memory/handover/SESSION_HANDOVER_2026_11_15_BATCH_B_GATE2_IA_CLOSED.md",
     "last_note": "Batch B Gate 2 IA + Gate 2.5 CLOSED 2026-11-15. Backend brief DRAFT not sent (owner to decide channel). Next: Gate 3 plans (FE-ready items first; backend-blocked items as PARTIAL/BLOCKED per Batch A pattern).",
     "qa_nov_sprint_report": "memory/test_reports/QA_REPORT_NOV_SPRINT_2026_11_18.md"
