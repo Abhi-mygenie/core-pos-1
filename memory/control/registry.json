@@ -40416,7 +40416,7 @@
       "title": "Table View: accepted aggregator order has no open/expand path (TableCard click disabled + AggregatorOrderPopOut gated to status 0/7)",
       "priority": "P0",
       "risk": "MEDIUM",
-      "status": "GATE_2_5_DESIGN_APPROVED",
+      "status": "GATE_3_PLAN_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Dashboard / Aggregator",
       "assignee": "Abhishek",
@@ -40425,7 +40425,7 @@
       "intake_doc": "change_requests/BUG-703_TABLEVIEW_ACCEPTED_AGGREGATOR_ORDER_NO_OPEN_PATH_INTAKE.md",
       "duplicate_check": "DISTINCT",
       "blocked_on": null,
-      "notes": "2026-11-18 INTAKE. TableCard.jsx L312 onClick no-op for isAggregator (// CR-106); AggregatorOrderPopOut.jsx L15-18/L44-53 queue only isAggregator && fOrderStatus in (0,7) -> accepted aggregator orders (status 1/2/5) have no re-open path; DashboardPage.jsx L1490 handleTableClick never reached for aggregator tiles. Fix direction: read-only view mode in AggregatorOrderPopOut OR explicit expand affordance on aggregator TableCard. Risk MEDIUM. Planning-skip NOT eligible. Related CR-106. Evidence: evidence/INV-POS-3BUGS/ (06_dashboard_tableview.jpeg). Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 1). OD-703-01 open. | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-703_IMPACT_ANALYSIS.md). OD-703-01=Option A (tap tile -> read-only AggregatorOrderPopOut view mode, no Accept/Reject). Design approved. Risk MEDIUM. Files: AggregatorOrderPopOut.jsx + TableCard.jsx:312 + DashboardPage.jsx. Related CR-106.",
+      "notes": "2026-11-18 INTAKE. TableCard.jsx L312 onClick no-op for isAggregator (// CR-106); AggregatorOrderPopOut.jsx L15-18/L44-53 queue only isAggregator && fOrderStatus in (0,7) -> accepted aggregator orders (status 1/2/5) have no re-open path; DashboardPage.jsx L1490 handleTableClick never reached for aggregator tiles. Fix direction: read-only view mode in AggregatorOrderPopOut OR explicit expand affordance on aggregator TableCard. Risk MEDIUM. Planning-skip NOT eligible. Related CR-106. Evidence: evidence/INV-POS-3BUGS/ (06_dashboard_tableview.jpeg). Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 1). OD-703-01 open. | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-703_IMPACT_ANALYSIS.md). OD-703-01=Option A (tap tile -> read-only AggregatorOrderPopOut view mode, no Accept/Reject). Design approved. Risk MEDIUM. Files: AggregatorOrderPopOut.jsx + TableCard.jsx:312 + DashboardPage.jsx. Related CR-106. | 2026-11-19 PLANNING Gate 3: Implementation Plan complete (plans/BUG-703_IMPLEMENTATION_PLAN.md). OD-703-02=ALL statuses open view-only; OD-703-03=KOT+Bill printable in view-only, Accept/Reject hidden, close returns. 4 files: AggregatorOrderPopOut.jsx (view-only mode) + TableCard.jsx:312 (route aggregator click) + DashboardPage.jsx (aggregatorViewOrder state+handler+props) + TableSection.jsx (prop thread). Mandatory 0/7 queue untouched (precedence). Awaiting Gate 4 GO.",
       "registered_date": "2026-11-18",
       "release_date": "2026-11-17"
     },

@@ -3,13 +3,13 @@
 ---
 
 
-**CURRENT 2026-11-19 — BUG-701 IMPLEMENTED. Gate 3 plan + code complete. QA handover at `plans/BUG-701_IMPLEMENTATION_PLAN.md`.** BUG-702 at GATE_5A_IMPLEMENTED (browser verification pending). BUG-703 at GATE_2_5. CR-547 at GATE_3_PLAN_COMPLETE. IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
+**CURRENT 2026-11-19 — BUG-701 IMPLEMENTED. Gate 3 plan + code complete. QA handover at `plans/BUG-701_IMPLEMENTATION_PLAN.md`.** BUG-702 at GATE_5A_IMPLEMENTED (browser verification pending). BUG-703 at GATE_3_PLAN_COMPLETE (plan `plans/BUG-703_IMPLEMENTATION_PLAN.md`; OD-703-01/02/03 resolved — Option A, all statuses, KOT+Bill printable). CR-547 at GATE_3_PLAN_COMPLETE. IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
 
 | ID | Risk | Status | Decision |
 |---|---|---|---|
 | **BUG-701** | HIGH | **GATE_5A_IMPLEMENTED** | FE guard added in `OrderContext.updateOrder` L147-158 (BUG-701 comment). Single file, 12 lines. Compile: clean (0 new warnings). Plan: `plans/BUG-701_IMPLEMENTATION_PLAN.md`. |
 | **BUG-702** | LOW | **GATE_5A_IMPLEMENTED** | Option A — selected option name(s) + each price (mirror CartPanel). `impact/BUG-702_IMPACT_ANALYSIS.md`. Browser verification pending. |
-| **BUG-703** | MEDIUM | GATE_2_5_DESIGN_APPROVED | Option A — tap tile → read-only AggregatorOrderPopOut (no Accept/Reject). `impact/BUG-703_IMPACT_ANALYSIS.md` |
+| **BUG-703** | MEDIUM | GATE_3_PLAN_COMPLETE | Option A — tap tile → read-only AggregatorOrderPopOut; ALL statuses; Accept/Reject hidden; KOT+Bill printable; close returns. Plan: `plans/BUG-703_IMPLEMENTATION_PLAN.md` |
 | **CR-547** | HIGH | **GATE_3_PLAN_COMPLETE** | Checkboxes → one KOT, only selected items' stations; KOT disabled when none ticked. Blocker RESOLVED: backend uses `billFoodList` from payload (curl-verified). Plan: `plans/CR-547_IMPLEMENTATION_PLAN.md`. |
 
 **Sequencing (R5):** BUG-702 + CR-547 share `ScanOrderPopOut.jsx`; CR-547 + BUG-703 share `DashboardPage.jsx`; all three overlap files just changed by **CR-552 (GATE_5A_IMPLEMENTED)** → batch the ScanOrderPopOut edits, sequence after CR-552 settles. BUG-701 edits `OrderContext.jsx` only (parallel-safe). **CR-547 Gate-3 blocker: ✅ RESOLVED** — curl probe Probe A/B/C confirm backend `order-temp-store` is pass-through (stores `billFoodList` as-is). No backend change needed. Next: owner GO → Gate 4 implementation.
@@ -23,7 +23,7 @@
 |---|---|---|---|---|---|
 | **BUG-701** | Room edit-confirm popup (ScanOrderPopOut) disappears on item-cancel — `isWebOrder` recomputed false (room `order_from` pos/null) | **P0** | **HIGH** | GATE_1_INTAKE_COMPLETE — full Gate 2-3 (sockets+order flow hotspots). Guard exists in `useOrderPollingReconciliation.js` L170-177 (BUG-082), missing in socket handlers + single-order transform | `change_requests/BUG-701_ROOM_EDIT_CONFIRM_POPUP_DISAPPEARS_ON_ITEM_CANCEL_INTAKE.md` |
 | **BUG-702** | ScanOrderPopOut shows partial variation (group name only; `v.values[].label/optionPrice` not read) | **P0** | **LOW** | GATE_1_INTAKE_COMPLETE — RELATED to BUG-573 (DISTINCT component); mirror `CartPanel.jsx` L111-124. Display-only, 1 file | `change_requests/BUG-702_SCANORDERPOPOUT_PARTIAL_VARIATION_DISPLAY_INTAKE.md` |
-| **BUG-703** | Table View: accepted aggregator order has no open/expand path (`TableCard.jsx:312` no-op + `AggregatorOrderPopOut` gated to status 0/7) | **P0** | **MEDIUM** | GATE_1_INTAKE_COMPLETE — Related CR-106. OD-703-01 (read-only view vs expand affordance) | `change_requests/BUG-703_TABLEVIEW_ACCEPTED_AGGREGATOR_ORDER_NO_OPEN_PATH_INTAKE.md` |
+| **BUG-703** | Table View: accepted aggregator order has no open/expand path (`TableCard.jsx:312` no-op + `AggregatorOrderPopOut` gated to status 0/7) | **P0** | **MEDIUM** | GATE_3_PLAN_COMPLETE — Option A, ALL statuses, KOT+Bill printable, Accept/Reject hidden. Related CR-106. OD-703-01/02/03 RESOLVED | `plans/BUG-703_IMPLEMENTATION_PLAN.md` |
 
 Source: investigations `INV-ROOM-CANCEL-POPUP_INVESTIGATION_REPORT_2026-11-18.md` (+ `_API_BRIEF.md`) and `INV-POS-3BUGS_INVESTIGATION_REPORT.md` (acct pms@macha.com, RID 69). Evidence: `evidence/BUG-701/`, `evidence/INV-POS-3BUGS/`. Also: **CR-547** (ScanOrderPopOut KOT item selection — Issue 3) upgraded **P2→P0**, risk LOW→HIGH, release 2026-11-17 (see CR_REGISTRY). Secondary empty-poll eviction finding overlaps existing **BUG-686** — no new filing. Next: owner answers ODs → Gate 2 IA (BUG-701 highest risk; BUG-702 cheapest).
 

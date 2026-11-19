@@ -44,6 +44,8 @@ UI: no way to view the accepted order ❌
 
 ## Owner Decisions — RESOLVED
 - **OD-703-01 → Option A**: tapping the aggregator tile opens the existing aggregator popup in **read-only mode** (no Accept/Reject). (Rejected: full order screen / explicit "View" button.)
+- **OD-703-02 (2026-11-19) → ALL statuses open it.** Any aggregator tile that has an order is tappable to view (not limited to 0/7 or 1/2/5).
+- **OD-703-03 (2026-11-19) → KOT + Bill printable from view-only.** The view-only popup shows **Print KOT** and **Print Bill** buttons (via existing `manuallyPrintAggregator`); Accept/Reject stay hidden. Close (X) returns to Table View. Mandatory new-order (0/7) auto-popup is unchanged and takes precedence.
 
 ## Open verification (Gate 3)
 - Confirm `AggregatorOrderPopOut` render body does not assume status 0/7 anywhere beyond the queue predicate (safe to show a status-1/2/5 order read-only).
