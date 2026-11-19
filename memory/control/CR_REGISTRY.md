@@ -1,4 +1,5 @@
 **CURRENT 2026-11-19 — OWNER OVERRIDE: all 28 QA-intake items forced to P0 (release 2026-11-17).** Applies to BUG-714…739 + CR-557/558 (cancellation QA gaps + merged QA Nov Sprint). Priority/severity set P0; risk fields unchanged. No app code changed.
+**→ Next: Gate 2 Impact Analysis.** IA brief + batching plan (cluster-based, parallel-across / sequential-within): `handover/SESSION_HANDOVER_2026_11_19_QA_NOV_SPRINT_IA_BRIEF.md`.
 
 **2026-11-19 — INTAKE MERGE: QA Nov Sprint intake folded into main.** 22 incoming items renumbered to **BUG-720…739 + CR-557, CR-558** (incoming 713–719 collided with ours → renumbered +7). CR-557 (shared `<PopoutItemRow>` for web-EDIT Mode B, P1) and CR-558 (true per-item Accept in ScanOrderPopOut, P2) registered at GATE_1_INTAKE. Reopened CR-551; CR-552 drift→PARTIAL; CR-526 RETEST; CR-523 annotated CONFIRMED. Merge doc: `change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md`. Registry total 1154→1176. No app code changed.
 
