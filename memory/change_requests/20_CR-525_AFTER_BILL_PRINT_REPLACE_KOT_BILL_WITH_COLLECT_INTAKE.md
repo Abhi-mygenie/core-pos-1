@@ -3,7 +3,8 @@
 **Registered:** 2026-11-12
 **Type:** CR
 **Sprint:** nov_cr_batch
-**Status:** GATE_1_INTAKE_COMPLETE
+**Status:** GATE_2_IA_CLOSED — HIDE-ONLY (revised 2026-11-19, owner) · UNBLOCKED · FE-only · ready for Gate 3
+**Priority:** P0 · **Assignee:** Abhishek · **Release:** 2026-11-17 · **Client:** ALL
 
 ---
 
@@ -15,12 +16,14 @@ After a bill is printed, the order card/footer still shows the **KOT** and **Bil
 
 **Expected behaviour:** Once `billPrinted = true` (CR-512 signal), the KOT and Bill buttons on the order card are replaced by (or the Bill button changes to) a "Collect Bill" button that opens the payment/collect panel directly.
 
+**REVISED 2026-11-19 (HIDE-ONLY):** replace BOTH KOT + Bill (and Ready/Serve) with a single **Collect Bill** button and route card tap/Enter → Collect Payment, **only** when the outlet setting `orderEditAccess` (CR-489) is ON. **No reverse** — if the printed order is later edited, the card stays on "Collect Bill" (KOT/Bill do not come back). This is forward-only and FE-only; the earlier backend reset (BD-01) is dropped.
+
 ---
 
 ## 2. Classification
 
 - **Type:** CR
-- **Severity:** P2 — Medium (UX improvement; workaround exists via standard collect flow)
+- **Severity:** P0 (escalated 2026-11-19 by owner — money-path card entry, part of the 2026-11-17 release batch). Was P2 at intake.
 - **Risk:** HIGH — touches OrderCard (R5), bill-print state logic, CR-489 edit-lock interaction
 - **Area:** Menu / Order Entry
 - **Fast Lane:** NOT eligible (R5 hotspot, state logic)
@@ -51,17 +54,20 @@ After a bill is printed, the order card/footer still shows the **KOT** and **Bil
 
 ---
 
-## 6. Open Questions
+## 6. Open Questions — RESOLVED (owner, 2026-11-19)
 
-- OD-525-01: Should both KOT and Bill be replaced, or only the Bill button changes to "Collect Bill"?
-- OD-525-02: If order is edited after bill print (CR-489 allows with permission), should KOT/Bill reappear?
-- OD-525-03: "Collect Bill" button — should it open the full CPP panel directly or trigger the existing collect-bill flow?
+- OD-525-01 → **RESOLVED:** Replace BOTH KOT and Bill with a single "Collect Bill" button (also hide Ready/Serve at every stage after print).
+- OD-525-02 → **RESOLVED (reversed):** **NO.** Hide-only — if a printed order is edited, KOT/Bill do **NOT** reappear. Accepted limitation; staff reprint via the order/report route. This removes the earlier "reverse" requirement and **drops backend dependency BD-01**.
+- OD-525-03 → **RESOLVED:** "Collect Bill" opens the Collect Payment panel directly (reuses existing `handleBillClick` → `initialShowPayment`).
+- OD-525-A → gated per-restaurant by `orderEditAccess` setting (CR-489); OFF → cards unchanged.
+- OD-525-B/C → rooms (C/Out), prepaid (Settle), delivery (rider flow), aggregator all **EXCLUDED**.
+- OD-525-D → applies at every stage after print (Preparing / Ready / Served).
 
 ---
 
 ## 7. Code Reality
 
-- **Status:** PARTIAL — `billPrinted` signal exists (CR-512); no button swap implemented yet
+- **Status:** PARTIAL — plumbing fully present & wired: `DashboardPage.handleBillClick` (L1604) + `initialShowPayment` exist and `onBillClick` is already passed to every live `<TableCard>`/`<OrderCard>`. The cards declare `onBillClick` in props but **never call it** (buttons call `handlePrintBill`; card tap calls `onOpenModal`/`onEdit`). CR-525 = pure FE wiring in the two card files, gated by `showCollect`. **No backend needed** (BD-01 dropped). All `showCollect` inputs already exist: `orderEditAccess` (profileTransform L430), `billPrinted` (orderTransform L316), plus `isRoom/paymentType/isDelivery/isAggregator` on the card.
 
 ---
 
@@ -70,3 +76,15 @@ After a bill is printed, the order card/footer still shows the **KOT** and **Bil
 - CR-512 (Print Confirmation Flow — GATE_5A_IMPLEMENTED, provides `billPrinted`)
 - CR-489 (Edit After Bill Print — GATE_5A_IMPLEMENTED)
 - BUG-583 (Card colour on bill print — GATE_5A_IMPLEMENTED via CR-512)
+
+---
+
+## 9. Owner Decision Update — 2026-11-19 (HIDE-ONLY)
+
+**New requirement (supersedes the original "reverse" behaviour):** After bill print, on table + order cards, replace KOT + Bill (and Ready/Serve) with a single **Collect Bill** button; card tap/Enter → Collect Payment. **HIDE-ONLY — no restore of KOT/Bill after a later edit.**
+
+- **Backend dependency BD-01 DROPPED** → CR-525 is **FE-only** and **UNBLOCKED**. OD-525-E ("wait for server before go-live") no longer applies; BD-02/BD-03 not required for CR-525.
+- **Derived flag:** `showCollect = restaurant.settings.orderEditAccess && billPrinted && !isRoom && paymentType!=='prepaid' && !isDelivery && !isAggregator`.
+- **Files that will change:** `components/cards/TableCard.jsx`, `components/cards/OrderCard.jsx`. `DashboardPage.jsx` unchanged (plumbing already present; IA item E5 is now a no-op).
+- **Accepted limitation (flag at QA):** edited-after-print stays on "Collect Bill".
+- Full revised analysis: `impact/CR-525_IMPACT_ANALYSIS.md` → **Revision 2026-11-19 (HIDE-ONLY)**.

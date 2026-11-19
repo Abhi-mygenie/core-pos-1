@@ -1,12 +1,31 @@
 # CR-525: After Bill Print, KOT + Bill → Collect Bill. Impact Analysis (Gate 2), 2026-11-15
 
+## ⚠ REVISION 2026-11-19 — HIDE-ONLY (owner; supersedes the reverse + BD-01 below)
+
+**This revision supersedes every "restore KOT/Bill after edit" statement in the 2026-11-15 body below.**
+
+- **Decision:** After bill print, on table + order cards, replace KOT + Bill (and Ready/Serve) with a single **Collect Bill** button, and route card tap/Enter → Collect Payment. **HIDE-ONLY — do NOT restore KOT/Bill when a printed order is later edited.**
+- **BD-01 DROPPED.** No backend `bill_print` reset is needed → **no backend dependency**. CR-525 is **FE-only** and **UNBLOCKED**. `OD-525-E` ("wait for server before go-live") no longer applies; the API contract's BD-01/BD-02/BD-03 are not required for CR-525.
+- **Accepted limitation (flag at QA):** if a printed order is edited (items added), the card stays on "Collect Bill" and will NOT bring KOT/Bill back. Staff reprint via the normal order/report route.
+- **Scope unchanged:** gated per-restaurant by the `orderEditAccess` setting (CR-489); excludes rooms / prepaid / delivery / aggregator; applies at every stage after print (OD-525-D).
+- **Derived flag:** `showCollect = restaurant.settings.orderEditAccess && billPrinted && !isRoom && paymentType!=='prepaid' && !isDelivery && !isAggregator`.
+- **Code-reality correction (verified on current `main`):** the plumbing is fully present and wired — `DashboardPage.handleBillClick` (L1604) + `initialShowPayment` exist and `onBillClick` is already passed to every live `<TableCard>`/`<OrderCard>` (L2043/2165/2231/2267/2297). **The cards simply never call `onBillClick`** (declared in props only; buttons call `handlePrintBill`, card tap calls `onOpenModal`/`onEdit`). So the change is pure FE wiring in the two card files.
+- **IA "Proposed" item E5 is now a NO-OP:** the old L1835 list-view target `OrderListSection` is dead code (rendered nowhere); all live card render sites already pass `onBillClick`.
+- **Verified anchors:** TableCard.jsx — `onBillClick` L55 (unused), `handleCardClick` L300 → `onOpenModal`, bill btn L746 → `handlePrintBill`. OrderCard.jsx — `onBillClick` L53 (unused), tap/Enter L461-462 → `onEdit`, bill btns L1255/L1280 → `handlePrintBill`.
+- **Files that WILL change:** `components/cards/TableCard.jsx`, `components/cards/OrderCard.jsx`. **WILL NOT touch:** `DashboardPage.jsx` (plumbing already present), any backend, any transform.
+- **Risk:** MEDIUM-HIGH (money-path entry, R5 cards). Regression: CR-489 lock, CR-512 print-confirm, BUG-583/664 colour, card tap/Enter, excluded types untouched.
+- **Status:** IA CLOSED (hide-only) → **ready for Gate 3 (implementation plan). Gate 4 GO still required before any coding.**
+
+---
+
+
 Code Reality: PARTIAL. The plumbing exists: `DashboardPage.handleBillClick` (L1596-1600) opens Order Entry with the Collect Payment panel already open (`initialShowPayment`, L443). It's passed as `onBillClick` to TableCard / OrderCard (Dashboard L1957, L2014, L2045, L2079; channel column L162) **but neither card uses it today** (TableCard L55, OrderCard L53 declared only). The card buttons call `handlePrintBill` (print) instead.
 Conflict pre-check: TableCard.jsx (875 lines) / OrderCard.jsx (1335 lines) also carry BUG-583 (5A), BUG-628 (5A), BUG-557 (5A), CR-512 (5A), CR-433 (5B). **CR-521 (this batch) edits the same files: CR-525 first, CR-521 after, same agent.** DashboardPage.jsx: CR-533 (Gate 1, P0) and BUG-570 (5A).
 Risk: **MEDIUM-HIGH** (money path entry point, R5 cards, depends on the CR-489 lock semantics). No Fast Lane.
-Backend-blocked: **PARTIAL**. The button swap is FE-only. **"Edited after print → KOT + Bill return" needs the backend** (probe P2: the server does NOT clear `bill_print` after items are added). Brief: `backend_briefs/BACKEND_BRIEF_BATCH-D_2026_11_15.md` §1.
+Backend-blocked: **PARTIAL**. The button swap is FE-only. **"Edited after print → KOT + Bill return" needs the backend** (probe P2: the server does NOT clear `bill_print` after items are added). Brief: `backend_briefs/BACKEND_BRIEF_BATCH-D_2026_11_15.md` §1. → **SUPERSEDED (Revision 2026-11-19): HIDE-ONLY, no reverse → BD-01 DROPPED → CR-525 is FE-only and UNBLOCKED.**
 
 ## Owner decisions (locked)
-- Intake: on table AND order cards, after the bill is printed, the button + card tap → Collect Bill screen directly. Edited after print → KOT + Bill return.
+- Intake: on table AND order cards, after the bill is printed, the button + card tap → Collect Bill screen directly. Edited after print → KOT + Bill return. **[REVISED 2026-11-19: HIDE-ONLY — the "Edited after print → KOT + Bill return" clause is REMOVED.]**
 - OD-525-A (R4/R5): **only when the outlet setting "Lock order after bill print" (`order_edit_access`, CR-489) is ON.** OFF → today's cards are unchanged.
 - OD-525-D (R5): applies at **every stage after print** (Preparing / Ready / Served).
 - OD-525-B: **rooms keep C/Out** (excluded).
