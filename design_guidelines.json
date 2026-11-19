@@ -1,0 +1,106 @@
+{
+  "project_name": "MyGenie POS Reports - Cancellations UI Redesign Blueprint",
+  "general_ui_ux_design_guidelines": "1. Do not apply universal transition (`transition: all`), use specific properties instead. 2. Create depth through layered design elements with z-index hierarchy. 3. Avoid AI slop aesthetics; do not center-align the app container. 4. Use glass-morphism effects with backdrop filters (12-24px blur) for sticky headers or overlays. 5. Ensure all interactive and key informational elements include a `data-testid` attribute (kebab-case, role-based). 6. Use pure HTML + Tailwind CSS for structural layouts; customize components heavily if used. 7. Do not use complete transparent background in headers, overlays, or dropdowns. 8. Use standard Lucide icons, never emoji characters.",
+  "typography": {
+    "headings": "Cabinet Grotesk, sans-serif, text-2xl font-semibold tracking-tight text-zinc-950",
+    "body": "font-sans, text-sm text-zinc-700",
+    "table_headers": "text-xs font-semibold text-zinc-500 uppercase tracking-wide",
+    "badges": "text-[10px] font-bold",
+    "instructions_to_main_agent": "Ensure letter spacing is tight for headings. Table headers must remain uppercase and legible. Maintain existing typography scales."
+  },
+  "colors": {
+    "backgrounds": "bg-white for cards, bg-zinc-50 for app background and table headers",
+    "borders": "border-zinc-200 for cards, border-zinc-100 for internal dividers",
+    "text": "text-zinc-950 for primary text, text-zinc-500 for secondary, text-red-600 for loss amounts",
+    "risk_tiers": {
+      "doubt": "bg-amber-50 text-amber-700 border border-amber-200",
+      "risk": "bg-orange-50 text-orange-700 border border-orange-200",
+      "high_risk": "bg-red-50 text-red-700 border border-red-200"
+    },
+    "instructions_to_main_agent": "Follow the neutral zinc palette strictly. Use the specified risk tier colors to explicitly indicate the duration severity."
+  },
+  "visual_enhancers": {
+    "badges": "rounded-full px-2 py-0.5 inline-flex items-center gap-1",
+    "filter_bar": "bg-white border border-zinc-200 rounded-xl p-4 flex gap-3 flex-wrap items-center shadow-sm",
+    "table_rows": "hover:bg-zinc-50/50 transition-colors",
+    "instructions_to_main_agent": "Ensure that badges have visual contrast against the table row. The filter bar should stand out slightly with a subtle shadow."
+  },
+  "component_name": [
+    "CancellationsMockup",
+    "CancelDetailMockup"
+  ],
+  "component_path": [
+    "/app/frontend/src/pages/reports-module/CancellationsMockup.jsx",
+    "/app/frontend/src/pages/reports-module/CancelDetailMockup.jsx"
+  ],
+  "grids": {
+    "filter_bar": "flex flex-wrap gap-3 w-full",
+    "table": "w-full min-w-full",
+    "instructions_to_main_agent": "Use flex layouts for the filter bar to allow responsive wrapping. Use table elements for tabular data."
+  },
+  "layouts": {
+    "cancellations_report": {
+      "before": "Table with 13 separate columns overflowing horizontally. Punch Time and Duration are hidden off-screen. No column filters.",
+      "after": "Consolidated 7-column table layout: 1. Order Info (Order #, Date). 2. Item Details (Item Name, Scope Badge). 3. Reason & Notes (Reason, Notes icon, Cancel Note icon). 4. Stage (Stage Badge). 5. Amount (Loss in red). 6. Personnel (Cancelled By, Station). 7. Timing & Risk (Punch Time, Duration, Risk Badge). Added a Filter Bar above the table."
+    },
+    "cancel_detail_report": {
+      "before": "Table with 8 columns. Missing Punch Time and Duration entirely. Only Stage and Reason dropdowns present.",
+      "after": "Consolidated 7-column table layout for parity: 1. Order Info (Order #, Date). 2. Item Details (Item Name, Qty). 3. Stage (Stage Badge). 4. Loss (Amount in red). 5. Reason (Reason text). 6. Personnel (By). 7. Timing & Risk (Punch Time, Duration, Risk Badge). Expanded Filter Bar to include all 5 metrics."
+    },
+    "instructions_to_main_agent": "Implement table cell merging on both screens to reduce the column count. Add the filter bar pattern immediately above the tables."
+  },
+  "motion": {
+    "hover_states": "hover:bg-zinc-50/50 on table rows, hover:bg-zinc-100 on filter dropdowns",
+    "transitions": "transition-colors duration-200",
+    "instructions_to_main_agent": "Use targeted transitions like `transition-colors` instead of `transition-all`. Exclude transforms from universal transition definitions."
+  },
+  "accessibility": {
+    "contrast": "Risk badges and text must maintain a minimum 4.5:1 contrast ratio against their backgrounds.",
+    "attributes": "Add `data-testid` to all filter inputs and risk badges.",
+    "instructions_to_main_agent": "Ensure dropdowns have solid backgrounds to avoid overlap transparency issues. Ensure all new merged columns are readable by screen readers."
+  },
+  "media": {
+    "icons": "Use lucide-react. Clock for doubt, AlertTriangle for risk, ShieldAlert or XCircle for high_risk. MessageSquare for Notes.",
+    "instructions_to_main_agent": "Do not use placeholder URLs. Do not use emoji characters."
+  },
+  "3d_libraries_and_steps": {
+    "usage": "Not applicable.",
+    "instructions_to_main_agent": "Do not introduce 3D or WebGL rendering."
+  },
+  "image_urls": [],
+  "instructions_to_main_agent": "This is a blueprint. Execute the changes to fix BUG-713, CR-554, CR-555, and CR-556. Use `.js`/`.jsx` files syntax. The goal is parity across both screens using the new 7-column layout, implementing the duration risk badges, and adding the comprehensive filter bar.",
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": "1. Prioritize using pre-existing components and styles. 2. Implement exact visual matching for the zinc palette. 3. Add `data-testid` uniformly to all elements.",
+  "blueprint_artifacts": {
+    "bug_713_and_cr_554_column_consolidation": {
+      "strategy": "Merge low-value columns into secondary lines within primary columns to eliminate horizontal scroll.",
+      "proposed_columns": [
+        "Order Info: <div>#{orderNumber}</div><div className=\"text-xs text-zinc-500\">{date}</div>",
+        "Item: <div>{foodName}</div><div className=\"mt-1\">{scopeBadge}</div>",
+        "Context (Reason/Notes): <div>{reason}</div><div className=\"flex gap-1 mt-1\">{notesIcon}{cancelNoteIcon}</div>",
+        "Stage: {stageBadge}",
+        "Financials: <div className=\"text-red-600 font-semibold\">{fmtINR(amount)}</div>",
+        "Audit: <div>{cancelledBy}</div><div className=\"text-xs text-zinc-400\">{station}</div>",
+        "Timing & Risk: <div>{punchTime}</div><div className=\"flex items-center gap-2 mt-1\"><span>{duration} min</span>{riskBadge}</div>"
+      ]
+    },
+    "cr_555_risk_badge_system": {
+      "logic": "Duration = (Cancel Time - Punch Time) in minutes.",
+      "thresholds": {
+        "doubt": { "condition": ">= 5 min && < 15 min", "classes": "bg-amber-50 text-amber-700 border border-amber-200", "icon": "Clock", "label": "Doubt" },
+        "risk": { "condition": ">= 15 min && < 30 min", "classes": "bg-orange-50 text-orange-700 border border-orange-200", "icon": "AlertTriangle", "label": "Risk" },
+        "high_risk": { "condition": ">= 30 min", "classes": "bg-red-50 text-red-700 border border-red-200", "icon": "ShieldAlert", "label": "High Risk" }
+      }
+    },
+    "cr_556_filter_bar_pattern": {
+      "layout": "A flex container placed directly above the table component. Background white, rounded-xl, padding 4.",
+      "elements": [
+        { "type": "select", "name": "Stage", "options": "All Stages, Before Cooking, Before Serving, After Serving, Order, Unknown" },
+        { "type": "select", "name": "Scope", "options": "All Scopes, Full Order, Item-Level" },
+        { "type": "select", "name": "Reason", "options": "Dynamic from data" },
+        { "type": "select", "name": "Cancelled By", "options": "Dynamic from data" },
+        { "type": "select", "name": "Risk Tier", "options": "All, Doubt (5-14m), Risk (15-29m), High Risk (30m+)" },
+        { "type": "button", "name": "Clear", "style": "text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg" }
+      ]
+    }
+  }
+}
