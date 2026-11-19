@@ -1,0 +1,37 @@
+{
+  "summary": "LIVE preprod verification. Login (owner@cafe103.com) works: /loading bootstrap (~45s, products step ~27s) then /dashboard. BUG-630/BB-14 Item Sales Ledger PASSES against real data for 2026-11-01 to 2026-11-18 (280 items). CR-547 live flow NOT-REACHABLE: the restaurant had 0 running orders (header shows Web 0 / POS 0, and no popout/scan elements on the dashboard), so there was no scan or web-edit order to open. No orders or data were created or changed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Item Sales header", "issues": ["Date range uses the browser's own date input (type=date) instead of the shadcn Calendar/Popover. This was already there before and does not block anything."]},
+      {"screen": "Global", "issues": ["The 'New version available / Update now' toast stays at the bottom centre and covers table rows on the reports page."]}
+    ]
+  },
+  "bug_630_live_results": {
+    "kpis": "Net Sales ₹5,83,468.83 ('before taxes') < Total Sales ₹6,12,641.15 ('incl. tax'); Tax ₹29,172.32 ('GST + VAT + SC'); Discount ₹35,405.17; Unique Items 280; Units 3,525. There is no Gross Revenue KPI.",
+    "kpi_reconciliation": "Net + Tax = 583468.83 + 29172.32 = 612641.15, which matches the Total Sales KPI and the API's top-level total_sales exactly.",
+    "table": "Columns: #, Food Item, Category, Station, Qty Sold, Variation, Addon, Net Sales, Total Sales. Net and total values differ on every row (e.g. Cappuccino ₹28,251.70 / ₹29,663.87). The totals row matches the KPIs.",
+    "per_row_sanity_all_280_rows": "0 rows where net_sales+gst+vat+service_charge != total_sales; 0 rows where item_price+variation+addon-discount != net_sales; 0 rows missing net_sales; 0 negative rows.",
+    "caveat": "service_charge and vat are 0 on all 280 rows for cafe103 in this period, so the live data cannot show that service charge is included in Total Sales. That part is only covered by the unit tests."
+  },
+  "cr_547_live_results": "NOT-REACHABLE: no live scan or web-edit order was in the queue (Web 0, POS 0, Running Orders 0 loaded). This depends on live order data and is not a failure. Per instructions, no fake orders were placed.",
+  "test_report_links": [],
+  "action_items": [
+    "No fixes needed for BUG-630.",
+    "Optional: verify service charge inclusion live on a restaurant or period where service_charge > 0.",
+    "CR-547: re-run the live check when a real scan or web-edit order is available."
+  ],
+  "critical_code_review_comments": [
+    "topFoodSalesService.parseTopFoodSalesRow correctly uses r.net_sales and r.total_sales and computes tax = gst+vat+sc, which matches the backend output exactly.",
+    "Opening any route with a full page load re-runs the ~45s /loading bootstrap. The tests used client-side navigation (history.pushState) to reach /reports-module/item-sales."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (external preprod, frontend-only test)", "frontend": "100% of reachable checks (BUG-630); CR-547 not reachable"},
+  "test_credentials": "owner@cafe103.com / Qplazm@10 (from /app/memory/test_credentials.md) - works",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login, wait for /dashboard (up to 90s), then pushState to /reports-module/item-sales and dispatch popstate, to avoid the bootstrap re-running. Fill item-sales-date-from/to (type=date, YYYY-MM-DD) and click item-sales-apply-btn. API: POST preprod /api/v1/vendoremployee/top-food%20sales-report. CR-547 still needs a live scan/web order."
+}
