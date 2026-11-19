@@ -120,6 +120,8 @@ const OrderCard = ({
   const isRoom = orderType === "room" || order.isRoom;
   // CR-489: Lock order editing after bill is printed
   const isEditLocked = !!(restaurant?.settings?.orderEditAccess) && !!(order?.billPrinted) && !hasPermission('order_edit_access');
+  // CR-525: after bill print → single Collect Bill (HIDE-ONLY, no reverse)
+  const showCollect = !!(restaurant?.settings?.orderEditAccess) && !!(order?.billPrinted) && !isRoom && order?.paymentType !== 'prepaid' && !isDelivery && !isAggregator;
   // BUG-097: delivery_assign from restaurant profile determines Dispatch vs Assign Rider
   const deliveryAssign = restaurant?.features?.deliveryAssign;
   const hasRiderAssigned = !!order.deliveryManId;
@@ -458,8 +460,8 @@ const OrderCard = ({
       {...(kbdEnabled && !isEngaged && !isAggregator ? { tabIndex: 0, 'data-kbd-card': '', 'data-kbd-label': tableLabel || '' } : {})}
       className={`relative rounded-lg shadow-sm overflow-hidden mb-2 ${isSnoozed ? "opacity-60" : ""} ${isEngaged ? "pointer-events-none" : "cursor-pointer"} ${kbdEnabled ? 'kbd-focus' : ''} ${kbdHighlight ? 'kbd-highlight' : ''}`}
       style={{ backgroundColor: order.billPrinted ? COLORS.billPrintedBg : COLORS.lightBg, border: `2px solid ${order.billPrinted ? COLORS.primaryGreen : getStatusColor(fOrderStatus, COLORS.borderGray)}`, breakInside: 'avoid' }} // CR-433 // BUG-583
-      onClick={isEngaged || isAggregator ? undefined : () => onEdit?.()} // CR-106: no-op for aggregator
-      onKeyDown={kbdEnabled && !isEngaged && !isAggregator ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onEdit?.(); } } : undefined}
+      onClick={isEngaged || isAggregator ? undefined : () => (showCollect ? onBillClick?.() : onEdit?.())} // CR-106 + CR-525
+      onKeyDown={kbdEnabled && !isEngaged && !isAggregator ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showCollect ? onBillClick?.() : onEdit?.(); } } : undefined}
     >
       {/* Engaged spinner overlay */}
       {isEngaged && (
@@ -1054,7 +1056,7 @@ const OrderCard = ({
               {/* CR-118: KOT button — aggregator uses dedicated print endpoint */}
               {/* CR-120: Aggregator KOT only at fOS=1 (preparing); Bill moves to fOS=2 */}
               {/* BUG-286: Aggregator print bypasses canPrintBill — uses UrbanPiper API, not POS printer */}
-              {(isAggregator || canPrintBill) && !isEditLocked && (isAggregator ? (fOrderStatus === 1) : !(isDelivery && (fOrderStatus === 2 || fOrderStatus === 5))) && (
+              {(isAggregator || canPrintBill) && !isEditLocked && !showCollect && (isAggregator ? (fOrderStatus === 1) : !(isDelivery && (fOrderStatus === 2 || fOrderStatus === 5))) && (
               <button
                 data-testid={`print-kot-btn-${orderId}`}
                 className={`min-h-[44px] min-w-[44px] rounded-lg border flex items-center justify-center ${isActionInProgress ? 'opacity-50' : ''}`}
@@ -1235,6 +1237,18 @@ const OrderCard = ({
               )
             )}
             {!isAggregator && fOrderStatus === 5 && canBill && (!isDelivery || hasRiderAssigned || order.riderStatus === 'dispatched') && ( // BUG-628: allow gate for manual dispatch
+              showCollect ? (
+                /* CR-525: single Collect Bill replaces Bill at Served (HIDE-ONLY) */
+                <button
+                  data-testid={`collect-bill-btn-${orderId}`}
+                  className="min-h-[44px] flex-1 min-w-0 px-2 text-sm font-bold rounded-lg flex items-center justify-center gap-2"
+                  style={{ backgroundColor: COLORS.primaryGreen, color: "white" }}
+                  onClick={(e) => { e?.stopPropagation?.(); onBillClick?.(); }}
+                  disabled={isActionInProgress}
+                >
+                  Collect Bill
+                </button>
+              ) : (
               isDelivery && order.riderStatus === 'dispatched' ? (
                 hasRiderAssigned ? (
                   // Rider-assigned: existing disabled label (UNCHANGED)
@@ -1283,6 +1297,7 @@ const OrderCard = ({
                 >
                   {isPrintingBill ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Bill'}
                 </button>
+              )
               )
             )}
           </div>

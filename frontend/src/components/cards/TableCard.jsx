@@ -145,6 +145,8 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
 
   // CR-489: Lock order editing after bill is printed (same logic as OrderCard)
   const isEditLocked = !!(restaurant?.settings?.orderEditAccess) && !!(table?.billPrinted) && !hasPermission('order_edit_access');
+  // CR-525: after bill print → single Collect Bill (HIDE-ONLY, no reverse)
+  const showCollect = !!(restaurant?.settings?.orderEditAccess) && !!(table?.billPrinted) && !table?.isRoom && table?.paymentType !== 'prepaid' && !isDelivery && !isAggregator;
 
   // Handle KOT print - with station picker
   const handlePrintKot = async (e) => {
@@ -299,6 +301,8 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
   }, []);
 
   const handleCardClick = () => {
+    // CR-525: Collect Bill tap → open Collect Payment directly
+    if (showCollect) { onBillClick?.(table); return; }
     if (hasOrders || isYetToConfirm) {
       onOpenModal(table);
     } else {
@@ -656,6 +660,19 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
                   </>
                 )}
                 {!isAggregator && table.fOrderStatus === 5 && (
+                  showCollect ? (
+                    /* CR-525: single Collect Bill replaces KOT + Bill at Served (HIDE-ONLY) */
+                    <TextButton
+                      onClick={(e) => { e?.stopPropagation?.(); onBillClick?.(table); }}
+                      testId={`collect-bill-btn-${table.id}`}
+                      ariaLabel={`Collect Bill for table ${table.id}`}
+                      fullWidth
+                      className="flex-1 text-xs py-2 flex items-center justify-center gap-1"
+                      disabled={isActionInProgress}
+                    >
+                      Collect Bill
+                    </TextButton>
+                  ) : (
                   <>
                     {/* BUG-097: Hide KOT for delivery orders at delivered state */}
                     {!isDelivery && (
@@ -755,6 +772,7 @@ const TableCard = ({ table, onClick, onOpenModal, onUpdateStatus, onBillClick, o
                       </TextButton>
                     ))}
                   </>
+                  )
                 )}
               </div>
             ) : table.status === "reserved" ? (

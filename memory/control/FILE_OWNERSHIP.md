@@ -51,6 +51,7 @@ NOT touched: `socketHandlers.js` · `orderTransform.js` · `useOrderPollingRecon
 | `src/components/sections/TableSection.jsx` | **BUG-703 IMPL 2026-11-19:** thread `onAggregatorView` prop → TableCard | BUG-703 IMPL 2026-11-19 |
 | `src/pages/DashboardPage.jsx` | **BUG-703 IMPL 2026-11-19:** `aggregatorViewOrder` state + `handleAggregatorView` + `viewOrder`/`onCloseView` on AggregatorOrderPopOut + `onAggregatorView` to 2 TableSection mounts & grid TableCard. Same file as CR-547/CR-552 (additive). | BUG-703 IMPL 2026-11-19 |
 | `src/components/cards/TableCard.jsx` | **BUG-703 IMPL 2026-11-19:** L314 onClick — aggregator tile w/ order → `onAggregatorView(table.order)` (engaged + non-aggregator paths unchanged); +prop +PropTypes. marker `// BUG-703` | BUG-703 IMPL 2026-11-19 |
+| `src/components/cards/TableCard.jsx` | **CR-525 IMPL 2026-11-19:** L148 `showCollect` flag; L305 `handleCardClick` → `onBillClick(table)` when showCollect; L664-778 fOS5 block wrapped `showCollect ? <Collect Bill> : <existing>`. markers `// CR-525` | CR-525 IMPL 2026-11-19 |
 
 > ⚠ Overlap with CR-552 (GATE_5A_IMPLEMENTED) on `ScanOrderPopOut.jsx` / `DashboardPage.jsx` — sequence Gate-3 edits after CR-552 settles.
 
@@ -193,6 +194,7 @@ NOT touched: `insightsService.js` · any transform · any other report page.
 | File | Change | CR/BUG |
 |---|---|---|
 | `src/components/cards/OrderCard.jsx` | **L699-715:** Variant parser — added `v.values[]` array check as first branch. Extracts `val.label` from each selected option, joins with comma. Hoisted `name` extraction. Existing `v.labels` and flat-field branches unchanged as fallbacks. | BUG-573 IMPL 2026-10-21 |
+| `src/components/cards/OrderCard.jsx` | **CR-525 IMPL 2026-11-19:** L123 `showCollect` flag; L465-466 onClick/onKeyDown → `onBillClick()` when showCollect; L1061 KOT gated `&& !showCollect`; L1241-1304 fOS5 Bill block wrapped `showCollect ? <Collect Bill> : <existing>`. markers `// CR-525` | CR-525 IMPL 2026-11-19 |
 
 NOT touched: `orderTransform.js` · `OrderEntry.jsx` · any R5 hotspot.
 

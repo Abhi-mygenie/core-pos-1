@@ -38353,7 +38353,7 @@
       "id": "CR-525",
       "type": "CR",
       "title": "After Bill Print: Replace KOT and Bill Buttons with Collect Bill Button",
-      "status": "GATE_3_PLAN_COMPLETE 2026-11-19 — 4 edits, 2 files (TableCard.jsx + OrderCard.jsx). showCollect derived flag + fOS 5 button swap + card tap redirect. FE-only, HIDE-ONLY. Awaiting Gate 4 GO.",
+      "status": "GATE_5A_IMPLEMENTED 2026-11-19 — 7 edits, 2 files (TableCard.jsx + OrderCard.jsx). showCollect flag + fOS5 button swap + card tap/Enter redirect. FE-only, HIDE-ONLY. Compiled clean. Gate 4 GO given; awaiting QA.",
       "priority": "P0",
       "severity": "P2",
       "risk": "HIGH",
