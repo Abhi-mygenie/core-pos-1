@@ -74,7 +74,7 @@ Both screens consume it via `fetchInsightsCancellations` (`insightsService.js` L
 
 ## Owner Decision Queue
 1. **BUG-713:** which columns to prioritise/reorder so Punch Time + Duration show without scroll (or accept sticky + horizontal scroll)?
-2. **CR-555:** confirm thresholds 5/15/30 min + badge labels/colours; order-scope / null-duration behaviour.
+2. **CR-555:** ~~confirm thresholds~~ **DECIDED (owner 2026-11-19): thresholds LOCKED at CR-543's 5/15/30 min as-is, for consistency with the Audit report.** Remaining: badge labels/colours (proposed Doubt=amber / Risk=orange / High Risk=red) + no badge when duration null. Note: live data skews high (≈52% ≥30 min) — owner accepted this for Audit consistency.
 3. **CR-556:** duration filter as risk-tier dropdown (recommended) or numeric range?
 
 ---
