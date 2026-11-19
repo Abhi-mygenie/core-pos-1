@@ -1,3 +1,10 @@
+## FILE_OWNERSHIP — CR-557 IMPL (2026-11-19) — markers `// CR-557`
+| File | Change | Owner |
+|------|--------|-------|
+| `frontend/src/components/dashboard/PopoutItemRow.jsx` | **NEW** — shared rich item-row renderer extracted from ScanOrderPopOut Mode A. Variants: `full` / `new` / `readonly`. Carries APS badge+Price-TBD (CR-545), cancelled styling (BUG-679), full variation+option price (BUG-702), add-on prices, notes, Comp tag. Per-variant legacy test-id families (OD-557-03 keep-labels). Presentation-only. | CR-557 IMPL 2026-11-19 |
+| `frontend/src/components/dashboard/ScanOrderPopOut.jsx` | Import PopoutItemRow; Mode A list, Mode B `newItems` list, and `prevItems` list (OD-557-02 read-only) now render `<PopoutItemRow>` instead of inline `<li>`. Removed unused `XCircle` import (moved into PopoutItemRow). Predicates/selection state/handlers/footer unchanged. | CR-557 IMPL 2026-11-19 |
+
+
 ## FILE_OWNERSHIP — BUG-702 IMPL (2026-11-18) — marker `// BUG-702`
 
 | File | Change | Owner |

@@ -44,8 +44,9 @@
 // ============================================================================
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Check, Eye, BellOff, Bell, Loader2, XCircle, Printer } from 'lucide-react'; // CR-545: +XCircle, Printer
+import { ChevronLeft, ChevronRight, X, Check, Eye, BellOff, Bell, Loader2, Printer } from 'lucide-react'; // CR-545: +Printer (XCircle moved to PopoutItemRow — CR-557)
 import { COLORS } from '../../constants';
+import PopoutItemRow from './PopoutItemRow'; // CR-557
 // CR SNOOZE_SOUND_STOP_AND_DURATION (Jan-2026): Snooze now also stops the
 // in-progress local chime. The original anti-rule above is overridden by
 // owner decision 2026-01-16. Use ONLY soundManager.stop() — no setEnabled,
@@ -550,51 +551,22 @@ const ScanOrderPopOut = ({
                       </label>
                     )}
                     <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
-                      {newItems.map((it, idx) => {
-                        const qty = Number(it?.qty ?? it?.quantity) || 1;
-                        const unit = Number(it?.unitPrice ?? it?.price) || 0;
-                        const lineTotal = unit * qty;
-                        const isComp = Boolean(it?.isComplementary || it?.isComplementaryRuntime);
-                        const variations = Array.isArray(it?.variation) ? it.variation : [];
-                        const variationOptions = flattenVariationOptions(variations); // BUG-702
-                        const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
-                        return (
-                          <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" data-testid={`popout-new-item-${idx}`}>
-                            {/* CR-547: Per-item KOT select */}
-                            {onPrintKOT && (
-                              <input
-                                type="checkbox"
-                                className="mt-0.5 flex-shrink-0 accent-[#2E7D32]"
-                                checked={selectedItemIds.has(it.id)}
-                                onChange={() => toggleKotItem(it.id)}
-                                data-testid={`popout-kot-check-new-${idx}`}
-                              />
-                            )}
-                            <span className="flex-1 text-sm" style={{ color: COLORS.darkText }}>
-                              {it?.name || it?.foodName || ''}
-                              {variationOptions.length > 0 && (
-                                <span className="text-xs text-gray-400 ml-1" data-testid={`popout-new-item-variation-${idx}`}>
-                                  ({variationOptions.map(o => o.price > 0 ? `${o.label} (+${currencySymbol}${o.price.toFixed(2)})` : o.label).join(', ')})
-                                </span>
-                              )}
-                              {addOns.length > 0 && <span className="text-xs text-gray-400 ml-1">+{addOns.map(a => a.name).join(', ')}</span>}
-                            </span>
-                            <span className="text-xs text-gray-500 whitespace-nowrap">×{qty}</span>
-                            {!isComp && <span className="text-xs font-medium tabular-nums" style={{ color: COLORS.darkText }}>{currencySymbol}{lineTotal.toFixed(2)}</span>}
-                            {onCancelItem && (
-                              <button
-                                type="button"
-                                data-testid={`popout-cancel-new-item-${idx}`}
-                                onClick={() => onCancelItem(activeOrder, it)}
-                                className="ml-1 p-0.5 rounded hover:bg-red-50"
-                                title="Cancel this item"
-                              >
-                                <XCircle className="w-4 h-4 text-red-400" />
-                              </button>
-                            )}
-                          </li>
-                        );
-                      })}
+                      {/* CR-557: Mode B new items use the shared rich row (gains APS/BUG-679/BUG-702/addons/notes) */}
+                      {newItems.map((it, idx) => (
+                        <PopoutItemRow
+                          key={it?.itemId ?? it?.id ?? idx}
+                          item={it}
+                          idx={idx}
+                          variant="new"
+                          currencySymbol={currencySymbol}
+                          variationOptions={flattenVariationOptions(Array.isArray(it?.variation) ? it.variation : [])}
+                          showKot={!!onPrintKOT}
+                          isSelected={selectedItemIds.has(it.id)}
+                          onToggleKot={toggleKotItem}
+                          showCancel={!!onCancelItem}
+                          onCancel={(item) => onCancelItem(activeOrder, item)}
+                        />
+                      ))}
                     </ul>
                     {prevItems.length > 0 && (
                       <details data-testid="popout-prev-items" className="border-t" style={{ borderColor: COLORS.borderGray }}>
@@ -602,18 +574,17 @@ const ScanOrderPopOut = ({
                           Previously ordered items ({prevItems.length})
                         </summary>
                         <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
-                          {prevItems.map((it, idx) => {
-                            const qty = Number(it?.qty ?? it?.quantity) || 1;
-                            const unit = Number(it?.unitPrice ?? it?.price) || 0;
-                            const lineTotal = unit * qty;
-                            return (
-                              <li key={it?.itemId ?? it?.id ?? idx} className="px-3 py-2 flex items-start gap-2" style={{ opacity: 0.6 }} data-testid={`popout-prev-item-${idx}`}>
-                                <span className="flex-1 text-sm" style={{ color: COLORS.grayText }}>{it?.name || it?.foodName || ''}</span>
-                                <span className="text-xs text-gray-400 whitespace-nowrap">×{qty}</span>
-                                <span className="text-xs tabular-nums" style={{ color: COLORS.grayText }}>{currencySymbol}{lineTotal.toFixed(2)}</span>
-                              </li>
-                            );
-                          })}
+                          {/* CR-557 (OD-557-02 Option A): prev items use shared read-only row */}
+                          {prevItems.map((it, idx) => (
+                            <PopoutItemRow
+                              key={it?.itemId ?? it?.id ?? idx}
+                              item={it}
+                              idx={idx}
+                              variant="readonly"
+                              currencySymbol={currencySymbol}
+                              variationOptions={flattenVariationOptions(Array.isArray(it?.variation) ? it.variation : [])}
+                            />
+                          ))}
                         </ul>
                       </details>
                     )}
@@ -662,158 +633,22 @@ const ScanOrderPopOut = ({
                     const aAps = Number(a?.unitPrice ?? a?.price) === 1 ? 0 : 1;
                     const bAps = Number(b?.unitPrice ?? b?.price) === 1 ? 0 : 1;
                     return aAps - bAps;
-                  }).map((it, idx) => {
-                    const qty = Number(it?.qty ?? it?.quantity) || 1;
-                    const unit = Number(it?.unitPrice ?? it?.price) || 0;
-                    const lineTotal = unit * qty;
-                    const isComp = Boolean(it?.isComplementary || it?.isComplementaryRuntime);
-                    const isCancelled = it?.status === 'cancelled' || Number(it?.foodStatus ?? it?.food_status) === 3; // BUG-679
-                    const variations = Array.isArray(it?.variation) ? it.variation : [];
-                    const variationOptions = flattenVariationOptions(variations); // BUG-702
-                    const addOns = Array.isArray(it?.addOns) ? it.addOns : [];
-                    return (
-                      <li
-                        key={`${it?.id ?? it?.foodId ?? idx}-${idx}`}
-                        className="px-3 py-2 text-sm flex items-start gap-2"
-                        style={{ opacity: isCancelled ? 0.5 : 1 }} // BUG-679
-                        data-testid={`popout-item-row-${idx}`}
-                      >
-                        {/* CR-547: Per-item KOT select — skip cancelled */}
-                        {onPrintKOT && !isCancelled && (
-                          <input
-                            type="checkbox"
-                            className="mt-1 flex-shrink-0 accent-[#2E7D32]"
-                            checked={selectedItemIds.has(it.id)}
-                            onChange={() => toggleKotItem(it.id)}
-                            data-testid={`popout-kot-check-${idx}`}
-                          />
-                        )}
-                        <div className="flex-1 min-w-0">
-                        {/* row 1: qty + name + comp tag + line total */}
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span
-                              style={{
-                                color: isCancelled ? '#9CA3AF' : COLORS.darkText, // BUG-679
-                                textDecoration: isCancelled ? 'line-through' : 'none', // BUG-679
-                              }}
-                              className="font-medium truncate"
-                            >
-                              {qty}× {it?.name || it?.productName || 'Item'}
-                              {isCancelled ? <span className="ml-1 text-xs font-normal" style={{ textDecoration: 'none' }}>(Cancelled)</span> : null}
-                            </span>
-                            {isComp ? (
-                              <span
-                                data-testid={`popout-item-comp-tag-${idx}`}
-                                className="text-[10px] font-bold px-1.5 py-0.5 rounded flex-shrink-0"
-                                style={{ backgroundColor: '#F1F5F9', color: COLORS.darkText }}
-                              >
-                                Comp
-                              </span>
-                            ) : null}
-                            {/* CR-545: APS badge for ₹1 items (not comp) */}
-                            {unit === 1 && !isComp ? (
-                              <span
-                                data-testid={`popout-item-aps-tag-${idx}`}
-                                className="text-[10px] font-bold px-1.5 py-0.5 rounded flex-shrink-0"
-                                style={{ backgroundColor: '#FFF3E0', color: '#E65100' }}
-                              >
-                                APS
-                              </span>
-                            ) : null}
-                          </div>
-                          {/* BUG-679: hide price for cancelled / CR-545 OBS-5: "Price TBD" for APS */}
-                          {isCancelled ? null : (unit === 1 && !isComp) ? (
-                            <span
-                              className="text-[11px] font-semibold flex-shrink-0 px-1.5 py-0.5 rounded"
-                              style={{ backgroundColor: '#FFF3E0', color: '#E65100' }}
-                            >
-                              Price TBD
-                            </span>
-                          ) : (
-                            <span
-                              style={{ color: COLORS.grayText }}
-                              className="font-mono flex-shrink-0"
-                            >
-                              {currencySymbol}
-                              {lineTotal.toFixed(2)}
-                            </span>
-                          )}
-                          {/* CR-545: per-item cancel — matches CartPanel PlacedItemRow style */}
-                          {onCancelItem && !isCancelled ? ( // BUG-679: hide cancel for already-cancelled
-                            <button
-                              data-testid={`popout-item-cancel-${idx}`}
-                              className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 hover:bg-gray-100"
-                              style={{ backgroundColor: COLORS.sectionBg }}
-                              onClick={(e) => { e.stopPropagation(); onCancelItem(activeOrder, it); }}
-                              title="Cancel this item"
-                            >
-                              <XCircle className="w-4 h-4" style={{ color: COLORS.grayText }} />
-                            </button>
-                          ) : null}
-                        </div>
-                        {/* row 2: variations */}
-                        {variationOptions.length > 0 ? (
-                          <div
-                            className="mt-1 pl-3 border-l-2"
-                            style={{ borderColor: COLORS.borderGray }}
-                          >
-                            {variationOptions.map((o, vIdx) => (
-                              <div
-                                key={`var-${vIdx}`}
-                                className="text-xs"
-                                style={{ color: COLORS.grayText }}
-                                data-testid={`popout-item-variation-${idx}-${vIdx}`}
-                              >
-                                {o.label}
-                                {o.price > 0 ? (
-                                  <span className="ml-1">
-                                    (+{currencySymbol}
-                                    {o.price.toFixed(2)})
-                                  </span>
-                                ) : null}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                        {/* row 3: add-ons */}
-                        {addOns.length > 0 ? (
-                          <div
-                            className="mt-1 pl-3 border-l-2"
-                            style={{ borderColor: '#FCD9A4' }}
-                          >
-                            {addOns.map((a, aIdx) => (
-                              <div
-                                key={`add-${aIdx}`}
-                                className="text-xs"
-                                style={{ color: COLORS.primaryOrange }}
-                                data-testid={`popout-item-addon-${idx}-${aIdx}`}
-                              >
-                                + {a?.name || ''}
-                                {Number(a?.price) > 0 ? (
-                                  <span className="ml-1">
-                                    (+{currencySymbol}
-                                    {Number(a.price).toFixed(2)})
-                                  </span>
-                                ) : null}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                        {/* row 4: item note */}
-                        {it?.notes ? (
-                          <div
-                            className="mt-1 text-xs italic px-2 py-1 rounded"
-                            style={{ color: COLORS.grayText, backgroundColor: COLORS.sectionBg }}
-                            data-testid={`popout-item-note-${idx}`}
-                          >
-                            &quot;{it.notes}&quot;
-                          </div>
-                        ) : null}
-                        </div>
-                      </li>
-                    );
-                  })}
+                  }).map((it, idx) => (
+                    /* CR-557: Mode A rows use the shared rich row */
+                    <PopoutItemRow
+                      key={`${it?.id ?? it?.foodId ?? idx}-${idx}`}
+                      item={it}
+                      idx={idx}
+                      variant="full"
+                      currencySymbol={currencySymbol}
+                      variationOptions={flattenVariationOptions(Array.isArray(it?.variation) ? it.variation : [])}
+                      showKot={!!onPrintKOT}
+                      isSelected={selectedItemIds.has(it.id)}
+                      onToggleKot={toggleKotItem}
+                      showCancel={!!onCancelItem}
+                      onCancel={(item) => onCancelItem(activeOrder, item)}
+                    />
+                  ))}
                 </ul>
                 </>
                 )} {/* CR-552: end Mode A (!isEditMode) */}
