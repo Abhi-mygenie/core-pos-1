@@ -12,8 +12,9 @@ import { fetchInsightsCancellations } from '../../api/services/insightsService';
 import { exportReportAsExcel, exportReportAsPDF, openReportWindow } from '../../utils/reportExporter';
 import ReportLoadingShield from '../../components/reports/ReportLoadingShield';
 import Sidebar from '../../components/layout/Sidebar';
-import { ArrowLeft, CalendarIcon, Check, Download, FileSpreadsheet, FileDown, Mail, MessageCircle, Send, XCircle, AlertTriangle, User } from 'lucide-react';
+import { ArrowLeft, CalendarIcon, Check, Download, FileSpreadsheet, FileDown, Mail, MessageCircle, Send, XCircle, AlertTriangle, User, Clock, ShieldAlert } from 'lucide-react';
 import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets'; // BUG-640 + CR-481
+import { RiskBadge, getRiskTier, durationMins } from '../../utils/riskTier'; // CR-554/555/556
 
 // CR-011 S28
 // BUG-640: fmtISO moved to shared utility
@@ -50,6 +51,9 @@ const CancelDetailMockup = () => {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [stageFilter, setStageFilter] = useState('');
   const [reasonFilter, setReasonFilter] = useState('');
+  const [scopeFilter, setScopeFilter] = useState('');            // CR-556
+  const [cancelledByFilter, setCancelledByFilter] = useState(''); // CR-556
+  const [riskTierFilter, setRiskTierFilter] = useState('');      // CR-556
 
   useEffect(() => { const h = (e) => { if (downloadRef.current && !downloadRef.current.contains(e.target)) setShowDownloadMenu(false); }; document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h); }, []);
 
@@ -72,16 +76,25 @@ const CancelDetailMockup = () => {
 
   const analytics = useMemo(() => {
     if (!rawData) return null;
-    const items = rawData.items || [];
+    const items = (rawData.items || []).map(i => ({ // CR-554: enrich with punch time + duration
+      ...i,
+      punchTime: i.created_at || '',
+      cancellationDuration: durationMins(i.created_at, i.cancel_time_full),
+    }));
     const stages = [...new Set(items.map(i => i.stage).filter(Boolean))].sort();
     const reasons = [...new Set(items.map(i => i.reason).filter(Boolean))].sort();
+    const scopes = [...new Set(items.map(i => i.scope).filter(Boolean))].sort();               // CR-556
+    const cancelledByList = [...new Set(items.map(i => i.cancelled_by).filter(Boolean))].sort(); // CR-556
     let filtered = items;
     if (stageFilter) filtered = filtered.filter(i => i.stage === stageFilter);
     if (reasonFilter) filtered = filtered.filter(i => i.reason === reasonFilter);
+    if (scopeFilter) filtered = filtered.filter(i => i.scope === scopeFilter);                   // CR-556
+    if (cancelledByFilter) filtered = filtered.filter(i => i.cancelled_by === cancelledByFilter); // CR-556
+    if (riskTierFilter) filtered = filtered.filter(i => getRiskTier(i.cancellationDuration) === riskTierFilter); // CR-556
     const totalQty = filtered.reduce((s, i) => s + (i.qty || 0), 0);
     const totalLoss = filtered.reduce((s, i) => s + (i.amount || 0), 0);
-    return { items: filtered, allItems: items, stages, reasons, totalQty, totalLoss };
-  }, [rawData, stageFilter, reasonFilter]);
+    return { items: filtered, allItems: items, stages, reasons, scopes, cancelledByList, totalQty, totalLoss };
+  }, [rawData, stageFilter, reasonFilter, scopeFilter, cancelledByFilter, riskTierFilter]);
 
   const buildExportPayload = () => {
     if (!analytics) return null;
@@ -92,6 +105,7 @@ const CancelDetailMockup = () => {
         { key: 'amount', label: 'Loss', format: 'inr', align: 'right', width: 100 }, { key: 'stage', label: 'Stage', format: 'text', align: 'left', width: 120 },
         { key: 'reason', label: 'Reason', format: 'text', align: 'left', width: 150 }, { key: 'cancelled_by', label: 'By', format: 'text', align: 'left', width: 100 },
         { key: 'order_id', label: 'Order', format: 'text', align: 'left', width: 80 }, { key: 'cancel_date', label: 'Date', format: 'text', align: 'left', width: 100 },
+        { key: 'punchTime', label: 'Punch Time', format: 'text', align: 'left', width: 120 }, { key: 'cancellationDuration', label: 'Duration (min)', format: 'integer', align: 'right', width: 90 }, // CR-554
       ], rows: analytics.items, totals: { name: 'TOTAL', qty: analytics.totalQty, amount: analytics.totalLoss } }] };
   };
   const handleDownloadAction = (action) => { let pw = null; if (action === 'pdf') pw = openReportWindow(); setShowDownloadMenu(false); if (['email','whatsapp','sms'].includes(action)) return; try { const p = buildExportPayload(); if (!p) return; if (action === 'excel') exportReportAsExcel(p); else if (action === 'pdf') exportReportAsPDF(pw, p); } catch (e) { console.error(e); if (pw && !pw.closed) pw.close(); } };
@@ -125,41 +139,41 @@ const CancelDetailMockup = () => {
                     <div className="bg-white border border-zinc-200 rounded-xl p-5"><div className="flex items-center gap-2 mb-2"><User className="w-4 h-4 text-blue-500" /><span className="text-xs font-medium text-zinc-500 uppercase">Showing</span></div><div className="text-2xl font-bold text-zinc-950">{analytics.items.length}</div><div className="text-[10px] text-zinc-400">filtered lines</div></div>
                   </div>
                   {/* Filters */}
-                  <div className="flex gap-3" data-testid="s28-filters">
+                  <div className="flex gap-3 flex-wrap" data-testid="s28-filters">
                     <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-stage"><option value="">All Stages</option>{analytics.stages.map(s => <option key={s} value={s}>{s}</option>)}</select>
+                    <select value={scopeFilter} onChange={(e) => setScopeFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-scope"><option value="">All Scopes</option>{analytics.scopes.map(s => <option key={s} value={s}>{s === 'order' ? 'Full Order' : s === 'item' ? 'Item-Level' : s}</option>)}</select>
                     <select value={reasonFilter} onChange={(e) => setReasonFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-reason"><option value="">All Reasons</option>{analytics.reasons.map(r => <option key={r} value={r}>{r}</option>)}</select>
-                    {(stageFilter || reasonFilter) && <button onClick={() => { setStageFilter(''); setReasonFilter(''); }} className="px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg">Clear</button>}
+                    <select value={cancelledByFilter} onChange={(e) => setCancelledByFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-cancelledby"><option value="">All Staff</option>{analytics.cancelledByList.map(c => <option key={c} value={c}>{c}</option>)}</select>
+                    <select value={riskTierFilter} onChange={(e) => setRiskTierFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-risk"><option value="">All Risk</option><option value="doubt">Doubt</option><option value="risk">Risk</option><option value="high_risk">High Risk</option></select>
+                    {(stageFilter || reasonFilter || scopeFilter || cancelledByFilter || riskTierFilter) && <button onClick={() => { setStageFilter(''); setReasonFilter(''); setScopeFilter(''); setCancelledByFilter(''); setRiskTierFilter(''); }} className="px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg" data-testid="s28-filter-clear">Clear</button>}
                   </div>
                   {/* Table */}
                   <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden" data-testid="s28-table">
                     <table className="w-full"><thead className="bg-zinc-50"><tr>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Order</th>
                       <th className="px-5 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Item</th>
-                      <th className="px-3 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Qty</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Loss</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Stage</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Loss</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Reason</th>
                       <th className="px-3 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">By</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Order</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Timing &amp; Risk</th>
                     </tr></thead><tbody>
                       {analytics.items.slice(0, 200).map((item, i) => (
                         <tr key={i} className="border-t border-zinc-50 hover:bg-zinc-50/50" data-testid={`s28-row-${i}`}>
-                          <td className="px-5 py-2.5 text-sm font-medium text-zinc-800">{item.name}</td>
-                          <td className="px-3 py-2.5 text-sm text-right text-zinc-700">{item.qty}</td>
-                          <td className="px-4 py-2.5 text-sm text-right text-red-600 font-medium">{fmtINR(item.amount)}</td>
-                          <td className="px-4 py-2.5 text-xs text-zinc-500">{item.stage || '—'}</td>
-                          <td className="px-4 py-2.5 text-xs text-zinc-500 max-w-[180px] truncate">{item.reason || '—'}</td>
-                          <td className="px-3 py-2.5 text-xs text-zinc-500">{item.cancelled_by || '—'}</td>
-                          <td className="px-3 py-2.5 text-xs text-zinc-600 font-mono">#{item.order_id}</td>
-                          <td className="px-4 py-2.5 text-xs text-zinc-500">{item.cancel_date} {item.cancel_time}</td>
+                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600 font-mono">#{item.order_id}</div><div className="text-[11px] text-zinc-400 mt-0.5">{item.cancel_date} {item.cancel_time}</div></td>
+                          <td className="px-5 py-2.5 align-top"><div className="text-sm font-medium text-zinc-800">{item.name}</div><div className="text-[11px] text-zinc-400 mt-0.5">× {item.qty}</div></td>
+                          <td className="px-4 py-2.5 align-top text-xs text-zinc-500">{item.stage || '—'}</td>
+                          <td className="px-4 py-2.5 align-top text-sm text-right text-red-600 font-medium">{fmtINR(item.amount)}</td>
+                          <td className="px-4 py-2.5 align-top text-xs text-zinc-500 max-w-[180px] truncate" title={item.reason}>{item.reason || '—'}</td>
+                          <td className="px-3 py-2.5 align-top text-xs text-zinc-500">{item.cancelled_by || '—'}</td>
+                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600">{item.punchTime ? new Date(item.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short' }) : '—'}</div><div className="flex items-center gap-2 mt-1"><span className="text-xs font-medium text-zinc-700">{item.cancellationDuration != null ? `${item.cancellationDuration} min` : '—'}</span><RiskBadge mins={item.cancellationDuration} /></div></td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot className="bg-zinc-50 border-t-2 border-zinc-200"><tr>
-                      <td className="px-5 py-3 text-sm font-bold">TOTAL ({analytics.items.length} lines)</td>
-                      <td className="px-3 py-3 text-sm text-right font-bold">{analytics.totalQty}</td>
+                      <td colSpan={3} className="px-4 py-3 text-sm font-bold">TOTAL ({analytics.items.length} lines · {analytics.totalQty} qty)</td>
                       <td className="px-4 py-3 text-sm text-right font-bold text-red-600">{fmtINR(analytics.totalLoss)}</td>
-                      <td colSpan={5} />
+                      <td colSpan={3} />
                     </tr></tfoot></table>
                   </div>
                 </div>

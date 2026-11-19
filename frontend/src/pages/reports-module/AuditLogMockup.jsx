@@ -18,6 +18,7 @@ import {
   ShieldAlert, AlertTriangle, RefreshCw, ChevronDown, ChevronUp, ExternalLink, Clock, XCircle, Ban, Percent, Info
 } from 'lucide-react';
 import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets';
+import { getRiskTier } from '../../utils/riskTier'; // CR-555: shared risk tier
 
 // --- Helpers ---
 const fmtINR = (n) => (parseFloat(n) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -65,13 +66,7 @@ const classifyEvent = (e) => {
   return cards;
 };
 
-// CR-543: Risk tier from duration_minutes
-const getRiskTier = (mins) => {
-  if (mins >= 30) return 'high_risk';
-  if (mins >= 15) return 'risk';
-  if (mins >= 5) return 'doubt';
-  return 'ok';
-};
+// CR-543 / CR-555: getRiskTier now shared from utils/riskTier (behaviour unchanged).
 
 // Event type badge map
 const EVENT_BADGE = {

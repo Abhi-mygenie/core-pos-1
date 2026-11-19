@@ -36,6 +36,7 @@ import {
 } from '../../utils/cancellationValuation';
 import useReportFetch from '../../components/reports/useReportFetch';
 import ReportLoadingShield from '../../components/reports/ReportLoadingShield';
+import { RiskBadge, getRiskTier } from '../../utils/riskTier'; // CR-555 / CR-556
 import Sidebar from '../../components/layout/Sidebar';
 import {
   ArrowLeft, CalendarIcon, Check, Download, FileSpreadsheet, FileDown,
@@ -187,6 +188,12 @@ const CancellationsMockup = () => {
   );
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [activeScope, setActiveScope] = useState('all');
+  // CR-556: column filters
+  const [stageFilter, setStageFilter] = useState('');
+  const [scopeFilter, setScopeFilter] = useState('');
+  const [reasonFilter, setReasonFilter] = useState('');
+  const [cancelledByFilter, setCancelledByFilter] = useState('');
+  const [riskTierFilter, setRiskTierFilter] = useState('');
 
   // Date range — draft vs applied (S5 pattern)
   const today = new Date();
@@ -420,12 +427,27 @@ const CancellationsMockup = () => {
     };
   };
 
+  // CR-556: filter option lists derived from the full dataset
+  const filterOptions = useMemo(() => ({
+    stages: [...new Set(cancelledItems.map(r => r.stage).filter(Boolean))].sort(),
+    reasons: [...new Set(cancelledItems.map(r => r.reason).filter(Boolean))].sort(),
+    cancelledBy: [...new Set(cancelledItems.map(r => r.cancelledBy).filter(Boolean))].sort(),
+  }), [cancelledItems]);
+
   const filteredTable = useMemo(() => {
-    if (activeScope === 'order') return cancelledItems.filter(r => r.scope === 'order');
-    if (activeScope === 'item') return cancelledItems.filter(r => r.scope === 'item');
     if (activeScope === 'audit') return auditData.flagged;
-    return cancelledItems;
-  }, [cancelledItems, activeScope, auditData.flagged]);
+    let base = cancelledItems;
+    if (activeScope === 'order') base = cancelledItems.filter(r => r.scope === 'order');
+    else if (activeScope === 'item') base = cancelledItems.filter(r => r.scope === 'item');
+    // CR-556: column filters (AND) layered on top of the active scope tab
+    return base.filter(r =>
+      (!stageFilter || r.stage === stageFilter) &&
+      (!scopeFilter || r.scope === scopeFilter) &&
+      (!reasonFilter || r.reason === reasonFilter) &&
+      (!cancelledByFilter || r.cancelledBy === cancelledByFilter) &&
+      (!riskTierFilter || getRiskTier(r.cancellationDuration) === riskTierFilter)
+    );
+  }, [cancelledItems, activeScope, auditData.flagged, stageFilter, scopeFilter, reasonFilter, cancelledByFilter, riskTierFilter]);
 
   const stageBadge = (stage) => {
     const cfg = STAGE_CONFIG[stage] || STAGE_CONFIG['Unknown'];
@@ -927,63 +949,79 @@ const CancellationsMockup = () => {
                       <h2 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">Cancellation Details</h2>
                       <span className="text-xs text-zinc-400">{filteredTable.length} records</span>
                     </div>
+                    {/* CR-556: column filter bar */}
+                    <div className="px-6 py-3 border-b border-zinc-100 flex flex-wrap items-center gap-2" data-testid="cx-filter-bar">
+                      <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="px-3 py-1.5 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="cx-filter-stage"><option value="">All Stages</option>{filterOptions.stages.map(s => <option key={s} value={s}>{s}</option>)}</select>
+                      {activeScope === 'all' && (
+                        <select value={scopeFilter} onChange={(e) => setScopeFilter(e.target.value)} className="px-3 py-1.5 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="cx-filter-scope"><option value="">All Scopes</option><option value="order">Full Order</option><option value="item">Item-Level</option></select>
+                      )}
+                      <select value={reasonFilter} onChange={(e) => setReasonFilter(e.target.value)} className="px-3 py-1.5 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="cx-filter-reason"><option value="">All Reasons</option>{filterOptions.reasons.map(r => <option key={r} value={r}>{r}</option>)}</select>
+                      <select value={cancelledByFilter} onChange={(e) => setCancelledByFilter(e.target.value)} className="px-3 py-1.5 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="cx-filter-cancelledby"><option value="">All Staff</option>{filterOptions.cancelledBy.map(c => <option key={c} value={c}>{c}</option>)}</select>
+                      <select value={riskTierFilter} onChange={(e) => setRiskTierFilter(e.target.value)} className="px-3 py-1.5 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="cx-filter-risk"><option value="">All Risk</option><option value="doubt">Doubt</option><option value="risk">Risk</option><option value="high_risk">High Risk</option></select>
+                      {(stageFilter || scopeFilter || reasonFilter || cancelledByFilter || riskTierFilter) && (
+                        <button onClick={() => { setStageFilter(''); setScopeFilter(''); setReasonFilter(''); setCancelledByFilter(''); setRiskTierFilter(''); }} className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg" data-testid="cx-filter-clear">Clear</button>
+                      )}
+                    </div>
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead className="bg-zinc-50">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Order #</th>
+                            {/* BUG-713: 13 flat cols → 7 consolidated groups (BUG-708: Cancel Note column removed) */}
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Order</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Item</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Date</th>
-                            <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Amount</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Reason / Notes</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Stage</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Scope</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Reason</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Notes</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Cancel Note</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Cancelled By</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Punch Time</th>
-                            <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Duration (min)</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Station</th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-500 uppercase">Loss</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Personnel</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-500 uppercase">Timing &amp; Risk</th>
                           </tr>
                         </thead>
                         <tbody>
                           {filteredTable.map((r, i) => (
                             <tr key={i} className="border-t border-zinc-50 hover:bg-zinc-50/50 transition-colors" data-testid={`cancellations-row-${i}`}>
-                              <td className="px-4 py-3 text-sm font-medium text-zinc-800">#{r.orderNumber}</td>
-                              <td className="px-4 py-3 text-sm text-zinc-700 max-w-[160px] truncate" title={r.foodName}>{r.foodName}</td>
-                              <td className="px-4 py-3 text-sm text-zinc-600">{r.orderDate ? (isNaN(new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).getTime()) ? `${r.orderDate} ${r.orderTime || ''}`.trim() : new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })) : '—'}{/* BUG-707 */}</td>
-                              <td className="px-4 py-3 text-sm text-right font-semibold text-red-600">{fmtINR(r.amount)}</td>
-                              <td className="px-4 py-3">{stageBadge(r.stage)}</td>
-                              <td className="px-4 py-3">
-                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${r.scope === 'order' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'}`}>
+                              {/* Order Info — BUG-713 */}
+                              <td className="px-4 py-3 align-top">
+                                <div className="text-sm font-medium text-zinc-800">#{r.orderNumber}</div>
+                                <div className="text-xs text-zinc-400 mt-0.5">{r.orderDate ? (isNaN(new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).getTime()) ? `${r.orderDate} ${r.orderTime || ''}`.trim() : new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })) : '—'}{/* BUG-707 */}</div>
+                              </td>
+                              {/* Item + scope — BUG-713 */}
+                              <td className="px-4 py-3 align-top max-w-[200px]">
+                                <div className="text-sm text-zinc-700 truncate" title={r.foodName}>{r.foodName}</div>
+                                <span className={`inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${r.scope === 'order' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'}`}>
                                   {r.scope === 'order' ? 'Full Order' : 'Item-Level'}
                                 </span>
                               </td>
-                              <td className="px-4 py-3 text-sm text-zinc-700 max-w-[160px] truncate" title={r.reason}>{r.reason || '—'}</td>
-                              <td className="px-4 py-3 text-sm max-w-[140px]">
+                              {/* Reason / Notes — BUG-713 (BUG-708: dead Cancel Note column removed) */}
+                              <td className="px-4 py-3 align-top text-sm max-w-[220px]">
+                                <div className="text-zinc-700 truncate" title={r.reason}>{r.reason || '—'}</div>
                                 {r.notes ? (
-                                  <span className="inline-flex items-center gap-1 text-xs text-blue-600" title={r.notes}>
-                                    <MessageSquare className="w-3 h-3" />
-                                    <span className="truncate max-w-[100px]">{r.notes}</span>
+                                  <span className="inline-flex items-center gap-1 text-xs text-blue-600 mt-0.5" title={r.notes}>
+                                    <MessageSquare className="w-3 h-3 shrink-0" />
+                                    <span className="truncate max-w-[160px]">{r.notes}</span>
                                   </span>
-                                ) : <span className="text-zinc-300">—</span>}
+                                ) : null}
                               </td>
-                              <td className="px-4 py-3 text-sm max-w-[140px]">{/* BUG-674 B2: staff cancel note */}
-                                {r.cancelNote ? (
-                                  <span className="inline-flex items-center gap-1 text-xs text-amber-600" title={r.cancelNote}>
-                                    <MessageSquare className="w-3 h-3" />
-                                    <span className="truncate max-w-[100px]">{r.cancelNote}</span>
-                                  </span>
-                                ) : <span className="text-zinc-300">—</span>}
+                              {/* Stage */}
+                              <td className="px-4 py-3 align-top">{stageBadge(r.stage)}</td>
+                              {/* Loss */}
+                              <td className="px-4 py-3 align-top text-sm text-right font-semibold text-red-600">{fmtINR(r.amount)}</td>
+                              {/* Personnel — BUG-713 */}
+                              <td className="px-4 py-3 align-top">
+                                <div className="text-sm text-zinc-700">{r.cancelledBy || '—'}</div>
+                                <div className="text-xs text-zinc-400 mt-0.5">{r.station || '—'}</div>
                               </td>
-                              <td className="px-4 py-3 text-sm text-zinc-700">{r.cancelledBy || '—'}</td>
-                              <td className="px-4 py-3 text-sm text-zinc-600">{r.punchTime ? new Date(r.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short' }) : '—'}</td>
-                              <td className="px-4 py-3 text-sm text-right font-medium text-zinc-700">{r.cancellationDuration != null ? r.cancellationDuration : '—'}</td>
-                              <td className="px-4 py-3 text-xs text-zinc-400">{r.station || '—'}</td>
+                              {/* Timing & Risk — BUG-713 + CR-555 */}
+                              <td className="px-4 py-3 align-top">
+                                <div className="text-sm text-zinc-600">{r.punchTime ? new Date(r.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short' }) : '—'}</div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className="text-xs font-medium text-zinc-700">{r.cancellationDuration != null ? `${r.cancellationDuration} min` : '—'}</span>
+                                  <RiskBadge mins={r.cancellationDuration} />
+                                </div>
+                              </td>
                             </tr>
                           ))}
                           {filteredTable.length === 0 && (
-                            <tr><td colSpan={12} className="px-4 py-8 text-center text-zinc-400 text-sm">No cancellations match the current filter</td></tr>
+                            <tr><td colSpan={7} className="px-4 py-8 text-center text-zinc-400 text-sm">No cancellations match the current filter</td></tr>
                           )}
                         </tbody>
                       </table>
