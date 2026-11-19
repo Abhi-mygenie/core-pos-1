@@ -42,5 +42,5 @@
 
 ## 5. Credentials + Environment
   Account: OWNER_PREPROD (see memory/test_credentials.md)
-  URL: https://repo-build-8--5u3pk2yp.preview.emergentagent.com
+  URL: https://pull-build-3--2jz687ss.preview.emergentagent.com
   QA report: test_reports/iteration_3.json

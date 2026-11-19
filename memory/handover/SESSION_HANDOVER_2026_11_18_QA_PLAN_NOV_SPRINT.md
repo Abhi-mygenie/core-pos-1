@@ -3,7 +3,7 @@
 **Date:** 2026-11-18
 **Written by:** PLANNING agent (this session)
 **Handover to:** QA agent (next session)
-**Preview URL:** https://375956ea-ff64-4b83-92fd-2b51897ea5d7.preview.emergentagent.com
+**Preview URL:** https://pull-build-3--2jz687ss.preview.emergentagent.com
 **Branch:** `main` @ `159f8b67`
 **Role for next agent:** QA
 

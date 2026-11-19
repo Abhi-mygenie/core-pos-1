@@ -1,7 +1,7 @@
 # QA Report — Nov Sprint (All 6 Batches) — 2026-11-18
 
 **Tester:** Automated QA (E1 testing agent)
-**Target:** Deployed preview frontend https://56e97cb7-0228-4dc9-8cab-29993a952b98.preview.emergentagent.com → preprod backend
+**Target:** Deployed preview frontend https://pull-build-3--2jz687ss.preview.emergentagent.com → preprod backend
 **Accounts used:** owner@ruby.com (CRM/general), owner@palmhouse.com (rooms/F&B)
 **Rule:** Verification only — no application code changed. Firebase push/FCM/ringer = HIGHLIGHTED-SKIPPED (keys pending).
 **Note:** Run hit its time limit; coverage partial. This is the consolidated record (no iteration json was produced).

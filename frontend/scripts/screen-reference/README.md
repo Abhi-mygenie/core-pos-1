@@ -15,7 +15,7 @@ A reusable Playwright + Python pipeline that generates client-facing Screen Refe
 # Step 3: Take screenshots
 python3 runner.py \
   --module MM \
-  --url https://repo-build-8--5u3pk2yp.preview.emergentagent.com \
+  --url https://pull-build-3--2jz687ss.preview.emergentagent.com \
   --email owner@restaurant.com \
   --password ****
 
