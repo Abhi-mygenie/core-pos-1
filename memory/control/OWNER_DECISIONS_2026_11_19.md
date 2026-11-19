@@ -21,3 +21,16 @@ FE-side stale-KPI/Download-on-error defect (part of BUG-722) handled separately 
 
 ## Publishing
 Owner decision: **do NOT push to remote** for now. All updates kept local only.
+
+---
+
+## CR-557 — Impact Analysis + OD-557 decisions (P0, Gate 2 complete)
+**IA:** `impact/CR-557_IMPACT_ANALYSIS.md` — GATE_2_IA_COMPLETE. Risk HIGH (R5 refactor of ScanOrderPopOut.jsx).
+**What it does:** extract the rich Mode A item renderer into a shared `<PopoutItemRow>` so web-EDIT Mode B gains the fixes it is missing (APS/Price-TBD CR-545, cancelled styling BUG-679, variation+option price BUG-702, add-on prices, notes).
+
+**Owner decisions (2026-11-19):**
+- **OD-557-01 = YES** — Mode B new-item rows show the APS badge + "Price TBD" for ₹1 items, same as Mode A.
+- **OD-557-02 = Option A** — the "Previously ordered items" grey list also uses the shared `<PopoutItemRow>` in a **read-only variant** (greyed, no cancel/KOT). One row component to maintain.
+- **OD-557-03 = Keep old labels** — shared row accepts a test-id prefix prop so Mode B new-item rows keep emitting `popout-new-item-${idx}`; existing tests (`ScanOrderPopOut.test.jsx`, `CR547_SelectiveKOT.test.jsx`) stay green, no migration.
+
+**Status:** All ODs resolved. Ready for Gate 3 (Implementation Plan). Dependents CR-558 / BUG-679-ModeB / BUG-702-ModeB run AFTER CR-557.

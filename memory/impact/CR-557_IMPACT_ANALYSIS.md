@@ -8,6 +8,8 @@
 **Severity:** P0 (owner override 2026-11-19; intrinsic P1)
 **Risk:** HIGH (R5 hotspot `ScanOrderPopOut.jsx`; order-accept display path; many feature consumers)
 **Code Reality:** PARTIAL — the rich row markup EXISTS inline in Mode A; the shared `<PopoutItemRow>` component does NOT exist. Mode B renders a divergent, stripped-down copy.
+
+> **OD decisions RESOLVED 2026-11-19:** OD-557-01 = YES (APS/Price-TBD in Mode B); OD-557-02 = Option A (shared read-only row for prevItems); OD-557-03 = Keep old labels (`testIdPrefix` prop, no test migration). See §8.
 **Conflict Pre-Check:** CLEAN at HEAD (all same-file items already IMPLEMENTED/merged — see §5). This CR is foundational for CR-558, BUG-679(ModeB), BUG-702(ModeB), CR-545(ModeB).
 
 ---
@@ -121,6 +123,15 @@ Then:
 ---
 
 ## 8. Owner Decision Queue (Rule R3 — do not guess)
+
+**RESOLVED 2026-11-19 (owner):**
+- **OD-557-01 = YES** — Mode B new-item rows SHOW the APS badge + "Price TBD" on ₹1 items (parity with Mode A).
+- **OD-557-02 = Option A** — `prevItems` ("Previously ordered items") uses the shared `<PopoutItemRow>` in a **read-only `variant`** (greyed, no cancel/KOT controls). One renderer to maintain.
+- **OD-557-03 = Keep old labels** — `<PopoutItemRow>` takes a `testIdPrefix` prop; Mode B new-item rows keep `popout-new-item-${idx}`, Mode A keeps `popout-item-row-${idx}`. No test migration; `ScanOrderPopOut.test.jsx` + `CR547_SelectiveKOT.test.jsx` stay green.
+
+All three resolved → Gate 3 Implementation Plan can proceed.
+
+### Original options (for reference)
 
 - **OD-557-01 — APS in Mode B:** When a web-edit *new* item is an APS (₹1) item, should Mode B now show the **APS badge + "Price TBD"** (as Mode A does)? *Recommend YES* (that is the intended consistency win), but confirm APS items can occur on web-edits.
 - **OD-557-02 — prevItems renderer:** Should the collapsible "Previously ordered items" list use the shared row in a **read-only greyed `variant`** (richer, consistent) or keep the current minimal greyed line? *Recommend read-only shared row* for one renderer to maintain.
