@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CR-547 Mockup</title>
+<style>
+  :root{--orange:#F26B33;--dark:#1A1A1A;--gray:#666;--border:#E5E5E5;--sec:#F7F7F7;--err:#EF4444}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#ECECEC;color:var(--dark);padding:28px 18px;line-height:1.45}
+  .wrap{max-width:720px;margin:0 auto}
+  h2{font-size:17px;margin-bottom:2px}
+  .meta{color:var(--gray);font-size:12px;margin-bottom:16px}
+  .opt{border:1px solid var(--orange);box-shadow:0 0 0 2px rgba(242,107,51,.12);border-radius:12px;padding:16px;background:#fff}
+  .tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-bottom:12px;background:var(--orange);color:#fff}
+  h3{font-size:14px;margin-bottom:12px}
+  .card{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .hdr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-bottom:1px solid var(--border);font-size:11px;color:var(--gray)}
+  .row{display:flex;align-items:flex-start;gap:10px;padding:12px;border-bottom:1px solid var(--border)}
+  .row:last-child{border-bottom:none}
+  .nm{flex:1;font-size:14px}
+  .vr{font-size:11px;color:var(--gray);margin-top:3px}
+  .qty{font-size:12px;color:var(--gray);white-space:nowrap}
+  .amt{font-size:13px;font-weight:600;white-space:nowrap}
+  .x{width:24px;height:24px;border-radius:999px;border:none;background:var(--sec);color:var(--gray);cursor:pointer}
+  .cbx{width:20px;height:20px;border:2px solid var(--orange);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;margin-top:2px;flex-shrink:0}
+  .cbx.on{background:var(--orange)}.cbx.off{background:#fff}
+  .foot{display:flex;gap:8px;padding:14px;background:var(--sec);align-items:center;flex-wrap:wrap}
+  .btn{min-height:42px;border-radius:9px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;padding:0 14px;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+  .btn.kot{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .btn.rej{border-color:var(--err);color:var(--err)}
+  .spacer{flex:1}
+  .selcount{font-size:12px;color:var(--gray)}
+  .note{font-size:12px;color:var(--gray);margin-top:12px}
+  .lnk{font-size:11px;color:var(--orange);font-weight:700;cursor:pointer}
+</style></head>
+<body><div class="wrap">
+  <h2>CR-547 — Selective KOT in the confirmation popup</h2>
+  <div class="meta">Pattern chosen: tick items → one KOT prints only the selected items to just their stations. Risk HIGH (print payload). Styling mirrors live ScanOrderPopOut (#F26B33).</div>
+  <div class="opt">
+    <span class="tag">Chosen pattern — for approval</span>
+    <h3>Checkboxes per item · single KOT for selected</h3>
+    <div class="card">
+      <div class="hdr"><span class="cbx on">✓</span><span class="lnk">Select all / none</span><span class="spacer"></span><span>New items to confirm</span></div>
+      <div class="row"><span class="cbx on">✓</span><div class="nm">Paneer Tikka <div class="vr">Station: <strong>Tandoor</strong></div></div><div class="qty">×1</div><div class="amt">₹320</div><button class="x">✕</button></div>
+      <div class="row"><span class="cbx on">✓</span><div class="nm">Veg Fried Rice <div class="vr">Station: <strong>Chinese</strong></div></div><div class="qty">×1</div><div class="amt">₹180</div><button class="x">✕</button></div>
+      <div class="row"><span class="cbx off"></span><div class="nm">Cold Coffee <div class="vr">Station: <strong>Beverages</strong></div></div><div class="qty">×2</div><div class="amt">₹240</div><button class="x">✕</button></div>
+    </div>
+    <div class="foot">
+      <span class="selcount"><strong>2 of 3</strong> items selected · <strong>2 stations</strong> (Tandoor, Chinese)</span>
+      <span class="spacer"></span>
+      <button class="btn">👁 Edit</button>
+      <button class="btn kot">🖨 Print KOT (2 items)</button>
+      <button class="btn rej">Reject</button>
+    </div>
+    <div class="note">KOT routes only to <strong>Tandoor</strong> &amp; <strong>Chinese</strong> — Beverages prints nothing because Cold Coffee is unticked. If nothing is ticked, the KOT button is disabled.</div>
+  </div>
+</div></body></html>
