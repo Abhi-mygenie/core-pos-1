@@ -35631,7 +35631,7 @@
       "title": "Item Sales Ledger 'Net Sales' definition wrong — includes GST/VAT/SC, should be after discount only (backend sends wrong total_sales)",
       "type": "BUG",
       "priority": "P0",
-      "status": "GATE_5A_IMPLEMENTED",
+      "status": "IMPLEMENTED",
       "area": "Reports",
       "sprint_key": "nov_cr_batch",
       "risk": "MEDIUM",
@@ -35646,7 +35646,11 @@
       "release_date": "2026-11-17",
       "qa_gate_status": "NOT IN TESTED BUILD (out of scope this pass; present only in newer main)",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "files": [
+        "src/api/services/topFoodSalesService.js",
+        "src/pages/reports-module/ItemSalesLedgerMockup.jsx"
+      ]
     },
     {
       "id": "CR-479",

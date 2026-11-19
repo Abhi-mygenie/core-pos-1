@@ -65,7 +65,7 @@ NOT touched: `socketHandlers.js` · `orderTransform.js` · `useOrderPollingRecon
 
 | File | Changes | Agent |
 |------|---------|-------|
-| `src/api/services/topFoodSalesService.js` | Added `totalSales` + `tax` fields to transform. Phase A: netSales still reads r.total_sales (Phase B on BB-14). | BUG-630 IMPL 2026-11-18 |
+| `src/api/services/topFoodSalesService.js` | **BUG-630 Phase B DONE (2026-11-19, BB-14 delivered):** netSales now reads `r.net_sales` (pre-tax, no fallback). totalSales reads corrected service-inclusive `r.total_sales`. tax = gst+vat+sc. | BUG-630 IMPL(B) 2026-11-19 |
 | `src/pages/reports-module/ItemSalesLedgerMockup.jsx` | Badge updated, Gross Revenue KPI removed, Tax + Total Sales KPIs added, Total Sales column added, kpis aggregation updated, export kpis updated. | BUG-630 IMPL 2026-11-18 |
 
 
