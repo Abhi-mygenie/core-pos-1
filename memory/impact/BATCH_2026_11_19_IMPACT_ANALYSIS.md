@@ -86,4 +86,20 @@ Collecting a bill prints a bill but is gated only by `clear_payment`. A user wit
 - **BUG-711** (1-line permission gate), **BUG-704** (LM shared-date persistence), **BUG-707** (date format standardise).
 
 ---
+
+## PROBE RESULTS — Round 2 (2026-11-19, owner-supplied accounts/orders)
+
+- **BUG-711 (T@t.com):** role=Cashier, `print_icon:false`, `clear_payment:false`. Perfect no-print repro account — this user WILL wrongly see "Reprint" on Order Report Beta, and correctly NOT see Collect. **FE bug confirmed, repro account available.**
+- **BUG-706 (owner@beanmeup.com = VAT):** profile `gst_status:false` + `vat_info.status:true` (vs cafe103 GST `gst_status:true`). **Discriminator = `gst_status`.** Rule: `gstStatus===true → "GST"`, else if `vatStatus===true → "VAT"`. Both flags already in `profileTransform` (gstStatus, vatStatus). **No backend change needed.**
+- **BUG-704 (cafe103):** top-food-sales LM (Oct) = 364 rows — data exists. LM click loads; bug is non-persistence on nav (LM branch skips `setSharedFrom/To`). FY confirmed NOT broken.
+- **BUG-709 (owner@ruby.com, order 000802):** dashboard `audits.orders[]` **DOES contain** the `make_unpaid` event for cancelled order 000802 (plus new `cancel_after_unpaid`). Operations: bill_print→order_bill_payment(upi)→make_unpaid→order_cancel. **Event is NOT dropped — overturns the backend-drop theory.** Either already fixed or a FE display/bucketing issue. Needs UI confirmation whether it still shows missing.
+- **BUG-710 (owner@ruby.com):** order 000803 (real after-print discount) → `restaurant_discount_amount:59.9`, `order_discount:59.90` **stored correctly** + `discount_apply_after_print` audit event present. Order 000804 (owner-cited) has NO discount operation at all and `restaurant_discount_amount:0`. **Overturns theory — field works when a discount is actually applied.** Need owner to clarify what was done on 000804.
+- **BUG-712:** `placeOrder` payload sends `cust_name` + `cust_mobile` (orderTransform L1109-1110). Post-placement edit calls `LINK_CUSTOMER_ORDER` = `/api/v1/vendoremployee/pos/user-check-create` with `order_id` (OrderEntry L1114), BUT `saveCustomerToServer` early-returns if order not yet placed (L1111). Read-back via `get-single-order-new` returns `user_name`/`user.f_name` correctly for linked orders. **So an attach API exists and read-back works; the gap is conditional** — need the specific order to see which path was used.
+- **BUG-708:** confirmed report = **Cancellation Report** (`/reports-module/cancellations`), "Cancellation Details" table. Two adjacent columns: "Notes" (reads `notes`, works — 8/65 rows) and an unlabelled staff-note column (BUG-674 B2, reads unmapped `r.cancelNote` → always "—"). API field `cancel_item_note` empty in all 65 rows.
+
+## Owner decisions captured this round
+- BUG-705 → **Option A (show all configured methods).**
+- BUG-706 → discriminator resolved via beanmeup probe (`gst_status`).
+
+---
 *Gate 2 Impact Analysis. No code written. No gates skipped. Probes read-only. No remote push.*
