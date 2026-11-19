@@ -56,12 +56,12 @@ After a bill is printed, the order card/footer still shows the **KOT** and **Bil
 
 ## 6. Open Questions — RESOLVED (owner, 2026-11-19)
 
-- OD-525-01 → **RESOLVED:** Replace BOTH KOT and Bill with a single "Collect Bill" button (also hide Ready/Serve at every stage after print).
+- OD-525-01 → **RESOLVED:** Replace BOTH KOT and Bill with a single "Collect Bill" button at the **Served (fOS 5)** stage where KOT + Bill render. (Ready/Serve at Preparing/Ready are NOT affected — revalidated 2026-11-19: no Bill/print button exists at fOS 1/2.)
 - OD-525-02 → **RESOLVED (reversed):** **NO.** Hide-only — if a printed order is edited, KOT/Bill do **NOT** reappear. Accepted limitation; staff reprint via the order/report route. This removes the earlier "reverse" requirement and **drops backend dependency BD-01**.
 - OD-525-03 → **RESOLVED:** "Collect Bill" opens the Collect Payment panel directly (reuses existing `handleBillClick` → `initialShowPayment`).
 - OD-525-A → gated per-restaurant by `orderEditAccess` setting (CR-489); OFF → cards unchanged.
-- OD-525-B/C → rooms (C/Out), prepaid (Settle), delivery (rider flow), aggregator all **EXCLUDED**.
-- OD-525-D → applies at every stage after print (Preparing / Ready / Served).
+- OD-525-B/C → rooms (C/Out), prepaid (Settle), delivery (rider flow), aggregator all **EXCLUDED**. **Aggregator: NO CHANGES — confirmed/locked by owner 2026-11-19.** Walk-in / takeaway / dine-in tables **INCLUDED** (owner 2026-11-19).
+- OD-525-D → **REVISED (revalidated 2026-11-19):** applies at the **Served (fOS 5)** stage (where KOT + Bill render). Revalidation of TableCard (L542-758) / OrderCard (L1136-1285) confirms the Bill/print-bill button appears ONLY at fOS 5; at Preparing (fOS 1) and Ready (fOS 2) cards show only KOT + Ready/Serve, so there is nothing to replace there and Ready/Serve stay. `showCollect` still keys off `billPrinted`.
 
 ---
 
@@ -88,3 +88,9 @@ After a bill is printed, the order card/footer still shows the **KOT** and **Bil
 - **Files that will change:** `components/cards/TableCard.jsx`, `components/cards/OrderCard.jsx`. `DashboardPage.jsx` unchanged (plumbing already present; IA item E5 is now a no-op).
 - **Accepted limitation (flag at QA):** edited-after-print stays on "Collect Bill".
 - Full revised analysis: `impact/CR-525_IMPACT_ANALYSIS.md` → **Revision 2026-11-19 (HIDE-ONLY)**.
+
+## 10. Revalidation + Decisions — 2026-11-19 (STAY AT GATE 2)
+- **#1 Ready/Serve print button — revalidated against current `main`:** the Bill/print-bill button renders ONLY at **Served (fOS 5)** (TableCard `collect-btn` L746-755; OrderCard L1237-1285 → `handlePrintBill`). At Preparing (fOS 1) and Ready (fOS 2) the card shows only KOT + Ready/Serve — **no Bill/print button**. ⇒ The Collect Bill swap happens at the Served stage (replace KOT + Bill); Ready/Serve are untouched. The earlier "hide Ready/Serve at every stage" requirement is **dropped**.
+- **#2 Aggregator orders — NO CHANGES** (locked, excluded).
+- **#3 Walk-in / takeaway / dine-in — INCLUDED** (confirmed).
+- **Gate:** remains **GATE_2_IA_CLOSED** (HIDE-ONLY). No open owner questions. NOT advancing to Gate 3 yet (owner: stay at Gate 2). Gate 4 GO required before any coding.

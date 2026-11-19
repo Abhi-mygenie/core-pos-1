@@ -60,11 +60,13 @@ New derived flag per card: `showCollect = restaurant.settings.orderEditAccess &&
 | E5 | DashboardPage | none needed (`handleBillClick` + `initialShowPayment` exist). Verify `onBillClick` reaches every card render site (L1835 list view passes only `onEdit` → **add `onBillClick` there**) |
 Editing after print: the Collect Payment panel has Back (`OrderEntry` L2157 `onBack → setShowPaymentPanel(false)`) → Order screen. Edit rules stay as CR-489/BUG-656: users with `order_edit_access` can add items; others can't.
 
-## Open points for Gate 3 (recommendations; confirm at plan review)
-1. "At every stage": a printed order at Preparing/Ready loses its Ready/Serve buttons on the card. Staff mark Ready/Served from the KDS or by opening the order. Owner chose this explicitly (R5). Flag it in the plan.
-2. Aggregator orders: treated as prepaid/platform → excluded (recommendation).
-3. Walk-in / takeaway / dine-in tables: included.
-4. Until the backend reset (brief §1) ships: an edit after print keeps the Collect Bill + orange card. Ship order: backend first, or FE ships with a known limitation, owner's choice at Gate 3.
+## Open points for Gate 3 — RESOLVED (owner, 2026-11-19; STAY AT GATE 2)
+1. **Ready/Serve hiding — RESOLVED by revalidation.** On current `main`: TableCard (fOS 1 L542-569 = KOT+Ready; fOS 2 L570-657 = KOT+Serve; **Bill only at fOS 5 Served**, `collect-btn` L746-755 → `handlePrintBill`) and OrderCard (Bill only at fOS 5, L1237-1285; Preparing/Ready L1136-1213 = KOT+Ready/Serve). **There is NO Bill/print-bill button at Preparing (fOS 1) or Ready (fOS 2)** — so a bill cannot be printed from the card at those stages. CR-525's Collect Bill swap therefore occurs at the **Served (fOS 5)** stage (replacing KOT + Bill); Ready/Serve at fOS 1/2 are untouched. The old "hide Ready/Serve at every stage after print" concern is dropped. OD-525-D revised accordingly.
+2. **Aggregator orders — RESOLVED: NO CHANGES** (excluded, locked by owner 2026-11-19).
+3. **Walk-in / takeaway / dine-in tables — RESOLVED: INCLUDED** (confirmed by owner 2026-11-19).
+4. ~~Backend reset ship-order~~ — **MOOT** (HIDE-ONLY, BD-01 dropped; no backend).
+
+**Gate status: remains GATE_2_IA_CLOSED (HIDE-ONLY). No open owner questions. Gate 4 GO still required before Gate 3 planning/coding.**
 
 ## Verification seeds
 V1 Setting ON, dine-in, print bill → card shows only Collect Bill. Tap button → Collect Payment opens. Tap card → same.
