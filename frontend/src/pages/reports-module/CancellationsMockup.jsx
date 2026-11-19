@@ -733,7 +733,7 @@ const CancellationsMockup = () => {
                                 <tr key={i} className="border-t border-zinc-50 bg-red-50/30 hover:bg-red-50/60 transition-colors" data-testid={`cancellations-audit-row-${i}`}>
                                   <td className="px-4 py-3 text-sm font-medium text-zinc-800">#{r.orderNumber}</td>
                                   <td className="px-4 py-3 text-sm text-zinc-700 max-w-[160px] truncate" title={r.foodName}>{r.foodName}</td>
-                                  <td className="px-4 py-3 text-sm text-zinc-600">{r.orderDate} {r.orderTime}</td>
+                                  <td className="px-4 py-3 text-sm text-zinc-600">{r.orderDate ? (isNaN(new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).getTime()) ? `${r.orderDate} ${r.orderTime || ''}`.trim() : new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })) : '—'}{/* BUG-707 */}</td>
                                   <td className="px-4 py-3 text-sm text-right font-medium text-zinc-800">{fmtINR(r.itemTotal)}</td>
                                   <td className="px-4 py-3">{stageBadge(r.stage)}</td>
                                   <td className="px-4 py-3">
@@ -951,7 +951,7 @@ const CancellationsMockup = () => {
                             <tr key={i} className="border-t border-zinc-50 hover:bg-zinc-50/50 transition-colors" data-testid={`cancellations-row-${i}`}>
                               <td className="px-4 py-3 text-sm font-medium text-zinc-800">#{r.orderNumber}</td>
                               <td className="px-4 py-3 text-sm text-zinc-700 max-w-[160px] truncate" title={r.foodName}>{r.foodName}</td>
-                              <td className="px-4 py-3 text-sm text-zinc-600">{r.orderDate} {r.orderTime}</td>
+                              <td className="px-4 py-3 text-sm text-zinc-600">{r.orderDate ? (isNaN(new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).getTime()) ? `${r.orderDate} ${r.orderTime || ''}`.trim() : new Date(`${r.orderDate}T${r.orderTime || '00:00'}`).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })) : '—'}{/* BUG-707 */}</td>
                               <td className="px-4 py-3 text-sm text-right font-semibold text-red-600">{fmtINR(r.amount)}</td>
                               <td className="px-4 py-3">{stageBadge(r.stage)}</td>
                               <td className="px-4 py-3">

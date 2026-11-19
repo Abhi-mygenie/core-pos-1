@@ -2448,3 +2448,6 @@ NOT touched: `DashboardPage.jsx` · `CartPanel.jsx` · `orderTransform.js` · an
 | `src/components/order-entry/CollectPaymentPanel.jsx` | E4 L325: VAT skip check added. E7 L822-824: scGst/tipGst/deliveryGst gated on gstStatus. E8 L474: +!isPrepaid on serviceChargeEnabled | BUG-683 E4+E7 + BUG-678 E8 |
 | `src/api/transforms/orderTransform.js` | E5a L1317: gstEnabled/vatEnabled destructure. E5b-c L1352-1353: placeOrderWithPayment per-item gate. E6a-b L1684-1685: collectBillExisting per-item gate | BUG-683 E5+E6 |
 NOT touched: `DashboardPage.jsx` · `RestaurantSettingsPage.jsx` · `restaurantSettingsTransform.js` · any context, service, hook, utility, CSS, config, test, or backend file.
+| `src/pages/reports-module/OrderReportBetaPage.jsx` | **L267:** `taxLabel` derived from `restaurant.tax.gstStatus`/`vatStatus`. **L502/700/882:** hardcoded "GST" → `{taxLabel}`. **L779:** Reprint gated with `hasPermission('print_icon')`. | BUG-706 + BUG-711 IMPL 2026-11-19 |
+| `src/pages/reports-module/ItemSalesLedgerMockup.jsx` | **L166:** LM preset branch now calls `setSharedFrom/setSharedTo` so Last-Month persists across navigation. | BUG-704 IMPL 2026-11-19 |
+| `src/pages/reports-module/CancellationsMockup.jsx` | **L736 + L954:** Date/Time cell now formatted via `toLocaleString('en-IN', {day,month,hour,minute})` matching Punch Time. | BUG-707 IMPL 2026-11-19 |

@@ -163,7 +163,7 @@ const ItemSalesLedgerMockup = () => {
     const now = new Date();
     let f = new Date(now);
     if (p === '7D')  f = new Date(now.getTime() - 6 * 86400000);
-    else if (p === 'LM') { const range = computePresetRange('LM'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setActivePreset(p); } return; } // CR-481
+    else if (p === 'LM') { const range = computePresetRange('LM'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setSharedFrom(range.from); setSharedTo(range.to); setActivePreset(p); } return; } // CR-481 · BUG-704: persist LM to shared date-context
     else if (p === '30D') f = new Date(now.getTime() - 29 * 86400000);
     else if (p === 'MTD') f = new Date(now.getFullYear(), now.getMonth(), 1);
     else if (p === '1Y')  f = new Date(now.getTime() - 364 * 86400000);

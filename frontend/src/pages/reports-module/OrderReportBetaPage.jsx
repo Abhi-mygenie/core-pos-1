@@ -264,6 +264,7 @@ export default function OrderReportBetaPage() {
   const navigate = useNavigate();
   const { currencySymbol, printerAgents, paymentTypes: restaurantPaymentTypes, restaurant, cancellation } = useRestaurant(); // CR-349: +printerAgents, +paymentTypes · CR-431: +restaurant for eInvoice flag · BUG-682: +cancellation
   const reconcileEnabled = !!restaurant?.settings?.reconcileAmount; // CR-483 Phase 2
+  const taxLabel = restaurant?.tax?.gstStatus ? 'GST' : (restaurant?.tax?.vatStatus ? 'VAT' : 'GST'); // BUG-706: VAT vs GST label from profile
   const { getOrderCancellationReasons } = useSettings(); // CR-165
   const { hasPermission } = useAuth(); // CR-515: permission gating for action buttons
   const { toast } = useToast(); // CR-165
@@ -498,7 +499,7 @@ export default function OrderReportBetaPage() {
             { key: 'amount', label: 'Amount', format: 'inr', align: 'right', width: 90 },
             ...(reconcileEnabled ? [{ key: 'received', label: 'Received', format: 'inr', align: 'right', width: 80 }] : []), // CR-483
             ...(reconcileEnabled ? [{ key: 'recon', label: 'Recon', format: 'inr', align: 'right', width: 70 }] : []), // CR-483
-            { key: 'gst', label: 'GST', format: 'inr', align: 'right', width: 80 },
+            { key: 'gst', label: taxLabel, format: 'inr', align: 'right', width: 80 }, // BUG-706
             { key: 'payment', label: 'Payment', format: 'text', align: 'left', width: 70 },
             { key: 'status', label: 'Status', format: 'text', align: 'left', width: 70 },
           ],
@@ -696,7 +697,7 @@ export default function OrderReportBetaPage() {
                           <th className="px-3 py-2 text-right">Amount</th>
                           {reconcileEnabled && <th className="px-3 py-2 text-right">Received</th>}
                           {reconcileEnabled && <th className="px-3 py-2 text-right">Recon</th>}
-                          <th className="px-3 py-2 text-right">GST</th>
+                          <th className="px-3 py-2 text-right">{taxLabel}</th>{/* BUG-706 */}
                           <th className="px-3 py-2 text-right">Service</th>
                           <th className="px-3 py-2 text-left">Payment</th>
                           <th className="px-3 py-2 text-left">Status</th>
@@ -775,8 +776,8 @@ export default function OrderReportBetaPage() {
                                       Unpaid
                                     </button>
                                   )}
-                                  {/* Reprint — all settled rows, no mutation window restriction */}
-                                  {row.f_order_status === 6 && (
+                                  {/* Reprint — all settled rows, no mutation window restriction · BUG-711: require print_icon */}
+                                  {hasPermission('print_icon') && row.f_order_status === 6 && (
                                     <button
                                       onClick={() => handleReprint(row)}
                                       disabled={printingIds.has(row.order_id)}
@@ -878,7 +879,7 @@ export default function OrderReportBetaPage() {
                 {/* Charges */}
                 <div className="space-y-1.5">
                   <div className="font-semibold text-zinc-500 uppercase tracking-wider text-[10px]">Charges</div>
-                  <div className="flex justify-between"><span className="text-zinc-500">GST</span><span className="font-medium text-zinc-700">{fmtINR(grandTotal.gst_amount)}</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500">{taxLabel}</span><span className="font-medium text-zinc-700">{fmtINR(grandTotal.gst_amount)}</span></div>{/* BUG-706 */}
                   <div className="flex justify-between"><span className="text-zinc-500">Service</span><span className="font-medium text-zinc-700">{fmtINR(grandTotal.service_tax)}</span></div>
                   <div className="flex justify-between"><span className="text-zinc-500">Delivery</span><span className="font-medium text-zinc-700">{fmtINR(grandTotal.delivery_charge)}</span></div>
                 </div>
