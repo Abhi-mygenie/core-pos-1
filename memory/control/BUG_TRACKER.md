@@ -1,3 +1,17 @@
+**CURRENT 2026-11-18 — PLANNING Gate 2 / 2.5 (POS investigations batch). All owner decisions resolved; no code changed.** IA bundle in `impact/` (index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`). Backend brief `backend_briefs/BUG-701_ORDER_FROM_ROOM_WEB_BACKEND_BRIEF.md`. Design `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`.
+
+| ID | Risk | Status | Decision |
+|---|---|---|---|
+| **BUG-701** | HIGH | GATE_2_IA_COMPLETE | FE guard centralised in `OrderContext.updateOrder` merge (OD-701-02) + backend brief (OD-701-01). `impact/BUG-701_IMPACT_ANALYSIS.md` |
+| **BUG-702** | LOW | GATE_2_5_DESIGN_APPROVED | Option A — selected option name(s) + each price (mirror CartPanel). `impact/BUG-702_IMPACT_ANALYSIS.md` |
+| **BUG-703** | MEDIUM | GATE_2_5_DESIGN_APPROVED | Option A — tap tile → read-only AggregatorOrderPopOut (no Accept/Reject). `impact/BUG-703_IMPACT_ANALYSIS.md` |
+| **CR-547** | HIGH | GATE_2_5_DESIGN_APPROVED | Checkboxes → one KOT, only selected items' stations; KOT disabled when none ticked. `impact/CR-547_IMPACT_ANALYSIS.md` |
+
+**Sequencing (R5):** BUG-702 + CR-547 share `ScanOrderPopOut.jsx`; CR-547 + BUG-703 share `DashboardPage.jsx`; all three overlap files just changed by **CR-552 (GATE_5A_IMPLEMENTED)** → batch the ScanOrderPopOut edits, sequence after CR-552 settles. BUG-701 edits `OrderContext.jsx` only (parallel-safe). **CR-547 Gate-3 blocker:** verify KOT print payload is item-driven (else backend brief). Next: owner GO → Gate 3 implementation plans.
+
+---
+
+
 **CURRENT 2026-11-18 — INTAKE (POS investigations bundle — 3 defects registered P0; CR-547 upgraded P2→P0. Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.)**
 
 | ID | Title | Sev | Risk | Status | Doc |

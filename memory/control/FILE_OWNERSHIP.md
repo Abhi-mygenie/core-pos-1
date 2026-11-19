@@ -8,6 +8,18 @@
 # Layer 7 — File Ownership Map
 
 
+## FILE_OWNERSHIP — POS INVEST BATCH GATE_2 PLANNING (2026-11-18) — BUG-701/702/703, CR-547
+
+| File | Planned change | Planning agent |
+|------|---------------|----------------|
+| `src/contexts/OrderContext.jsx` | `updateOrder` merge: preserve prior `orderFrom`/`isWebOrder` when incoming order lacks web origin (BUG-701) | BUG-701 PLANNING 2026-11-18 |
+| `src/components/dashboard/ScanOrderPopOut.jsx` | Variation render reads `v.values[].label/optionPrice` (BUG-702 Opt A) **+** per-item KOT checkboxes + selection state (CR-547). **Batch both; same file as CR-552/CR-545.** | BUG-702 + CR-547 PLANNING 2026-11-18 |
+| `src/pages/DashboardPage.jsx` | `handleScanPrintKOT(order, selectedItems)` subset KOT (CR-547) + `handleAggregatorView` wiring (BUG-703). **Same file as CR-552/CR-545.** | CR-547 + BUG-703 PLANNING 2026-11-18 |
+| `src/components/dashboard/AggregatorOrderPopOut.jsx` | View-only mode for accepted aggregator order, Accept/Reject hidden (BUG-703) | BUG-703 PLANNING 2026-11-18 |
+| `src/components/cards/TableCard.jsx` | L312: route aggregator tile click to view handler instead of no-op (BUG-703) | BUG-703 PLANNING 2026-11-18 |
+
+> ⚠ Overlap with CR-552 (GATE_5A_IMPLEMENTED) on `ScanOrderPopOut.jsx` / `DashboardPage.jsx` — sequence Gate-3 edits after CR-552 settles.
+
 ## FILE_OWNERSHIP — CR-552 GATE_3_PLAN_COMPLETE (2026-11-18) — marker `// CR-552`
 
 | File | Planned change | Planning agent |

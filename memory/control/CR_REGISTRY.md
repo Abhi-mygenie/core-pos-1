@@ -1,3 +1,8 @@
+**CURRENT 2026-11-18 — PLANNING Gate 2/2.5 (POS investigations batch).** **CR-547** (selective KOT in ScanOrderPopOut) → **GATE_2_5_DESIGN_APPROVED**. Pattern approved: checkboxes per item → one KOT prints only selected items to just their stations; KOT disabled when none selected (design `public/gate25_cr547.html` / `design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html`). IA `impact/CR-547_IMPACT_ANALYSIS.md`. Risk HIGH (print payload) — **Gate-3 blocker:** verify `printOrder`/KOT payload is item-driven (`DashboardPage.handleScanPrintKOT` L1737 → `printOrder`), else file a backend brief. Same-file batch w/ BUG-702 (ScanOrderPopOut.jsx) + CR-552/CR-545 (DashboardPage.jsx). Sibling P0s same batch: BUG-701 (OrderContext guard), BUG-702 (variation Option A), BUG-703 (aggregator read-only view). Index `impact/POS_INVEST_BUG701-703_CR547_IA_INDEX.md`. No code changed.
+
+---
+
+
 **CURRENT 2026-11-18 — INTAKE (POS investigations bundle).** **CR-547** (ScanOrderPopOut: KOT Button — Item Selection Before Print) **upgraded P2 → P0** (owner directive), risk **LOW → HIGH** (touches print payload + popup state; needs print-path validation), assignee **Abhishek**, target release **2026-11-17**. Re-confirmed as Issue 3 of INVESTIGATION `investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md`: banner KOT is order-level (`DashboardPage.handleScanPrintKOT` L1737-1747 → `printOrder` all stations); per-item cancel exists (`ScanOrderPopOut` L596-606) but there is no per-item KOT selection state; KOT footer button L737-749. Sibling P0 bugs filed same session: **BUG-701** (room popup disappears on item-cancel), **BUG-702** (ScanOrderPopOut partial variation), **BUG-703** (Table View accepted aggregator no open path) — see BUG_TRACKER.
 
 ---
