@@ -38353,7 +38353,7 @@
       "id": "CR-525",
       "type": "CR",
       "title": "After Bill Print: Replace KOT and Bill Buttons with Collect Bill Button",
-      "status": "GATE_2_IA_CLOSED — HIDE-ONLY (revised 2026-11-19, owner). UNBLOCKED, FE-only, ready for Gate 3; Gate 4 GO required before coding. BD-01 DROPPED (no backend). Replace KOT+Bill+Ready/Serve with single Collect Bill; card tap/Enter -> Collect Payment; gated by orderEditAccess (CR-489); excludes rooms/prepaid/delivery/aggregator; applies all stages after print. HIDE-ONLY: no restore after later edit.",
+      "status": "GATE_3_PLAN_COMPLETE 2026-11-19 — 4 edits, 2 files (TableCard.jsx + OrderCard.jsx). showCollect derived flag + fOS 5 button swap + card tap redirect. FE-only, HIDE-ONLY. Awaiting Gate 4 GO.",
       "priority": "P0",
       "severity": "P2",
       "risk": "HIGH",
@@ -38373,6 +38373,11 @@
           "label": "Batch D owner decisions",
           "path": "memory/change_requests/BATCH_D_OWNER_DECISIONS_2026_11_14.md",
           "type": "decisions"
+        },
+        {
+          "label": "Implementation Plan",
+          "path": "memory/plans/CR-525_IMPLEMENTATION_PLAN.md",
+          "type": "implementation_plan"
         }
       ],
       "blocked_on": "BACKEND",
