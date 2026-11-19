@@ -12,6 +12,35 @@
 
 Source: `investigations/INV-CR524-BUG579-RISK-BADGE_2026_11_19.md` GAP A (visibility). Relates CR-524 (added the columns) + CR-554 (Item Cancellation Detail parity). Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns or responsive layout).
 
+## MERGE — QA Nov Sprint intake (another agent) → main — 2026-11-19
+Incoming `BUG-713…732` collided with our `BUG-713…719`, so renumbered to **BUG-720…739** (+ CR-557/558). Merge doc: `change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md`. All `GATE_1_INTAKE`, assignee Abhishek (client ALL, release 2026-11-17). No app code changed.
+
+| ID | Title | Sev | Risk | Area |
+|---|---|---|---|---|
+| **BUG-720** | Route permission bypass — low-rights user deep-links /settings,/menu,/employees,/inventory-*,/pms/* (ProtectedRoute not PermissionRoute); /employees exposes PII + editable password/role | **P0** | CRITICAL | Auth/Routing |
+| **BUG-721** | Dashboard Print KOT / YTC Cancel not permission-gated (ChannelColumn→TableCard) | **P1** | HIGH | Permissions/Dashboard |
+| **BUG-722** | Audit 30D/LM/FY timeout (insights-dashboard 65-77s>60s) + stale KPIs & Download-enabled-on-error (overlaps BUG-696/BUG-719) | **P1** | MEDIUM | Reports/Analytics |
+| **BUG-723** | Insights preset chip hard-coded (Sales/Cancellations/Dashboard) | P2 | LOW | Reports/Insights |
+| **BUG-724** | Order Report Beta double-load / no abort guard → "0 orders" flash | **P1** | MEDIUM | Reports/Order Beta |
+| **BUG-725** | Order Report Beta Payment column raw lowercase | P2 | LOW | Reports/Order Beta |
+| **BUG-726** | Order Report Beta cancelled rows misalign (13 cells vs 12) | P2 | LOW | Reports/Order Beta |
+| **BUG-727** | Order Report Beta `<tr>` whitespace console error | P3 | LOW | Reports/Order Beta |
+| **BUG-728** | Order Report Beta Cancelled KPI (41) ≠ rows (25); day headers whole-day totals | P2 | LOW | Reports/Order Beta |
+| **BUG-729** | Cancellations Daily Trend x-axis clipped to "2026-"; Revenue Loss chart empty | P2 | LOW | Reports/Cancellations |
+| **BUG-730** | Audit drill-down shows "High Risk" on every row; no Risk/Duration col in UI | P2 | LOW | Reports/Audit |
+| **BUG-731** | ScanOrderPopOut check-in marker shown as KOT item; count includes marker/cancelled | P2 | MEDIUM | Order Entry/ScanOrderPopOut |
+| **BUG-732** | Cart edit — edited row jumps to bottom | P3 | LOW | Order Entry/Cart |
+| **BUG-733** | Native date input instead of shadcn calendar (Credit, Order Report Beta) | P3 | LOW | Credit/Reports |
+| **BUG-734** | Credit `[null]` item names + silent Remove failure | P2 | MEDIUM | Credit |
+| **BUG-735** | Change-Method/Mark-Unpaid shown on split row (inconsistent gating vs BUG-671) | P2 | MEDIUM | Reports/Credit |
+| **BUG-736** | "Update now" toast overlaps table rows | P3 | LOW | Shell/UX |
+| **BUG-737** | Leftover CR-003 console.log of permissions (AllOrdersReportPage L147) | P3 | LOW | Reports |
+| **BUG-738** | ScanOrderPopOut channel/amount mismatch (#1578881 RM→Dine-In) | P2 | MEDIUM | Order Entry/ScanOrderPopOut |
+| **BUG-739** | Audit "Total Events" KPI counts orders not events; Excel summary gaps | P3 | LOW | Reports/Audit |
+
+**Reopened/updated (existing IDs):** BUG-684 REOPENED · BUG-679 REOPENED · BUG-702 REOPENED · CR-551 REOPENED · CR-552 drift→PARTIAL · BUG-671 RETEST · CR-526 RETEST · BUG-712 & CR-523 annotated CONFIRMED.
+**Retest (no ID):** BUG-686, BUG-688, BUG-690, CR-547 (Batch E not run).
+
 ## QA-FOUND GAPS — Cancellation Reports batch — INTAKE 2026-11-19
 Source: `test_reports/iteration_8.json` (testing_agent). Intake doc: `change_requests/BATCH_INTAKE_2026_11_19_CANCELLATION_QA_GAPS.md`. All DISTINCT.
 
