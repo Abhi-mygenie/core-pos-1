@@ -3,13 +3,26 @@
 ---
 
 
-**CURRENT 2026-11-19 — INTAKE / RE-OPEN (GAP A revalidated).** Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.
+**CURRENT 2026-11-19 — INTAKE: registered BUG-714..BUG-719 (QA-found gaps from cancellation-reports batch, testing_agent iteration_8).** All 5 batch items (BUG-713/708, CR-554/555/556) PASSED live QA; these 6 are residual gaps. 714 scope-filter persists across tabs (P2), 715 punch-time timezone mismatch (P2), 716 detail empty-state missing (P3), 717 detail polish (P3), 718 export raw ISO (P3), 719 Audit full-range timeout (P1, BACKEND-BLOCKED, pre-existing). Intake doc: `change_requests/BATCH_INTAKE_2026_11_19_CANCELLATION_QA_GAPS.md`. Triage/intake only, no code changed.
+(prev) **2026-11-19 — INTAKE / RE-OPEN (GAP A revalidated).** Owner directive: P0, assignee Abhishek, target release 2026-11-17. Triage/intake only, no code changed.
 
 | ID | Title | Sev | Risk | Status | Doc |
 |---|---|---|---|---|---|
 | **BUG-713** | Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside `overflow-x-auto`; `CancellationsMockup.jsx` th L944-945 / td L980-981, container L930) | **P0** | **LOW** | GATE_1_INTAKE 2026-11-19 — GAP A RE-OPENED (reverses handover withdrawal); matches investigation GAP A; owner confirms not visible on screen | `change_requests/BATCH_INTAKE_2026_11_19_CR524_CANCELLATION_PARITY_RISKBADGE_FILTERS.md` |
 
 Source: `investigations/INV-CR524-BUG579-RISK-BADGE_2026_11_19.md` GAP A (visibility). Relates CR-524 (added the columns) + CR-554 (Item Cancellation Detail parity). Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns or responsive layout).
+
+## QA-FOUND GAPS — Cancellation Reports batch — INTAKE 2026-11-19
+Source: `test_reports/iteration_8.json` (testing_agent). Intake doc: `change_requests/BATCH_INTAKE_2026_11_19_CANCELLATION_QA_GAPS.md`. All DISTINCT.
+
+| ID | Title | Sev | Risk | Status | Assignee |
+|---|---|---|---|---|---|
+| **BUG-714** | Cancellation Report — scope filter persists across scope tabs (hidden select → 0 rows, no visible cause); `CancellationsMockup.jsx` | **P2** | LOW | GATE_1_INTAKE 2026-11-19 (QA-found, CR-556) | Abhishek |
+| **BUG-715** | Punch Time rendered in browser timezone, disagrees with Order/cancel time (both screens); `CancellationsMockup.jsx` + `CancelDetailMockup.jsx` | **P2** | LOW | GATE_1_INTAKE 2026-11-19 (QA-found) | Abhishek |
+| **BUG-716** | Item Cancellation Detail — no empty-state row when filters match nothing; `CancelDetailMockup.jsx` | **P3** | LOW | GATE_1_INTAKE 2026-11-19 (QA-found, CR-556) | Abhishek |
+| **BUG-717** | Item Cancellation Detail polish — stale subtitle / raw Order timestamp / scope option order; `CancelDetailMockup.jsx` | **P3** | LOW | GATE_1_INTAKE 2026-11-19 (QA-found) | Abhishek |
+| **BUG-718** | Item Cancellation Detail export — Punch Time column holds raw ISO string; `CancelDetailMockup.jsx` | **P3** | LOW | GATE_1_INTAKE 2026-11-19 (QA-found, CR-554) | Abhishek |
+| **BUG-719** | Audit Report — full 50-day range times out (insights-dashboard ~78s > 60s axios timeout); BACKEND-BLOCKED, pre-existing, NOT from getRiskTier refactor | **P1** | MEDIUM | GATE_1_INTAKE 2026-11-19 (QA-found, CR-546/528) | Gyan |
 
 ---
 
