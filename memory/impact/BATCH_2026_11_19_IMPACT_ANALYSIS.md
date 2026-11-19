@@ -102,4 +102,25 @@ Collecting a bill prints a bill but is gated only by `clear_payment`. A user wit
 - BUG-706 → discriminator resolved via beanmeup probe (`gst_status`).
 
 ---
+
+## DECISIONS & IA CLOSURE — Round 3 (2026-11-19, owner)
+
+| ID | Decision | IA status |
+|---|---|---|
+| BUG-711 | No owner input needed. Add `hasPermission('print_icon')` to Reprint gate. Repro acct: T@t.com (Cashier, no print_icon). | **IA CLOSED → ready Gate 3** |
+| BUG-704 | Fix LM branch only (add `setSharedFrom/To`); FY already correct. | **IA CLOSED → ready Gate 3** |
+| BUG-705 | **Owner: Option A — show ALL configured payment methods.** Remove hardcoded `allowedMethods` restriction on OrderBeta PayLater Collect. | **IA CLOSED → ready Gate 3** |
+| BUG-706 | Discriminator = `gst_status` (true→GST, else `vat_info.status`→VAT). Both flags already in profileTransform. No backend change. | **IA CLOSED → ready Gate 3** |
+| BUG-707 | Frontend-only display standardisation (shared date formatter). | **IA CLOSED → ready Gate 3** |
+| BUG-710 | **Owner: no discount was applied after print on 000804.** Probe proved field works (000803 stored `restaurant_discount_amount:59.9`). No defect. | **IA CLOSED — NO DEFECT / not reproduced** |
+| CR-553 | **Owner: Collect-flow bill print is acceptable as-is; no extra `print_icon` gate required.** | **IA CLOSED — DECLINED / won't fix** |
+| BUG-708 | PENDING owner: what should the staff-note column show vs working "Notes" col? (`cancel_item_note` empty in all 65 rows; `notes` works). | **IA OPEN — awaiting owner** |
+| BUG-709 | PENDING owner: will confirm whether UI still shows it missing. Probe: `make_unpaid` event IS present in dashboard audits for cancelled order 000802 (+ new `cancel_after_unpaid`). | **IA OPEN — awaiting owner** |
+| BUG-712 | PENDING owner: will share the failing order. Contract aligned with mobile brief (endpoint/payload/membership_id=crmId/X-localization). Suspected gap: web fires `user-check-create` eagerly on blur with empty `membership_id` before CRM `crmId` resolves (brief wants CRM-first → single call). Awaiting owner answer on whether backend requires non-empty `membership_id` to link. | **IA OPEN — awaiting owner** |
+
+**Ready for Gate 3 (Implementation Plan):** BUG-711, BUG-704, BUG-705, BUG-706, BUG-707.
+**Closed without fix:** BUG-710 (no defect), CR-553 (declined).
+**IA remains open:** BUG-708, BUG-709, BUG-712.
+
+---
 *Gate 2 Impact Analysis. No code written. No gates skipped. Probes read-only. No remote push.*

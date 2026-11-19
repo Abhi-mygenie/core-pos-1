@@ -40435,7 +40435,7 @@
       "title": "Item Sales Ledger — 'Last Month'/'FY' preset not persistent across navigation",
       "priority": "P2",
       "risk": "LOW",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "assignee": "Abhishek",
@@ -40444,9 +40444,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Same pattern as BUG-697/698 (Audit Report) but Item Sales Ledger page — not a dup",
       "blocked_on": "",
-      "notes": "handlePreset LM branch early-returns before setSharedFrom/setSharedTo (ItemSalesLedgerMockup L164 vs L175); InsightsCacheContext sharedFrom stays today → remount resets. FY branch same gap. Fix ~1 line both branches. Data confirmed (49 Oct rows).",
+      "notes": "handlePreset LM branch early-returns before setSharedFrom/setSharedTo (ItemSalesLedgerMockup L164 vs L175); InsightsCacheContext sharedFrom stays today → remount resets. FY branch same gap. Fix ~1 line both branches. Data confirmed (49 Oct rows). | IA (Gate 2) done 2026-11-19: LM branch (ItemSalesLedgerMockup L166) skips setSharedFrom/To; FY confirmed NOT broken. Data exists (Oct 364 rows). FE 1-line. Ready Gate 3.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-705",
@@ -40454,7 +40455,7 @@
       "title": "Order Beta PayLater Collect shows only Cash/UPI/Card (Split/Credit/To-Room/dynamic hidden)",
       "priority": "P1",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -40463,9 +40464,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Regression introduced by CR-503; not covered by BUG-087/049",
       "blocked_on": "",
-      "notes": "CollectBillPanelDrawer L300 hardcodes allowedMethods=['cash','card','upi'] (from BUG-042-A), reused by CR-503 for OrderBeta PayLater → CPP isHoldContext=true → Row 2 hidden. Owner decision: Option A remove allowedMethods / Option B caller-driven prop.",
+      "notes": "CollectBillPanelDrawer L300 hardcodes allowedMethods=['cash','card','upi'] (from BUG-042-A), reused by CR-503 for OrderBeta PayLater → CPP isHoldContext=true → Row 2 hidden. Owner decision: Option A remove allowedMethods / Option B caller-driven prop. | IA (Gate 2) done 2026-11-19: OWNER DECISION = Option A (show all configured methods). Remove hardcoded allowedMethods on OrderBeta PayLater Collect (CollectBillPanelDrawer L300). Ready Gate 3.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-706",
@@ -40473,7 +40475,7 @@
       "title": "Order Report Beta — VAT amount mislabelled 'GST' (no tax-type detection)",
       "priority": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -40482,9 +40484,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Same family as BUG-516 (FolioCheckoutPanel) but OrderBeta page — not a dup",
       "blocked_on": "",
-      "notes": "OrderReportBetaPage hardcodes 'GST' at L501/L699/L881; backend sends VAT in gst_amount; profileTransform exposes no taxType. CPP shows 'VAT' correctly. Fix: profileTransform add taxType + OrderBeta conditional label. Backend: confirm tax_type field.",
+      "notes": "OrderReportBetaPage hardcodes 'GST' at L501/L699/L881; backend sends VAT in gst_amount; profileTransform exposes no taxType. CPP shows 'VAT' correctly. Fix: profileTransform add taxType + OrderBeta conditional label. Backend: confirm tax_type field. | IA (Gate 2) done 2026-11-19: discriminator = gst_status (beanmeup VAT gst_status=false+vat_info.status=true vs cafe103 GST gst_status=true). Both flags already in profileTransform. No backend change. Fix OrderReportBetaPage L501/699/881+export. Ready Gate 3.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-707",
@@ -40492,7 +40495,7 @@
       "title": "Cancellation Report — order date/time format inconsistent with Punch Time column",
       "priority": "P2",
       "risk": "LOW",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "assignee": "Abhishek",
@@ -40501,9 +40504,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Punch Time col added by CR-524; not covered by BUG-640/CR-481",
       "blocked_on": "",
-      "notes": "CancellationsMockup renders raw API strings {orderDate} {orderTime} (L736/L954 e.g. '2026-10-01 19:31') while Punch Time uses toLocaleString (L980 e.g. '01 Oct, 06:51 pm'). App-wide: no shared date formatter. Fix: standardize to one formatter. Display-only.",
+      "notes": "CancellationsMockup renders raw API strings {orderDate} {orderTime} (L736/L954 e.g. '2026-10-01 19:31') while Punch Time uses toLocaleString (L980 e.g. '01 Oct, 06:51 pm'). App-wide: no shared date formatter. Fix: standardize to one formatter. Display-only. | IA (Gate 2) done 2026-11-19: frontend display only (CancellationsMockup L736/954 raw vs L980 toLocaleString). Standardise via shared formatter. Ready Gate 3.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-708",
@@ -40511,7 +40515,7 @@
       "title": "Cancellation Report — staff cancel-note column always '—' (cancelNote not mapped)",
       "priority": "P1",
       "risk": "LOW",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_AWAITING_OWNER",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "assignee": "Abhishek",
@@ -40520,9 +40524,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Different from BUG-682 (cancelNoteMandatory flag mapping) — this is the note VALUE in the report",
       "blocked_on": "",
-      "notes": "CancellationsMockup transform never maps cancelNote (render L972 reads r.cancelNote → always undefined → '—'). Also 'notes' field from insights-cancellations API unconfirmed (backend probe). FE fix: add cancelNote: i.cancel_note.",
+      "notes": "CancellationsMockup transform never maps cancelNote (render L972 reads r.cancelNote → always undefined → '—'). Also 'notes' field from insights-cancellations API unconfirmed (backend probe). FE fix: add cancelNote: i.cancel_note. | IA (Gate 2) 2026-11-19: Cancellation Report has 2 note cols; Notes (reads notes) WORKS (8/65 rows); staff-note col reads unmapped r.cancelNote -> always dash. API cancel_item_note empty in all 65 rows. AWAITING OWNER: what should staff-note col show vs Notes col?",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-709",
@@ -40530,7 +40535,7 @@
       "title": "Audit Log — 'Make Unpaid' event missing after order later cancelled",
       "priority": "P1",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_AWAITING_OWNER",
       "sprint_key": "nov_cr_batch",
       "area": "Reports / Analytics",
       "assignee": "Abhishek",
@@ -40539,9 +40544,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "BACKEND_ISSUE; related CR-542 (reason mandatory) but distinct",
       "blocked_on": "",
-      "notes": "AuditLogMockup correctly filters type==='make_unpaid'; backend insights-audit drops make_unpaid events once the order is cancelled. FE correct. Backend brief: audit events must be immutable/append-only.",
+      "notes": "AuditLogMockup correctly filters type==='make_unpaid'; backend insights-audit drops make_unpaid events once the order is cancelled. FE correct. Backend brief: audit events must be immutable/append-only. | IA (Gate 2) 2026-11-19: theory overturned — dashboard audits.orders[] DOES contain make_unpaid for cancelled ruby order 000802 (+ new cancel_after_unpaid). FE reads correctly. AWAITING OWNER confirm whether UI still shows it missing.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-710",
@@ -40549,7 +40555,7 @@
       "title": "Reports — discount applied after bill print not reflected in report",
       "priority": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "CLOSED — NO DEFECT (not reproduced, 2026-11-19)",
       "sprint_key": "nov_cr_batch",
       "area": "Payments / Coupons / Credit",
       "assignee": "Abhishek",
@@ -40558,9 +40564,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Distinct from BUG-659 (reprint omits discount on the printed bill)",
       "blocked_on": "Live probe of restaurant_discount_amount",
-      "notes": "FE reportTransform reads restaurant_discount_amount correctly (L183). Likely backend not storing discount from collect-bill-after-print into restaurant_discount_amount. Needs live probe of priti orders. MEDIUM confidence.",
+      "notes": "FE reportTransform reads restaurant_discount_amount correctly (L183). Likely backend not storing discount from collect-bill-after-print into restaurant_discount_amount. Needs live probe of priti orders. MEDIUM confidence. | IA (Gate 2) 2026-11-19: OWNER confirmed no discount applied after print on 000804. Live probe proved field works: ruby 000803 after-print discount stored restaurant_discount_amount=59.9 + discount_apply_after_print event. FE reads field correctly. No defect.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-711",
@@ -40568,7 +40575,7 @@
       "title": "Order Report Beta — Reprint prints bill WITHOUT 'print_icon' permission",
       "priority": "P0",
       "risk": "CRITICAL",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_COMPLETE",
       "sprint_key": "nov_cr_batch",
       "area": "Permissions / Security",
       "assignee": "Abhishek",
@@ -40577,9 +40584,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Reprint button added by CR-349; perms by CR-515 — this gap is new",
       "blocked_on": "",
-      "notes": "OrderReportBetaPage L779 Reprint gated only by f_order_status===6; missing hasPermission('print_icon'). handleReprint → printOrder('bill'). No-print role can reprint bills from Order Report. CR-515 incomplete. 1-line fix.",
+      "notes": "OrderReportBetaPage L779 Reprint gated only by f_order_status===6; missing hasPermission('print_icon'). handleReprint → printOrder('bill'). No-print role can reprint bills from Order Report. CR-515 incomplete. 1-line fix. | IA (Gate 2) done 2026-11-19: FE bug confirmed; add hasPermission('print_icon') to Reprint gate (OrderReportBetaPage L779). Repro acct T@t.com (Cashier, print_icon=false). Ready Gate 3.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "BUG-712",
@@ -40587,7 +40595,7 @@
       "title": "Order Entry — customer name not persisted/returned on order after quick-customer link (CR-523 follow-up)",
       "priority": "P0",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "GATE_2_IA_AWAITING_OWNER",
       "sprint_key": "nov_cr_batch",
       "area": "Menu / Order Entry",
       "assignee": "Abhishek",
@@ -40596,9 +40604,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Distinct from BUG-356 (closed), BUG-479 (printer-agent), BUG-593 (CRM noname)",
       "blocked_on": "Live SINGLE_ORDER read-back probe",
-      "notes": "FE save verified correct (POSTs f_name to user-check-create; effectiveTable.orderId guard passes). On reopen name hydrates from api.user_name/user.f_name which returns blank while phone persists → backend read-back gap. Needs live SINGLE_ORDER probe; likely backend brief.",
+      "notes": "FE save verified correct (POSTs f_name to user-check-create; effectiveTable.orderId guard passes). On reopen name hydrates from api.user_name/user.f_name which returns blank while phone persists → backend read-back gap. Needs live SINGLE_ORDER probe; likely backend brief. | IA (Gate 2) 2026-11-19: contract aligned with mobile brief (user-check-create; payload; membership_id=crmId; X-localization). Read-back (get-single-order-new) returns user_name correctly. Suspected gap: web fires user-check-create eagerly on blur with empty membership_id before CRM crmId resolves (brief wants CRM-first single call). AWAITING OWNER: failing order + whether backend needs non-empty membership_id to link.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
       "id": "CR-553",
@@ -40606,7 +40615,7 @@
       "title": "Order Beta — require 'print_icon' (plus clear_payment) to print bill during Collect flow",
       "priority": "P2",
       "risk": "MEDIUM",
-      "status": "GATE_1_INTAKE",
+      "status": "CLOSED — DECLINED (owner, 2026-11-19)",
       "sprint_key": "nov_cr_batch",
       "area": "Permissions / Security",
       "assignee": "Abhishek",
@@ -40615,9 +40624,10 @@
       "intake_doc": "change_requests/BATCH_INTAKE_2026_11_19_INV_FINDINGS.md",
       "duplicate_check": "Design decision; relates to CR-515",
       "blocked_on": "",
-      "notes": "Collect-Bill/payment flow prints a bill gated only by clear_payment, not print_icon. A collect-only role can trigger a bill print during collection. Owner decision whether Collect should additionally require print_icon.",
+      "notes": "Collect-Bill/payment flow prints a bill gated only by clear_payment, not print_icon. A collect-only role can trigger a bill print during collection. Owner decision whether Collect should additionally require print_icon. | IA (Gate 2) 2026-11-19: OWNER decision = Collect-flow bill print acceptable as-is; no additional print_icon gate required. Declined/won't fix.",
       "registered_date": "2026-11-19",
-      "release_date": ""
+      "release_date": "",
+      "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     }
   ],
   "meta": {
