@@ -168,7 +168,8 @@ const formatLocation = (order) => {
 };
 
 const formatItemCount = (order) => {
-  const items = Array.isArray(order?.items) ? order.items : [];
+  // BUG-731: exclude the "Check In" system marker from the count
+  const items = (Array.isArray(order?.items) ? order.items : []).filter(it => !it?.isCheckInMarker);
   const qty = items.reduce((sum, it) => sum + (Number(it?.qty ?? it?.quantity) || 0), 0);
   if (qty === 0 && items.length === 0) return '— items';
   return `${qty || items.length} item${(qty || items.length) === 1 ? '' : 's'}`;
@@ -327,12 +328,14 @@ const ScanOrderPopOut = ({
   if (!activeOrder) return null;
 
   const idStr = String(activeOrder.orderId);
+  // BUG-731: hide backend "Check In" system marker (orderTransform.js L292-309 mandates consumers filter it)
+  const visibleItems = (activeOrder.items || []).filter(it => !it?.isCheckInMarker);
   // CR-552: Mode B = web-edit order with appended Not-Confirm items
   const isEditMode = hasUnconfirmedWebEditItems(activeOrder);
-  const newItems   = isEditMode ? (activeOrder.items || []).filter(it => it.isNotConfirmed && it.status !== 'cancelled') : [];
-  const prevItems  = isEditMode ? (activeOrder.items || []).filter(it => !it.isNotConfirmed) : [];
+  const newItems   = isEditMode ? visibleItems.filter(it => it.isNotConfirmed && it.status !== 'cancelled') : [];
+  const prevItems  = isEditMode ? visibleItems.filter(it => !it.isNotConfirmed) : [];
   // CR-547: selected items that STILL exist on the order — drives KOT badge, disabled, and payload
-  const kotSelectedItems = (activeOrder.items || []).filter(it => selectedItemIds.has(it.id));
+  const kotSelectedItems = visibleItems.filter(it => selectedItemIds.has(it.id));
   const isUnderlyingSnoozed =
     snoozedOrders && typeof snoozedOrders.has === 'function' && snoozedOrders.has(idStr);
   const total = Number(activeOrder.amount || 0).toFixed(2);
@@ -423,6 +426,7 @@ const ScanOrderPopOut = ({
                 <div
                   className="text-xs mt-1"
                   style={{ color: COLORS.grayText }}
+                  data-testid="scan-order-popout-item-count"
                 >
                   {formatItemCount(activeOrder)}
                 </div>
@@ -515,7 +519,7 @@ const ScanOrderPopOut = ({
               </div>
             ) : null}
 
-            {Array.isArray(activeOrder.items) && activeOrder.items.length > 0 ? (
+            {visibleItems.length > 0 ? (
               <div
                 className="rounded-lg border max-h-[28vh] overflow-y-auto"
                 style={{ borderColor: COLORS.borderGray }}
@@ -592,7 +596,7 @@ const ScanOrderPopOut = ({
                 ) : (
                 <>
                 {/* CR-547: Select-all header for KOT selection (normal mode) */}
-                {onPrintKOT && (activeOrder.items || []).some(it =>
+                {onPrintKOT && visibleItems.some(it =>
                   it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3
                 ) && (
                   <label
@@ -604,12 +608,12 @@ const ScanOrderPopOut = ({
                       type="checkbox"
                       className="accent-[#2E7D32]"
                       checked={
-                        (activeOrder.items || [])
+                        visibleItems
                           .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3)
                           .every(it => selectedItemIds.has(it.id))
                       }
                       onChange={() => {
-                        const selectable = (activeOrder.items || [])
+                        const selectable = visibleItems
                           .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3);
                         const allIds = selectable.map(it => it.id).filter(Boolean);
                         setSelectedItemIds(prev =>
@@ -618,18 +622,18 @@ const ScanOrderPopOut = ({
                       }}
                     />
                     <span className="text-xs font-semibold" style={{ color: COLORS.grayText }}>
-                      {(activeOrder.items || [])
+                      {visibleItems
                         .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3)
                         .every(it => selectedItemIds.has(it.id))
                         ? 'Deselect all' : 'Select all'}
-                      {' '}({(activeOrder.items || [])
+                      {' '}({visibleItems
                         .filter(it => it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3).length})
                     </span>
                   </label>
                 )}
                 <ul className="divide-y" style={{ borderColor: COLORS.borderGray }}>
                   {/* CR-545: APS items (₹1) sort to top so staff sees them first */}
-                  {[...(activeOrder.items || [])].sort((a, b) => {
+                  {[...visibleItems].sort((a, b) => {
                     const aAps = Number(a?.unitPrice ?? a?.price) === 1 ? 0 : 1;
                     const bAps = Number(b?.unitPrice ?? b?.price) === 1 ? 0 : 1;
                     return aAps - bAps;
