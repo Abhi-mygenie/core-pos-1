@@ -41575,18 +41575,41 @@
       "open_decisions": [
         "POS-2: LOCKED \u2014 keep per-item cancel, clarify wording only"
       ]
+    },
+    {
+      "type": "BUG",
+      "sprint_key": "nov_cr_batch",
+      "area": "POS / Order Entry (KOT / Printing)",
+      "assignee": "Abhishek",
+      "client": "ALL",
+      "source": "AGENT-DISCOVERED; investigations/INV-KOT-CUSTOM-ITEM-2026-11-20.md (HIGH confidence, 8/10 steps)",
+      "intake_doc": "change_requests/BUG-742_CUSTOM_ITEM_KOT_NOT_PRINTED_FIRST_PLACE_INTAKE.md",
+      "status": "GATE_1_INTAKE 2026-11-20 \u2014 POS-4: custom (out-of-menu) item KOT not printed on first placement. customItemFromAPI (orderTransform.js:2326) omits station \u2192 cartStationsToSet []\u2192 selectAgentsForKot []\u2192 printer_agent []+station null \u2192 backend can't route KOT. Reprint works (socket enriches station, orderTransform.js:134). Fix ref: add station:data.station||null. Printing hotspot \u2192 not planning-skip without owner risk-downgrade.",
+      "gate": "GATE_1",
+      "current_gate": 1,
+      "blocked_on": "Owner: OD-742-A severity (P1/P2), OD-742-B risk-downgrade vs full gate, OD-742-C station selector vs backend category station",
+      "registered_date": "2026-11-20",
+      "release_date": "",
+      "id": "BUG-742",
+      "title": "Custom (out-of-menu) item KOT not printed on first placement (POS-4)",
+      "priority": "P1",
+      "risk": "CRITICAL",
+      "duplicate_check": "DISTINCT; RELATED CR-561 (POS KOT family), BUG-663/BUG-297 (station-null KOT routing), CR-449 (item-level station)",
+      "notes": "FE_BUG. 1 file/1 line: orderTransform.js:2326 customItemFromAPI (R5 hotspot). Add station:data.station||null. Reprint path OK (orderTransform.js:134). Complexity LOW, risk CRITICAL (printing).",
+      "severity": "CRITICAL",
+      "rebatch": ""
     }
   ],
   "meta": {
-    "last_updated": "2026-11-19",
-    "last_action": "OWNER OVERRIDE: forced P0 on all 28 QA-intake items (BUG-714..739 + CR-557/558), release 2026-11-17. Risk fields unchanged. No app code changed.",
+    "last_updated": "2026-11-20",
+    "last_action": "INTAKE: registered BUG-742 (POS-4 custom-item KOT not printed on first placement). No app code changed.",
     "current_gate": "1",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
     "qa_group_c_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
     "gate_5b_complete": true,
-    "total": 1181,
-    "total_items": 1176,
+    "total": 1182,
+    "total_items": 1177,
     "last_session": "Batch B Gate 2 IA close 2026-11-15 \u2014 owner R5 answered, R5 read-only probes (RID 541). Handover at /app/memory/handover/SESSION_HANDOVER_2026_11_15_BATCH_B_GATE2_IA_CLOSED.md",
     "last_note": "Batch B Gate 2 IA + Gate 2.5 CLOSED 2026-11-15. Backend brief DRAFT not sent (owner to decide channel). Next: Gate 3 plans (FE-ready items first; backend-blocked items as PARTIAL/BLOCKED per Batch A pattern).",
     "qa_nov_sprint_report": "memory/test_reports/QA_REPORT_NOV_SPRINT_2026_11_18.md"
