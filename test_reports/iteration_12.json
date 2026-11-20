@@ -1,0 +1,15 @@
+{
+  "summary": "BUG-723 re-test (frontend only, preprod owner@cafe103.com). The Dashboard 30D fix works: clicking reports-date-preset-30d sets From=2026-10-22 (today-29) and To=2026-11-20 (today), and only the 30D chip is active (bg-white + shadow-sm). It carries over to Sales and Cancellations through in-app navigation with the 30D chip active on both. Regression checks pass: FY picked on Audit (2025-04-01..2026-03-31) shows the FY chip on Sales, Dashboard and Cancellations. LM picked on Sales (2026-10-01..2026-10-31) shows the LM chip on Cancellations. A custom range applied on Dashboard (2026-11-10..2026-11-17) shows no active chip and carries over to Sales and Cancellations with no chip. 11/11 checks passed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": ["DashboardMockup.handlePreset 30D case (now-29..now) is the same as the 30D logic on Sales and Cancellations. The preset date maths is still copied into each screen; consider moving it to utils/datePresets.js (computePreset) next to matchPreset so this kind of missing case cannot happen again."],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100% (11/11 checks)"},
+  "test_credentials": "owner@cafe103.com / Qplazm@10 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "None. Read-only testing; no data was created or changed.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login takes about 20-30s (/loading then /dashboard), so use wait_for_url('**/dashboard'). Then page.goto /reports-module/dashboard once (it passes through /loading again) and navigate only with history.pushState + PopStateEvent. Check a chip is active by its class containing 'bg-white text-zinc-900' and 'shadow-sm'. Audit chips are selected by text inside [data-testid=audit-presets]."
+}

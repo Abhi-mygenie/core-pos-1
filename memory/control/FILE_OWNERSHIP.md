@@ -2534,3 +2534,4 @@ NOT touched: `orderService.js`/`confirmOrder` · `toAPI.updateOrderStatus` · `p
 | `frontend/src/pages/reports-module/CancellationsMockup.jsx` | BUG-723: chip init matchPreset (L206); `handlePreset` LM/FY/generic +shared setters. Marker `// BUG-723`. Same file as Cluster B (shipped, disjoint region) | BUG-723 IMPL 2026-11-20 |
 | `frontend/src/pages/reports-module/DashboardMockup.jsx` | BUG-723: chip init matchPreset (L67); `handlePreset` +`setSharedFrom/setSharedTo`. Marker `// BUG-723` | BUG-723 IMPL 2026-11-20 |
 | `frontend/src/utils/__tests__/datePresets.matchPreset.test.js` | BUG-723 unit test (6/6 PASS) | BUG-723 IMPL 2026-11-20 |
+| `frontend/src/pages/reports-module/DashboardMockup.jsx` | BUG-723 follow-up (QA iteration_11): added missing `case '30D'` (now-29..now) to `handlePreset` — the 30D chip was dead. Marker `// BUG-723` | BUG-723 IMPL 2026-11-20 |

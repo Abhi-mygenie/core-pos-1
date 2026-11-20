@@ -41023,7 +41023,14 @@
       "severity": "P0",
       "rebatch": "B4-PRESETS",
       "code_reality": "FULL",
-      "qa_gate_status": "PENDING_QA"
+      "qa_gate_status": "QA_PASS 2026-11-20 (iteration_12: 11/11). Core chip-sync FY/LM across Sales/Dashboard/Cancellations + propagation + custom-range(no chip) PASS. Follow-up fix: added missing 30D case to DashboardMockup.handlePreset (was dead chip). Reports: test_reports/iteration_11.json, iteration_12.json",
+      "files": [
+        "frontend/src/utils/datePresets.js",
+        "frontend/src/pages/reports-module/SalesMockup.jsx",
+        "frontend/src/pages/reports-module/CancellationsMockup.jsx",
+        "frontend/src/pages/reports-module/DashboardMockup.jsx",
+        "frontend/src/utils/__tests__/datePresets.matchPreset.test.js"
+      ]
     },
     {
       "type": "BUG",
