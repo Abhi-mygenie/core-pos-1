@@ -60,3 +60,25 @@ export const computePresetRange = (preset) => {
   }
   return { from: f, to: t };
 };
+
+// BUG-723: shared preset reconciler (was local to AuditLogMockup — BUG-697).
+// Maps an applied {from,to} back to its preset label, or '' when the range is custom.
+export const matchPreset = (from, to) => {
+  if (!from || !to) return '';
+  const t = new Date();
+  const td = fmtISO(t);
+  const now = new Date();
+  const cands = {
+    Today: { from: fmtISO(t), to: td },
+    '7D': { from: fmtISO(new Date(t.getTime() - 6 * 86400000)), to: td },
+    '30D': { from: fmtISO(new Date(t.getTime() - 29 * 86400000)), to: td },
+    MTD: { from: fmtISO(new Date(t.getFullYear(), t.getMonth(), 1)), to: td },
+    LM: { from: fmtISO(new Date(now.getFullYear(), now.getMonth() - 1, 1)), to: fmtISO(new Date(now.getFullYear(), now.getMonth(), 0)) },
+  };
+  const fy = computePresetRange('FY');
+  if (fy) cands.FY = fy;
+  for (const [label, r] of Object.entries(cands)) {
+    if (r.from === from && r.to === to) return label;
+  }
+  return '';
+};

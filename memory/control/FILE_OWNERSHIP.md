@@ -2528,3 +2528,9 @@ NOT touched: `orderService.js`/`confirmOrder` · `toAPI.updateOrderStatus` · `p
 | `src/api/transforms/creditTransform.js` | CR-527/BB-09: `creditEntryFromAPI` maps `dinerName`/`dinerMobile` from `diner_name`/`diner_mobile` (null default). Marker `// CR-527/BB-09` | CR-527 IMPL 2026-11-20 |
 | `src/components/credit/CreditCustomerDetailSheet.jsx` | CR-527/BB-09: local mapper mirrors diner fields (L249); `CreditRow` new Diner cell + `holder` prop (— when null or == holder); `CREDIT_TABLE_HEAD` +Diner `<th>`; diner filter OD-527-C (2-5 chips / 6+ searchable Command dropdown) + active summary; `dinerFilter`/`dinerMenuOpen` state. Markers `// CR-527`. Same sheet as CR-526 (additive, different region) | CR-527 IMPL 2026-11-20 |
 | `src/api/transforms/__tests__/creditTransform.cr527.test.js` | CR-527 unit test (diner field mapping + null default). 2/2 PASS | CR-527 IMPL 2026-11-20 |
+
+| `frontend/src/utils/datePresets.js` | BUG-723: + exported `matchPreset(from,to)` reconciler (shared from Audit's local copy). Marker `// BUG-723` | BUG-723 IMPL 2026-11-20 |
+| `frontend/src/pages/reports-module/SalesMockup.jsx` | BUG-723: chip init `useState(() => matchPreset(sharedFrom,sharedTo))` (L121); `handlePreset` LM/FY/generic branches +`setSharedFrom/setSharedTo`. Marker `// BUG-723` | BUG-723 IMPL 2026-11-20 |
+| `frontend/src/pages/reports-module/CancellationsMockup.jsx` | BUG-723: chip init matchPreset (L206); `handlePreset` LM/FY/generic +shared setters. Marker `// BUG-723`. Same file as Cluster B (shipped, disjoint region) | BUG-723 IMPL 2026-11-20 |
+| `frontend/src/pages/reports-module/DashboardMockup.jsx` | BUG-723: chip init matchPreset (L67); `handlePreset` +`setSharedFrom/setSharedTo`. Marker `// BUG-723` | BUG-723 IMPL 2026-11-20 |
+| `frontend/src/utils/__tests__/datePresets.matchPreset.test.js` | BUG-723 unit test (6/6 PASS) | BUG-723 IMPL 2026-11-20 |

@@ -48,7 +48,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets'; // BUG-640 + CR-481
+import { fmtISO, DATE_PRESETS, computePresetRange, matchPreset } from '../../utils/datePresets'; // BUG-640 + CR-481 + BUG-723
 
 /* ── Helpers ── */
 // BUG-640: fmtISO moved to shared utility
@@ -203,7 +203,7 @@ const CancellationsMockup = () => {
   const [toDate, setToDate] = useState(sharedTo);
   const [appliedFrom, setAppliedFrom] = useState(sharedFrom);
   const [appliedTo, setAppliedTo] = useState(sharedTo);
-  const [activePreset, setActivePreset] = useState('7D');
+  const [activePreset, setActivePreset] = useState(() => matchPreset(sharedFrom, sharedTo)); // BUG-723: match shared range, not hard-coded 7D
 
   useEffect(() => {
     const handler = (e) => { if (downloadRef.current && !downloadRef.current.contains(e.target)) setShowDownloadMenu(false); };
@@ -230,19 +230,19 @@ const CancellationsMockup = () => {
       const now = new Date();
       const lf = fmtISO(new Date(now.getFullYear(), now.getMonth() - 1, 1));
       const lt = fmtISO(new Date(now.getFullYear(), now.getMonth(), 0));
-      setFromDate(lf); setToDate(lt); setAppliedFrom(lf); setAppliedTo(lt); setActivePreset(p); // CR-422
+      setFromDate(lf); setToDate(lt); setAppliedFrom(lf); setAppliedTo(lt); setSharedFrom(lf); setSharedTo(lt); setActivePreset(p); // CR-422 + BUG-723
       return;
     }
     else if (p === '30D') f = new Date(t.getTime() - 29 * 86400000); // CR-481
     else if (p === 'MTD') { f = new Date(t.getFullYear(), t.getMonth(), 1); }
     else if (p === 'FY') { // INV-001 + BUG-640: use computePresetRange to avoid const t reassignment
       const range = computePresetRange('FY');
-      if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setActivePreset(p); }
+      if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setSharedFrom(range.from); setSharedTo(range.to); setActivePreset(p); } // BUG-723
       return;
     }
     else return;
     const fd = fmtISO(f); const td = fmtISO(t);
-    setFromDate(fd); setToDate(td); setAppliedFrom(fd); setAppliedTo(td); setActivePreset(p);
+    setFromDate(fd); setToDate(td); setAppliedFrom(fd); setAppliedTo(td); setSharedFrom(fd); setSharedTo(td); setActivePreset(p); // BUG-723
   };
 
   /* ── CR-049: Fetch from backend insights-cancellations endpoint ── */

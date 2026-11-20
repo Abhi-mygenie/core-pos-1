@@ -29,7 +29,7 @@ import {
   Cell, 
   Tooltip 
 } from 'recharts';
-import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets'; // BUG-640 + CR-481
+import { fmtISO, DATE_PRESETS, computePresetRange, matchPreset } from '../../utils/datePresets'; // BUG-640 + CR-481 + BUG-723
 
 const CHANNEL_COLORS = {
   'Dine-In': '#F26B33',
@@ -64,7 +64,7 @@ const DashboardMockup = () => {
     () => localStorage.getItem('mygenie_sidebar_expanded') === 'true'
   );
   const [isSilentMode, setIsSilentMode] = useState(false);
-  const [activePreset, setActivePreset] = useState('Today');
+  const [activePreset, setActivePreset] = useState(() => matchPreset(sharedFrom, sharedTo)); // BUG-723: match shared range, not hard-coded Today
 
   // Date validation + 2-month max range enforcement
   const datesValid = appliedFrom && appliedTo && appliedFrom <= appliedTo;
@@ -144,6 +144,8 @@ const DashboardMockup = () => {
     setToDate(t);
     setAppliedFrom(f);
     setAppliedTo(t);
+    setSharedFrom(f); // BUG-723
+    setSharedTo(t);   // BUG-723
     setActivePreset(preset);
   };
 

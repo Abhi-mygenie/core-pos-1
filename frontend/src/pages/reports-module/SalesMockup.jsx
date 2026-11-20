@@ -27,7 +27,7 @@ import {
   PieChart, Pie, Cell, Legend,
   AreaChart, Area, Line,
 } from 'recharts';
-import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets'; // BUG-640 + CR-481
+import { fmtISO, DATE_PRESETS, computePresetRange, matchPreset } from '../../utils/datePresets'; // BUG-640 + CR-481 + BUG-723
 
 // BUG-640: fmtISO moved to shared utility
 const fmtINR = (n) => {
@@ -118,7 +118,7 @@ const SalesMockup = () => {
   const [toDate, setToDate] = useState(sharedTo);
   const [appliedFrom, setAppliedFrom] = useState(sharedFrom);
   const [appliedTo, setAppliedTo] = useState(sharedTo);
-  const [activePreset, setActivePreset] = useState('7D');
+  const [activePreset, setActivePreset] = useState(() => matchPreset(sharedFrom, sharedTo)); // BUG-723: match shared range, not hard-coded 7D
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -149,15 +149,15 @@ const SalesMockup = () => {
       const now = new Date();
       const lf = fmtISO(new Date(now.getFullYear(), now.getMonth() - 1, 1));
       const lt = fmtISO(new Date(now.getFullYear(), now.getMonth(), 0));
-      setFromDate(lf); setToDate(lt); setAppliedFrom(lf); setAppliedTo(lt); setActivePreset(p); // CR-422
+      setFromDate(lf); setToDate(lt); setAppliedFrom(lf); setAppliedTo(lt); setSharedFrom(lf); setSharedTo(lt); setActivePreset(p); // CR-422 + BUG-723
       return;
     }
     else if (p === '30D') f = new Date(t.getTime() - 29 * 86400000); // CR-481
     else if (p === 'MTD') { f = new Date(t.getFullYear(), t.getMonth(), 1); }
-    else if (p === 'FY') { const range = computePresetRange('FY'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setActivePreset(p); } return; } // CR-481
+    else if (p === 'FY') { const range = computePresetRange('FY'); if (range) { setFromDate(range.from); setToDate(range.to); setAppliedFrom(range.from); setAppliedTo(range.to); setSharedFrom(range.from); setSharedTo(range.to); setActivePreset(p); } return; } // CR-481 + BUG-723
     else return;
     const fd = fmtISO(f); const td = fmtISO(t);
-    setFromDate(fd); setToDate(td); setAppliedFrom(fd); setAppliedTo(td); setActivePreset(p);
+    setFromDate(fd); setToDate(td); setAppliedFrom(fd); setAppliedTo(td); setSharedFrom(fd); setSharedTo(td); setActivePreset(p); // BUG-723
   };
 
   // CR-049: Fetch from backend insights-sales endpoint (replaces FE aggregation)

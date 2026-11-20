@@ -41008,9 +41008,9 @@
       "client": "ALL",
       "source": "QA_REPORT_NOV_SPRINT_2026-11-19.md (QA-FOUND) | merged into main (renumbered from BUG-716) 2026-11-19",
       "intake_doc": "change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md",
-      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-20 — B4-PRESETS. Root cause code-verified: activePreset hard-coded (Sales L121 7D, Cancellations L206 7D, Dashboard L67 Today) instead of matchPreset(sharedFrom,sharedTo); matchPreset only in AuditLogMockup (BUG-697); handlePreset on all 3 omits setSharedFrom/To. Plan 4 files (E1 datePresets.js export matchPreset; E2-E4 the 3 screens: chip init + propagate shared in handlePreset) + 1 unit test. LOW risk, no backend, no owner decision. IA: impact/BUG-723_IMPACT_ANALYSIS.md; Plan: plans/BUG-723_IMPLEMENTATION_PLAN.md",
-      "gate": "GATE_3",
-      "current_gate": 3,
+      "status": "IMPLEMENTED 2026-11-20 (GATE_5A) — B4-PRESETS. E1 utils/datePresets.js export matchPreset; E2 SalesMockup (chip init + handlePreset propagate shared); E3 CancellationsMockup (same); E4 DashboardMockup (same). Unit test datePresets.matchPreset.test.js 6/6 PASS. AuditLogMockup untouched (B2). Markers // BUG-723.",
+      "gate": "GATE_5A",
+      "current_gate": 5,
       "blocked_on": "",
       "registered_date": "2026-11-19",
       "release_date": "2026-11-17",
@@ -41021,7 +41021,9 @@
       "duplicate_check": "RELATED BUG-697, BUG-704",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Sales/Cancellations/Dashboard preset chip hard-coded useState(7D)/Today (SalesMockup L121, CancellationsMockup L199); does not match the FY/LM range shared from Audit. matchPreset fix landed only in AuditLogMockup. SalesMockup FY branch (L157) also omits setSharedFrom/To. QA Group 1.",
       "severity": "P0",
-      "rebatch": "B4-PRESETS"
+      "rebatch": "B4-PRESETS",
+      "code_reality": "FULL",
+      "qa_gate_status": "PENDING_QA"
     },
     {
       "type": "BUG",
