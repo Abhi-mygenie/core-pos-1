@@ -106,7 +106,7 @@ const CancelDetailMockup = () => {
         { key: 'reason', label: 'Reason', format: 'text', align: 'left', width: 150 }, { key: 'cancelled_by', label: 'By', format: 'text', align: 'left', width: 100 },
         { key: 'order_id', label: 'Order', format: 'text', align: 'left', width: 80 }, { key: 'cancel_date', label: 'Date', format: 'text', align: 'left', width: 100 },
         { key: 'punchTime', label: 'Punch Time', format: 'text', align: 'left', width: 120 }, { key: 'cancellationDuration', label: 'Duration (min)', format: 'integer', align: 'right', width: 90 }, // CR-554
-      ], rows: analytics.items, totals: { name: 'TOTAL', qty: analytics.totalQty, amount: analytics.totalLoss } }] };
+      ], rows: analytics.items.map(r => ({ ...r, punchTime: r.punchTime ? new Date(r.punchTime).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }) : '' })) /* BUG-718 */, totals: { name: 'TOTAL', qty: analytics.totalQty, amount: analytics.totalLoss } }] };
   };
   const handleDownloadAction = (action) => { let pw = null; if (action === 'pdf') pw = openReportWindow(); setShowDownloadMenu(false); if (['email','whatsapp','sms'].includes(action)) return; try { const p = buildExportPayload(); if (!p) return; if (action === 'excel') exportReportAsExcel(p); else if (action === 'pdf') exportReportAsPDF(pw, p); } catch (e) { console.error(e); if (pw && !pw.closed) pw.close(); } };
 
@@ -119,7 +119,7 @@ const CancelDetailMockup = () => {
             <div className="flex items-center gap-4">
               <button className="p-2 hover:bg-zinc-100 rounded-lg" data-testid="s28-back-btn" onClick={() => navigate('/reports-module/cancellations')}><ArrowLeft className="w-5 h-5 text-zinc-600" /></button>
               <div><h1 className="text-2xl font-semibold tracking-tight text-zinc-950" style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}>Item Cancellation Detail</h1>
-                <p className="text-[11px] text-zinc-500 mt-0.5">Per-item cancellation breakdown · filterable by stage & reason{' · '}<button onClick={() => navigate('/reports-module/definitions')} className="text-emerald-700 hover:underline font-medium">ⓘ Definitions</button></p></div>
+                <p className="text-[11px] text-zinc-500 mt-0.5">Per-item cancellation breakdown · filterable by stage, scope, reason, staff & risk{' · '}<button onClick={() => navigate('/reports-module/definitions')} className="text-emerald-700 hover:underline font-medium">ⓘ Definitions</button></p></div>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <div className={`flex items-center gap-2 px-3 py-2 border ${draftDirty && draftValid ? 'border-[#F26B33]' : 'border-zinc-200'} bg-white rounded-lg`} data-testid="s28-daterange"><CalendarIcon className="w-4 h-4 text-zinc-500" /><label className="flex items-center gap-1.5 text-sm"><span className="text-xs text-zinc-400 uppercase">From</span><input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} disabled={isLoading} max={fmtISO(today)} className="bg-transparent border-0 outline-none text-sm font-medium text-zinc-800 cursor-pointer focus:ring-0 p-0" data-testid="s28-date-from" /></label><span className="text-zinc-300">—</span><label className="flex items-center gap-1.5 text-sm"><span className="text-xs text-zinc-400 uppercase">To</span><input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} disabled={isLoading} max={fmtISO(today)} className="bg-transparent border-0 outline-none text-sm font-medium text-zinc-800 cursor-pointer focus:ring-0 p-0" data-testid="s28-date-to" /></label></div>
@@ -141,7 +141,7 @@ const CancelDetailMockup = () => {
                   {/* Filters */}
                   <div className="flex gap-3 flex-wrap" data-testid="s28-filters">
                     <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-stage"><option value="">All Stages</option>{analytics.stages.map(s => <option key={s} value={s}>{s}</option>)}</select>
-                    <select value={scopeFilter} onChange={(e) => setScopeFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-scope"><option value="">All Scopes</option>{analytics.scopes.map(s => <option key={s} value={s}>{s === 'order' ? 'Full Order' : s === 'item' ? 'Item-Level' : s}</option>)}</select>
+                    <select value={scopeFilter} onChange={(e) => setScopeFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-scope"><option value="">All Scopes</option><option value="order">Full Order</option><option value="item">Item-Level</option>{/* BUG-717 */}</select>
                     <select value={reasonFilter} onChange={(e) => setReasonFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-reason"><option value="">All Reasons</option>{analytics.reasons.map(r => <option key={r} value={r}>{r}</option>)}</select>
                     <select value={cancelledByFilter} onChange={(e) => setCancelledByFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-cancelledby"><option value="">All Staff</option>{analytics.cancelledByList.map(c => <option key={c} value={c}>{c}</option>)}</select>
                     <select value={riskTierFilter} onChange={(e) => setRiskTierFilter(e.target.value)} className="px-3 py-2 border border-zinc-200 rounded-lg text-sm bg-white" data-testid="s28-filter-risk"><option value="">All Risk</option><option value="doubt">Doubt</option><option value="risk">Risk</option><option value="high_risk">High Risk</option></select>
@@ -160,15 +160,18 @@ const CancelDetailMockup = () => {
                     </tr></thead><tbody>
                       {analytics.items.slice(0, 200).map((item, i) => (
                         <tr key={i} className="border-t border-zinc-50 hover:bg-zinc-50/50" data-testid={`s28-row-${i}`}>
-                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600 font-mono">#{item.order_id}</div><div className="text-[11px] text-zinc-400 mt-0.5">{item.cancel_date} {item.cancel_time}</div></td>
+                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600 font-mono">#{item.order_id}</div><div className="text-[11px] text-zinc-400 mt-0.5">{item.cancel_date ? (isNaN(new Date(`${item.cancel_date}T${item.cancel_time || '00:00'}`).getTime()) ? `${item.cancel_date} ${item.cancel_time || ''}`.trim() : new Date(`${item.cancel_date}T${item.cancel_time || '00:00'}`).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })) : '—'}{/* BUG-717 */}</div></td>
                           <td className="px-5 py-2.5 align-top"><div className="text-sm font-medium text-zinc-800">{item.name}</div><div className="text-[11px] text-zinc-400 mt-0.5">× {item.qty}</div></td>
                           <td className="px-4 py-2.5 align-top text-xs text-zinc-500">{item.stage || '—'}</td>
                           <td className="px-4 py-2.5 align-top text-sm text-right text-red-600 font-medium">{fmtINR(item.amount)}</td>
                           <td className="px-4 py-2.5 align-top text-xs text-zinc-500 max-w-[180px] truncate" title={item.reason}>{item.reason || '—'}</td>
                           <td className="px-3 py-2.5 align-top text-xs text-zinc-500">{item.cancelled_by || '—'}</td>
-                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600">{item.punchTime ? new Date(item.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short' }) : '—'}</div><div className="flex items-center gap-2 mt-1"><span className="text-xs font-medium text-zinc-700">{item.cancellationDuration != null ? `${item.cancellationDuration} min` : '—'}</span><RiskBadge mins={item.cancellationDuration} /></div></td>
+                          <td className="px-4 py-2.5 align-top"><div className="text-xs text-zinc-600">{item.punchTime ? new Date(item.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short', timeZone: 'Asia/Kolkata' }) : '—'}{/* BUG-715 */}</div><div className="flex items-center gap-2 mt-1"><span className="text-xs font-medium text-zinc-700">{item.cancellationDuration != null ? `${item.cancellationDuration} min` : '—'}</span><RiskBadge mins={item.cancellationDuration} /></div></td>
                         </tr>
                       ))}
+                      {analytics.items.length === 0 && (
+                        <tr data-testid="s28-empty-row"><td colSpan={7} className="px-4 py-8 text-center text-zinc-400 text-sm">No cancellations match the current filter</td></tr>
+                      )}{/* BUG-716 */}
                     </tbody>
                     <tfoot className="bg-zinc-50 border-t-2 border-zinc-200"><tr>
                       <td colSpan={3} className="px-4 py-3 text-sm font-bold">TOTAL ({analytics.items.length} lines · {analytics.totalQty} qty)</td>

@@ -2475,3 +2475,6 @@ NOT touched: `DashboardPage.jsx` · `RestaurantSettingsPage.jsx` · `restaurantS
 | `src/contexts/OrderContext.jsx` | `orderItemsByTableId` whitelist (L348): add `isWebOrder: order.isWebOrder || false` (RC-2). marker `// CR-559` | CR-559 IMPL 2026-11-20 |
 
 NOT touched: `orderService.js`/`confirmOrder` · `toAPI.updateOrderStatus` · `printOrder` · `handleScanPrintKOT` · `printerAgentConfigTransform.js` · aggregator accept path · Place/Update builders · `ScanOrderPopOut.jsx`.
+
+| `src/pages/reports-module/CancellationsMockup.jsx` | Cluster B: BUG-714 clear `scopeFilter` on non-all scope tab (L662); BUG-715 punch time `timeZone:'Asia/Kolkata'` (L1015); BUG-729 Daily-Trend x-axis `tickFormatter` → "DD Mon" (L854). Markers `// BUG-714/715/729` | Cluster B IMPL 2026-11-20 |
+| `src/pages/reports-module/CancelDetailMockup.jsx` | Cluster B: BUG-715 punch TZ (L169); BUG-716 empty-state row (L173); BUG-717 subtitle (L122)/Order-date format (L163)/scope option order (L144); BUG-718 export punch time IST-formatted (L109). Markers `// BUG-715/716/717/718` | Cluster B IMPL 2026-11-20 |

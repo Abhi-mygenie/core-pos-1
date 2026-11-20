@@ -659,7 +659,7 @@ const CancellationsMockup = () => {
                     return (
                       <button
                         key={tab.id}
-                        onClick={() => setActiveScope(tab.id)}
+                        onClick={() => { /* BUG-714 */ setActiveScope(tab.id); if (tab.id !== 'all') setScopeFilter(''); }}
                         disabled={isLoading}
                         className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                           activeScope === tab.id
@@ -851,7 +851,7 @@ const CancellationsMockup = () => {
                       <ResponsiveContainer width="100%" height={240}>
                         <BarChart data={analytics.daily} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                          <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#a1a1aa' }} tickLine={false} axisLine={{ stroke: '#e4e4e7' }} tickFormatter={(v) => v.slice(0, 5)} />
+                          <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#a1a1aa' }} tickLine={false} axisLine={{ stroke: '#e4e4e7' }} tickFormatter={(v) => { /* BUG-729 */ const d = new Date(v + 'T12:00:00'); return isNaN(d.getTime()) ? v : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }); }} />
                           <YAxis tick={{ fontSize: 10, fill: '#a1a1aa' }} tickLine={false} axisLine={false} />
                           <ReTooltip content={<BarTooltip />} cursor={{ fill: 'rgba(239,68,68,0.04)', radius: 4 }} />
                           <Bar dataKey="orderCancels" stackId="cancels" fill="#EF4444" radius={0} animationDuration={800} />
@@ -1012,7 +1012,7 @@ const CancellationsMockup = () => {
                               </td>
                               {/* Timing & Risk — BUG-713 + CR-555 */}
                               <td className="px-4 py-3 align-top">
-                                <div className="text-sm text-zinc-600">{r.punchTime ? new Date(r.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short' }) : '—'}</div>
+                                <div className="text-sm text-zinc-600">{r.punchTime ? new Date(r.punchTime).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, day: '2-digit', month: 'short', timeZone: 'Asia/Kolkata' }) : '—'}</div>{/* BUG-715 */}
                                 <div className="flex items-center gap-2 mt-1">
                                   <span className="text-xs font-medium text-zinc-700">{r.cancellationDuration != null ? `${r.cancellationDuration} min` : '—'}</span>
                                   <RiskBadge mins={r.cancellationDuration} />
