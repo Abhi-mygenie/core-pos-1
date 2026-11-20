@@ -750,8 +750,8 @@ export default function OrderReportBetaPage() {
                               {/* CR-349: action buttons — Change / Unpaid / Reprint / Refund */}
                               <td className="px-3 py-2">
                                 <div className="flex items-center justify-end gap-1 flex-wrap">
-                                  {/* Change — settled non-PG, within mutation window · CR-515: gated by update_payment */}
-                                  {hasPermission('update_payment') && row.f_order_status === 6 && !row.razorpay_order_id && (
+                                  {/* Change — settled non-PG, within mutation window · CR-515: gated by update_payment · BUG-735: hidden on split/partial rows (Change Method is Phase 2, matches OD-671-A + Audit OrderTable) */}
+                                  {hasPermission('update_payment') && row.f_order_status === 6 && !row.razorpay_order_id && (row.payment_method_raw || '').toLowerCase() !== 'partial' && (
                                     <PaymentMethodPicker
                                       order={{ id: row.order_id }}
                                       currentMethod={(row.payment_method_raw || row.payment_method || '').toLowerCase()}
