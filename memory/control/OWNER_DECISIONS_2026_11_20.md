@@ -28,3 +28,16 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 
 **Status:** CR-559 = GATE_2_IA_COMPLETE. **Gate-3 Implementation Plan must be REVISED** to (a) add the
 `scanOrderAutoPrint` gate on the Accept path and (b) add the profileTransform exposure sub-task — before Gate-4 build.
+
+---
+
+## CR-559 — OD-5 (2026-11-20): Scan-Order Auto-print flag SOURCE (PROBE-1 result)
+**Probe (live, owner@thegoankitchen.com):**
+- `GET /api/v1/vendoremployee/profile` → `scan_order_auto_print` **ABSENT** (no `auto_printing`, no `settings_config`). Evidence: `evidence/CR-559/profile_response.json`.
+- `GET /api/v2/vendoremployee/restaurant-settings/printer-agent-config` → `settings_config.auto_printing.scan_order_auto_print = "Yes"` (present). Evidence: `evidence/CR-559/printer_agent_config_response.json`.
+
+**Decision needed before Gate-4 build:**
+- **Option A (recommended):** backend surfaces `scan_order_auto_print` at `restaurants[0]` root of the profile payload (parity with `print_kot`/`billing_auto_bill_print`); frontend maps it one line in `profileTransform`. Needs BACKEND_BRIEF_CR-559.
+- **Option B (no-backend fallback):** frontend calls `printer-agent-config` once at load and merges `scanOrderAutoPrint` into `restaurant.settings`.
+
+**Status:** CR-559 Gate-3 plan REVISED v2 at `plans/CR-559_IMPLEMENTATION_PLAN.md`. Blocked on OD-5 only.
