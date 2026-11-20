@@ -1,3 +1,6 @@
+**Last Updated:** 2026-11-20 — **Registry reconcile: Cluster B (BUG-714/715/716/717/718/729) was STALE** (gate=GATE_4 while status already said IMPLEMENTED). Verified all 6 fixes present in code (`CancellationsMockup.jsx` BUG-714 scope-reset L662 / BUG-729 x-axis L854 / BUG-715 punch-tz L1015; `CancelDetailMockup.jsx` BUG-715 L169 / BUG-716 empty-row L173 / BUG-717 L122,144,163 / BUG-718 export L109) → advanced to **GATE_5A_IMPLEMENTED**. Awaiting QA. No code changed (registry correction only).
+
+
 **Last Updated:** 2026-11-20 — **IMPLEMENTATION Cluster C: BUG-724/725/726/727/737 SHIPPED (GATE_5A_IMPLEMENTED), webpack clean.** BUG-724 fetch sequence-guard + no "0 orders" flash; BUG-725 UPI/Card/Room/Merged labels + Title-Case fallback; BUG-726 cancelled-row cell-count fixed (reason folded into Status cell); BUG-727 `<tr>` whitespace node removed; BUG-737 CR-003 console diagnostic deleted. BUG-728 still PARKED. Authenticated browser QA pending (preprod creds in test_credentials.md). Handover: `handover/QA_HANDOVER_CLUSTER_C_2026-11-20.md`.
 
 
