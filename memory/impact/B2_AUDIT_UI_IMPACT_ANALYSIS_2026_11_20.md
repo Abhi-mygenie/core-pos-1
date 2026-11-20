@@ -96,6 +96,9 @@ Both are 1-line FE once decided. → **OD-739.**
 
 ## Owner Decision Queue (BLOCK Gate-4 for the blocked parts)
 
+> **RESOLVED 2026-11-20** (record: `control/OWNER_DECISIONS_B2_2026_11_20.md`): **OD-739 = RECOUNT** (true event count, label stays "Total Events") → P2 unblocked. **OD-730 = YES** (add Risk-tier badge + Duration col + time-order) → approved but BACKEND-BLOCKED; brief filed `backend_briefs/BACKEND_BRIEF_BUG-730_2026-11-20.md`. OD-739-b = default (user email).
+
+
 | # | Item | Decision needed | Recommendation |
 |---|---|---|---|
 | **OD-730** | BUG-730 | Drill-down columns: add a true per-row **Risk tier** badge and a **Duration** column? Reorder multi-day rows by time? (Requires backend to send per-event `risk_level`+`duration_minutes`.) | Add Risk-tier badge + Duration col + time-order; raise backend brief |

@@ -61,9 +61,9 @@ File: `AuditLogMockup.jsx`, `buildExportPayload` (~L280-281).
 
 ---
 
-## P2 — OD-739-gated (1-line, after owner decides)
+## P2 — OD-739 RESOLVED = RECOUNT (2026-11-20) → READY FOR GO
 
-### E4 · BUG-739(a) — Total Events semantic
+### E4 · BUG-739(a) — Total Events semantic — use RECOUNT branch
 File: `AuditLogMockup.jsx`, analytics return (L269).
 - **IF OD-739 = RECOUNT (recommended):**
   ```js
@@ -71,11 +71,11 @@ File: `AuditLogMockup.jsx`, analytics return (L269).
   ```
   (KpiCard label "Total Events" at L362 stays.)
 - **IF OD-739 = RELABEL:** keep `totalEvents: uniqueOrderIds.size`; change KpiCard label L362 `"Total Events"` → `"Orders Flagged"`.
-- Do NOT implement until OD-739 is answered (R3 — no business-rule guessing).
+- OD-739 ANSWERED = RECOUNT → implement the RECOUNT branch. Label "Total Events" stays.
 
 ---
 
-## P3 — OD-730 + BACKEND-gated (do not start until payload carries per-event fields)
+## P3 — OD-730 RESOLVED = YES (2026-11-20); still BACKEND-gated (do not start until payload carries per-event fields)
 
 **Precondition:** backend adds `risk_level` + `duration_minutes` (or `created_at`+`cancel_time_full`) to each `audits.orders[]` late-cancel event (BACKEND BRIEF below). Verified live 2026-11-20: these fields are ABSENT today.
 
