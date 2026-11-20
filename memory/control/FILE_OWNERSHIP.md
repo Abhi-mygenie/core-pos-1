@@ -1,3 +1,6 @@
+| `frontend/src/components/dashboard/ScanOrderPopOut.jsx` | BUG-731 IMPL 2026-11-20: added `visibleItems` (`!isCheckInMarker`) source + routed list/count/KOT-selection through it; added `scan-order-popout-item-count` test-id. Presentation+selection only; no payload value change (marker already price-0). | BUG-731 IMPL 2026-11-20 |
+| `frontend/src/__tests__/components/dashboard/BUG731_CheckInMarker.test.jsx` | **NEW** — asserts marker hidden / uncounted / un-KOT-selectable + regression. | BUG-731 IMPL 2026-11-20 |
+
 ## FILE_OWNERSHIP — CR-557 IMPL (2026-11-19) — markers `// CR-557`
 | File | Change | Owner |
 |------|--------|-------|

@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only check of the BUG-731 fix (Check In marker hidden in ScanOrderPopOut), run against the live preprod backend as Owner@thegoankitchen.com. LOGIN: PASS (dashboard loads, 0 console errors). On the live account, no order has f_order_status=7 or food_status=7 lines, so I simulated those states with read-only page.route interception of employee-orders-list. Order 1578953 (t2) has a real 'check in' line (3969772); order 1578881 (room a1) also has real ones. Nothing was written to the backend, and Accept, cancel-confirm and KOT print were never clicked. MODE A (t1 with an injected 'check in' line, confirmed present in the intercepted JSON: 9 lines): 8 rows rendered, no 'check in' text anywhere in the panel, 8 KOT checkboxes and 8 cancel X, item-count '8 items', 'Deselect all (8)', KOT (8). Toggling select-all leaves KOT disabled. PASS. MODE B (t2: the real 'check in' line set to food_status=7 so it falls in new items, plus an injected 'check in' line in previously-ordered): new items show 2 (melo fish APS + moo duudh) with no marker. 'Previously ordered items (22)' has no marker. Count is '24 items' (26 lines minus 2 markers), Select all (2), KOT (2). Select-all toggles 2 to 0 to 2. PASS. KOT payload: the marker is never selectable and the button is disabled at 0, so kotSelectedItems and the rawOrderDetails filter cannot include it. Checked by code reading plus the badge counts; no print was triggered. REGRESSION (t1 Mode A, no marker, with the CR-557 changes): APS badge plus 'Price TBD' on row 0, cancelled row 1 struck through with no KOT checkbox and no cancel X, variation prices shown (poil +10, Hot +15, Extra Cheese +20), add-on '+ TEST_Dip (+₹25.00)', note shown, Select all (7) / KOT (7). Unchecking one gives KOT (6) and the label 'Select all (7)'. Re-select gives 7. Deselect gives KOT disabled. PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/tests/bug731_checkin_marker_intercept.py"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "DashboardPage.handleScanPrintKOT L1750: when selectedItems is empty it falls back to order.items, which still contains the isCheckInMarker line. This path is unreachable from the popout today because the KOT button is disabled at 0 selections. For defence in depth, consider filtering !isCheckInMarker in that fallback too.",
+    "This was already the case before the fix and is not a regression: the item-count label includes cancelled (food_status=3) lines ('8 items' while 1 is cancelled). Decide whether that is intended.",
+    "The normal-mode Select-all filter expression is repeated 4 times inline (ScanOrderPopOut L599-630). Extract a 'kotSelectable' const."
+  ],
+  "updated_files": ["/app/tests/bug731_checkin_marker_intercept.py"],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100% (5/5 cases, using simulated order states)"},
+  "test_credentials": "Owner@thegoankitchen.com / Qplazm@10 (from /app/memory/test_credentials.md) - works",
+  "seed_data_creation": "None. Only client-side response interception was used; no backend writes.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Use /app/tests/bug731_checkin_marker_intercept.py: exec it with globals {'MODE': 'A'|'B'|'REG'} and register patch_orders on page.route('**/employee-orders-list**'). Mode A = 1578942 set to f_order_status=7 plus an injected 'check in' line. Mode B = 1578953 with lines 3969772 (real 'check in'), 3969786 and 3969787 set to food_status=7, plus an injected 'check in' line in previously-ordered. REG = CR-557 rich rows on 1578942 with no marker. Never click Accept, cancel-confirm or popout-print-kot-* on intercepted data. Dismiss the 'New version available' toast if it gets in the way (it did not block anything here)."
+}
