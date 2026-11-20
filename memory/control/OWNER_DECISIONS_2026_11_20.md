@@ -61,3 +61,19 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 - **Constraints:** historical rows return `null` (no backfill) → UI shows `—`; **production** requires the migration `2026_11_20_000001_add_diner_snapshot...` deployed to `manage.mygenie.online` before fields appear live.
 - **FE plan (2 files):** `plans/CR-527_IMPLEMENTATION_PLAN.md` — map fields (E1/E2), Diner column (E3/E4), diner filter OD-527-C (E5). Awaiting Gate-4 GO.
 - **SEPARATE OPEN ITEM (not CR-527):** prepaid amount discrepancy observed on preprod — restaurant **672**, order **1578984** (bill 000823): placement ₹127 but order **saved & credited ₹132.71**; postpaid order 1578985 correct at ₹127. Money-correctness issue → needs its own P1 bug intake.
+
+---
+
+## P0 UNBLOCK SEQUENCE — BUG-711 → BUG-671 → BUG-733 (2026-11-20) — STATUS: PROPOSED (awaiting owner approval)
+**Decision:** before Cluster C, clear the two P0s + the shared-file blocker. Next agent verifies the findings, then works in this exact order once approved. Handover: `handover/SESSION_HANDOVER_2026-11-20_P0_UNBLOCK_SEQUENCE.md`.
+
+**Verified findings (re-confirm at Step 0):**
+- **BUG-711 (P0/CRITICAL)** — visible Reprint is ALREADY gated (`OrderReportBetaPage.jsx:780`). Real remaining gap = Collect-drawer print path (`handlePrintBillFromBeta` L423 → `CollectBillPanelDrawer` L929, no `print_icon` check) = CR-553. → verify + likely 1-line gate.
+- **BUG-733 (P3)** — native `type="date"` exists in **~65 files**, not just Credit + Order Beta. Blanket swap = cross-cutting refactor. → build ONE reusable `<DateRangePicker>`, migrate ONLY the 2 flagged screens now.
+- **BUG-671 (P0/HIGH)** — financial, Fast-Lane ineligible, needs a **backend answer** (can a partial/split order be reversed-to-unpaid; effect on the paid leg?). Longest lead time → start first/in parallel.
+
+**Order:** (1) BUG-711 quick P0 win → (2) BUG-671 Gate-2 IA + backend brief in parallel → (3) BUG-733 shared picker + 2 screens. Then BUG-735 becomes a trivial split-row gating tweak, and Cluster C ships as the clean FE batch; Cluster G references the new picker.
+
+**OD-P0-1 (BUG-733 scope) — PENDING:** (a) shared picker + migrate ONLY Credit + Order Beta now [RECOMMENDED]; or (b) full ~65-screen rollout [separate large effort].
+**OD-P0-2 (BUG-671 backend) — PENDING:** confirm partial/split order → unpaid is supported server-side and the expected effect on the already-paid leg. FE cannot finish without this.
+**Shared-file lock:** `OrderReportBetaPage.jsx` is touched by BUG-711/671/733/735 + all of Cluster C → one owner-session/PR at a time (line-ranges are disjoint).
