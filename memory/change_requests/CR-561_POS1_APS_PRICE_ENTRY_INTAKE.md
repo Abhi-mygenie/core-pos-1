@@ -16,9 +16,9 @@ A cashier must be able to enter the price of an **APS item** (catalog unit price
 ## Recommendation
 Reuse the existing `dynamicPriceItem` "Enter Price" model for APS rows in the Accept pop-up and/or Order-Entry edit view.
 
-## Owner decisions (for Planning Gate 2)
-- **OD-561-A** — where is the price entered: in the pop-up **before Accept**, or forced in **Order-Entry edit**, or both?
-- **OD-561-B** — may an **unpriced** APS item be accepted at all (block Accept vs allow ₹1 placeholder)?
+## Owner decisions — LOCKED 2026-11-20
+- **OD-561-A** — LOCKED: **Both places** — price can be entered from the Accept pop-up (before Accept) **and** from the Order-Entry edit view.
+- **OD-561-B** — LOCKED: **Allow accepting an unpriced APS item** with the ₹1 placeholder; price can be entered later (do NOT block Accept).
 
 ## Blast radius
 MEDIUM — `ScanOrderPopOut.jsx`, `PopoutItemRow.jsx`, `OrderEntry.jsx` (+ confirm no double-charge on existing dynamic-price path).

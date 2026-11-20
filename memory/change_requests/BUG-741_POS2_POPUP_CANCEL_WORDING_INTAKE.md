@@ -16,8 +16,8 @@ The pop-up has **two** cancel affordances:
 ## Recommendation
 UX/wording clarification only (no backend): make the per-item modal clearly read as a single-item action and make the order-level "Reject/Cancel order" affordance distinct.
 
-## Owner decision
-Keep **per-item cancel + clearer wording**, or make the pop-up cancel **order-wise**?
+## Owner decision — LOCKED 2026-11-20
+**Keep per-item cancel + clearer wording.** The per-item ✕ stays item-level (CancelFoodModal, per CR-545); only the labels/affordances change so it reads clearly as a single-item action, distinct from the order-level "Reject/Cancel order" button. No behaviour change, no backend.
 
 ## Blast radius
 LOW–MEDIUM — `ScanOrderPopOut.jsx`, `CancelFoodModal.jsx`, `CancelOrderModal.jsx` (labels/affordances only).

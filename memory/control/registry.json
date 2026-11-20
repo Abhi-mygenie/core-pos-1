@@ -41531,10 +41531,10 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_1_INTAKE 2026-11-20 \u2014 POS-1: APS \u20b91 price not enterable from Accept pop-up / web-order edit. dynamicPriceItem model only wired to fresh \u20b91 taps in Order Entry; pop-up row read-only 'Price TBD'. Reuse model. Needs OD-561-A/B.",
+      "status": "GATE_1_INTAKE COMPLETE \u2014 OD LOCKED 2026-11-20. OD-561-A=Both places (Accept pop-up + Order-Entry edit); OD-561-B=Allow accepting with \u20b91 placeholder, price later. Reuse dynamicPriceItem model. \u2192 Planning Gate 2.",
       "gate": "GATE_1",
       "current_gate": 1,
-      "blocked_on": "Owner OD-561-A (price-entry location) + OD-561-B (allow accepting unpriced APS)",
+      "blocked_on": "",
       "registered_date": "2026-11-20",
       "release_date": "",
       "id": "CR-561",
@@ -41544,7 +41544,11 @@
       "duplicate_check": "RELATED CR-545 (isAps); DISTINCT from POS-4 KOT",
       "notes": "FE_GAP. Files: ScanOrderPopOut.jsx, PopoutItemRow.jsx:116-118, OrderEntry.jsx:850/880-928/3038-3101.",
       "severity": "HIGH",
-      "rebatch": ""
+      "rebatch": "",
+      "open_decisions": [
+        "OD-561-A: LOCKED \u2014 Both places (Accept pop-up + Order-Entry edit)",
+        "OD-561-B: LOCKED \u2014 Allow accepting unpriced (\u20b91 placeholder), price later"
+      ]
     },
     {
       "type": "BUG",
@@ -41554,10 +41558,10 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 2)",
       "intake_doc": "change_requests/BUG-741_POS2_POPUP_CANCEL_WORDING_INTAKE.md",
-      "status": "GATE_1_INTAKE 2026-11-20 \u2014 POS-2: pop-up per-item \u2715 opens item-level CancelFoodModal (reads like order cancel); order-level cancel is the separate 'Reject' button. Wording/UX only, no backend. Needs owner decision.",
+      "status": "GATE_1_INTAKE COMPLETE \u2014 OWNER DECISION LOCKED 2026-11-20: keep per-item cancel + clearer wording (distinct from order-level Reject). Wording/UX only, no backend. \u2192 Planning/implement.",
       "gate": "GATE_1",
       "current_gate": 1,
-      "blocked_on": "Owner decision: keep per-item cancel + clearer wording vs order-wise cancel",
+      "blocked_on": "",
       "registered_date": "2026-11-20",
       "release_date": "",
       "id": "BUG-741",
@@ -41567,7 +41571,10 @@
       "duplicate_check": "none",
       "notes": "FE_UX. Files: ScanOrderPopOut.jsx:571/653/746/750, CancelFoodModal.jsx:72/237-239/262, CancelOrderModal.jsx.",
       "severity": "MEDIUM",
-      "rebatch": ""
+      "rebatch": "",
+      "open_decisions": [
+        "POS-2: LOCKED \u2014 keep per-item cancel, clarify wording only"
+      ]
     }
   ],
   "meta": {
