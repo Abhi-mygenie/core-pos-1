@@ -34,3 +34,15 @@ Owner decision: **do NOT push to remote** for now. All updates kept local only.
 - **OD-557-03 = Keep old labels** — shared row accepts a test-id prefix prop so Mode B new-item rows keep emitting `popout-new-item-${idx}`; existing tests (`ScanOrderPopOut.test.jsx`, `CR547_SelectiveKOT.test.jsx`) stay green, no migration.
 
 **Status:** All ODs resolved. Ready for Gate 3 (Implementation Plan). Dependents CR-558 / BUG-679-ModeB / BUG-702-ModeB run AFTER CR-557.
+
+---
+
+## CR-558 + Mode-B reopens (BUG-679/702/CR-545) — Gate 2 cluster IA + probe (2026-11-19)
+**IA:** `impact/CR-558_BUG679_702_CR545_MODEB_IA_2026_11_19.md`
+
+- **BUG-679 / BUG-702 / CR-545 (Mode B) = RESOLVED BY CR-557.** The shared `<PopoutItemRow>` now gives Mode-B lists the cancelled styling, variation/option prices, and APS/Price-TBD. No further code — **verify-only** on a live web-edit order, then close as resolved-by-CR-557.
+- **CR-558 = Option B** (owner, confirmed). Per-item cancel + reject-all already exist; the old "Reject uses items[0] only" note is STALE (CR-552 loops all).
+- **OD-558-01 = YES (preprod probe, order 1578881).** Order-level confirm (`waiter-dinein-order-status-update`, `order_status=cooking`) flipped all appended `food_status 7→1`. So the existing **Accept** already confirms the remaining non-cancelled appended items → **no backend needed, near-zero FE.** Evidence: `evidence/CR-558/CONFIRM_PROBE_2026_11_19.md`.
+- **OD-558-02 (OPEN, minor UX):** in edit mode, show a "N item(s) confirmed" toast and/or relabel Accept → "Accept remaining"? Recommend yes (small). Does NOT block — CR-558 already functions.
+
+**Status:** CR-558 functionally works today via existing controls. Remaining = optional OD-558-02 polish + live QA. BUG-679/702/CR-545 Mode-B = live QA only.
