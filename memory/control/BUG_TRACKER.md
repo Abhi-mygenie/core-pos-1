@@ -1,3 +1,6 @@
+**CURRENT 2026-11-19 — CR-558 confirm probe DONE (OD-558-01=YES).** Preprod order 1578881: order-level confirm (`waiter-dinein-order-status-update`, `order_status=cooking`) flipped all 4 appended `food_status 7→1`. CR-558 **Option B works with the existing Accept — no backend needed, near-zero FE** (only optional OD-558-02 "N items confirmed" toast). Evidence `evidence/CR-558/CONFIRM_PROBE_2026_11_19.md`.
+
+
 **CURRENT 2026-11-19 — PLANNING Gate 2 cluster IA (CR-558 + Mode-B reopens).** BUG-679 & BUG-702 Mode-B gaps are **RESOLVED BY CR-557** (shared `<PopoutItemRow>` now renders cancelled styling, variation/option prices, and APS/Price-TBD in both Mode-B lists) → `GATE_2_IA_COMPLETE`, verify-only (no further code), QA on a live web-edit order. CR-545 Mode-B gap likewise covered. **CR-558** owner-chosen **Option B** (cancel unwanted → Accept-all): per-item cancel + reject-all already exist; "items[0] only" note is STALE (CR-552 loops all). OPEN **OD-558-01**: does order-level `confirmOrder` flip appended `food_status=7` lines on a status-2 order? → probe needed (shares CR-552 OD-552-01 backend dep). IA: `impact/CR-558_BUG679_702_CR545_MODEB_IA_2026_11_19.md`. No app code changed.
 
 
