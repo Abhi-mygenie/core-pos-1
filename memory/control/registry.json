@@ -38437,7 +38437,7 @@
       "id": "CR-527",
       "type": "CR",
       "title": "Credit Management: Filter Orders by Same Phone Number with Different Names",
-      "status": "GATE_2.5_DESIGN_APPROVED 2026-11-15 (Batch B; Gate 2 IA closed; mockup M4, M4b (chips 2-5 / dropdown 6+) approved). Next: Gate 3 plan. Backend brief BACKEND_BRIEF_BATCH-B_2026_11_15.",
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-20 — backend BB-09 delivered & validated (diner_name/diner_mobile on tap-customer-record-list credit rows; plain text, no CRM link; historical null; preprod rest 672). 2-file additive FE plan: E1 creditTransform.creditEntryFromAPI map dinerName/dinerMobile; E2 CreditCustomerDetailSheet local mapper mirror; E3 CreditRow new Diner cell (— when null or == holder); E4 bucket headers +Diner th; E5 diner filter OD-527-C (0-1 none / 2-5 chips / 6+ searchable dropdown). +1 unit test. Prod needs migration deploy. SEPARATE open bug: prepaid amount discrepancy rest 672 order 1578984 (placed 127 -> saved/credited 132.71). Plan: plans/CR-527_IMPLEMENTATION_PLAN.md. Handoff: backend_replies/CR-527_BB-09_FRONTEND_HANDOFF_2026-11-20.md",
       "priority": "P0",
       "severity": "P2",
       "risk": "MEDIUM",
@@ -38446,7 +38446,7 @@
       "fast_lane": "NOT eligible",
       "intake_doc": "change_requests/22_CR-527_CREDIT_FILTER_SAME_PHONE_DIFF_NAME_INTAKE.md",
       "notes": "[2026-11-15 Gate 2 IA closed] see impact/CR-527_IMPACT_ANALYSIS.md || [2026-11-14 owner decisions] Details at impact. || Credit list filter: same phone number showing different names. Display/filter only, no payment logic. | API contract FINAL v1 2026-11-15: contracts/BATCH-B_CR-527_API_CONTRACT_2026_11_15.md",
-      "gate": "GATE_1",
+      "gate": "GATE_3",
       "current_gate": 1,
       "registered": "2026-11-12",
       "assignee": "Abhishek",
@@ -41436,6 +41436,35 @@
       "release_date": "2026-11-17",
       "code_reality": "NONE (this branch)",
       "impl_plan_doc": "plans/CR-559_IMPLEMENTATION_PLAN.md"
+    },
+    {
+      "id": "BUG-740",
+      "type": "bug",
+      "title": "Prepaid placement saves/credits higher amount than submitted (₹127 → ₹132.71)",
+      "priority": "P0",
+      "severity": "P0",
+      "risk": "CRITICAL",
+      "status": "GATE_1_INTAKE_COMPLETE 2026-11-20 — prepaid order saved/credited ₹132.71 vs submitted ₹127 (postpaid correct). Preprod rest 672 order 1578984 bill 000823. DISTINCT from BUG-666/684. Suspected service-charge/tax added to saved amount; FE-vs-backend TBD. Intake: change_requests/BUG-740_PREPAID_AMOUNT_DISCREPANCY_INTAKE.md. Next: Gate 2 INVESTIGATION.",
+      "gate": "GATE_1",
+      "current_gate": "GATE_1",
+      "sprint_key": "nov_cr_batch",
+      "area": "Payments / Coupons / Credit",
+      "client": "ALL",
+      "assignee": "Gyan",
+      "source": "AGENT-DISCOVERED (CR-527/BB-09 backend handoff verification)",
+      "intake_doc": "change_requests/BUG-740_PREPAID_AMOUNT_DISCREPANCY_INTAKE.md",
+      "ia_doc": null,
+      "duplicate_check": "DISTINCT (relates CR-527/BB-09, CR-483; not BUG-666/684)",
+      "blocked_on": null,
+      "relates_to": [
+        "CR-527",
+        "CR-483"
+      ],
+      "notes": "Repro: rest 672, order 1578984 (prepaid) saved/credited 132.71 vs placed 127; control order 1578985 (postpaid) correct. OD-740-01/02/03 open.",
+      "registered_date": "2026-11-20",
+      "release_date": null,
+      "code_reality": "NEEDS INVESTIGATION (orderTransform.placeOrder / received_amount CR-483)",
+      "impl_plan_doc": null
     }
   ],
   "meta": {
