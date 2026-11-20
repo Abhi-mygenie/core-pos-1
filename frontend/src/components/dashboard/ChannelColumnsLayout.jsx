@@ -72,6 +72,7 @@ const ChannelColumnsLayout = ({
   // CR-106: Aggregator handlers
   onAggregatorReady,
   onAggregatorDispatch,
+  onAggregatorView, // BUG-703: forward read-only aggregator view to ChannelColumn
   // BUG-372: Shift/Merge table handlers
   onTableShift,
   onMergeOrder,
@@ -212,6 +213,7 @@ const ChannelColumnsLayout = ({
           onFoodTransfer={onFoodTransfer}
           onAggregatorReady={onAggregatorReady}
           onAggregatorDispatch={onAggregatorDispatch}
+          onAggregatorView={onAggregatorView}
           onTableShift={onTableShift}
           onMergeOrder={onMergeOrder}
           hasPermission={hasPermission}

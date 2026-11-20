@@ -2333,6 +2333,7 @@ export const customItemFromAPI = (data, qty, notes) => ({
   status:       'preparing',
   placed:       false,
   isCustomItem: true,
+  station:      data.station_name || null, // BUG-742: route custom-item KOT to backend-resolved station (category→station)
   addedAt:      new Date().toISOString(),
 });
 

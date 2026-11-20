@@ -50,6 +50,7 @@ const ChannelColumn = ({
   // CR-106: Aggregator handlers
   onAggregatorReady,
   onAggregatorDispatch,
+  onAggregatorView, // BUG-703: thread read-only aggregator view down to TableCard
   // BUG-372: Shift/Merge table handlers
   onTableShift,
   onMergeOrder,
@@ -335,6 +336,7 @@ const ChannelColumn = ({
                           isEngaged={isOrderEngaged?.(item.orderId) || isTableEngaged?.(item.tableId)}
                           onAggregatorReady={onAggregatorReady}
                           onAggregatorDispatch={onAggregatorDispatch}
+                          onAggregatorView={onAggregatorView}
                           kbdEnabled={kbdEnabled} kbdHighlight={kbdHighlightId === item.id}
                         />
                       );

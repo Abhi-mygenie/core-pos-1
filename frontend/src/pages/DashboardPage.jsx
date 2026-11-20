@@ -2074,6 +2074,7 @@ const DashboardPage = () => {
                 onFoodTransfer={handleFoodTransfer}
                 onAggregatorReady={handleAggregatorReady}              
                 onAggregatorDispatch={(order) => setAggregatorDispatchOrder(order)} 
+                onAggregatorView={handleAggregatorView} /* BUG-703: open accepted aggregator tile in channel/table layout */
                 onTableShift={(o) => { // BUG-372 Transfer: wire for ChannelColumnsLayout
                   const tableEntry = allTablesList?.find(t => t.orderId === o.orderId);
                   if (tableEntry) { setInitialShowShift(true); handleTableClick(tableEntry); }
