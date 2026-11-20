@@ -41562,7 +41562,7 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 2)",
       "intake_doc": "change_requests/BUG-741_POS2_POPUP_CANCEL_WORDING_INTAKE.md",
-      "status": "GATE_3_PLAN READY 2026-11-20 — wording-only (CancelFoodModal title/button + PopoutItemRow label). Keep per-item behaviour. Implement before CR-561. Track 2.",
+      "status": "GATE_5A_IMPLEMENTED 2026-11-20 (Track 2) — CancelFoodModal title now \"Cancel item: {name}\" (unmistakably single-item). Confirm button already \"Cancel Item\", PopoutItemRow title already \"Cancel this item\", order-level Reject already distinct — plan edits 2/3 pre-satisfied. Wording-only, webpack clean.",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",

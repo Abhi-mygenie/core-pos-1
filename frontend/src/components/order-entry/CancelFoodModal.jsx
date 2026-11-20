@@ -64,12 +64,13 @@ const CancelFoodModal = ({ item, reasons = [], onClose, onCancel, cancelNoteMand
         <div className="p-5 border-b" style={{ borderColor: COLORS.borderGray }}>
           <div className="flex items-center justify-between">
             <div>
+              {/* BUG-741: wording made unmistakably single-item (per-item cancel; CR-545 behaviour unchanged) */}
               <h2
                 className="text-xl font-bold"
                 style={{ color: COLORS.darkText }}
                 data-testid="cancel-modal-title"
               >
-                Cancel {item?.name}
+                Cancel item: {item?.name}
               </h2>
               <p className="text-sm mt-1" style={{ color: COLORS.grayText }}>
                 Select cancellation details
