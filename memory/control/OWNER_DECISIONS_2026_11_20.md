@@ -52,3 +52,12 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 - **OD-5 = Option A:** backend adds `scan_order_auto_print` at profile `restaurants[0]` root (brief: `backend_briefs/BACKEND_BRIEF_CR-559_2026-11-20.md`).
 - **Mechanism:** Accept reuses the manual-KOT process (`printOrder('kot', ...)` → order-temp-store + update-print-status `kot_print:'Yes'`). Prior "no printOrder after accept" rule reversed (safe: backend auto-print suppressed + web-only + gated).
 - **GATE-3 GO** given by owner. **Implementation deferred** until PRE-IMPL VALIDATION (profile probe shows `scan_order_auto_print`) passes. Plan: `plans/CR-559_IMPLEMENTATION_PLAN.md` (FINAL v3).
+
+---
+
+## CR-527 / BB-09 — Backend delivered + Gate-3 GO path (2026-11-20)
+- **Backend handoff validated** (`backend_replies/CR-527_BB-09_FRONTEND_HANDOFF_2026-11-20.md`): `GET /api/v2/vendoremployee/pos/tap-customer-record-list` credit rows now return `diner_name` + `diner_mobile` (LOCKED contract names honoured).
+- **OD-B-BB09 resolved:** `diner_mobile` is stored **plain text only** — NO customer creation, NO CRM link/sync side-effect. Owner's "diner mobile becomes a customer" concern does not occur.
+- **Constraints:** historical rows return `null` (no backfill) → UI shows `—`; **production** requires the migration `2026_11_20_000001_add_diner_snapshot...` deployed to `manage.mygenie.online` before fields appear live.
+- **FE plan (2 files):** `plans/CR-527_IMPLEMENTATION_PLAN.md` — map fields (E1/E2), Diner column (E3/E4), diner filter OD-527-C (E5). Awaiting Gate-4 GO.
+- **SEPARATE OPEN ITEM (not CR-527):** prepaid amount discrepancy observed on preprod — restaurant **672**, order **1578984** (bill 000823): placement ₹127 but order **saved & credited ₹132.71**; postpaid order 1578985 correct at ₹127. Money-correctness issue → needs its own P1 bug intake.
