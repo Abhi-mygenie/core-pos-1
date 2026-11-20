@@ -104,6 +104,8 @@ const creditEntryFromAPI = (raw) => ({
   createdAt: raw?.created_at || null,
   orderCreatedAt: raw?.order_created_at || null,
   hasOrderDetail: Number(raw?.order_id) > 0,
+  dinerName: raw?.diner_name ?? null,     // CR-527/BB-09
+  dinerMobile: raw?.diner_mobile ?? null, // CR-527/BB-09
 });
 
 /**

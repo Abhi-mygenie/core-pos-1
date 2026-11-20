@@ -2524,3 +2524,7 @@ NOT touched: `orderService.js`/`confirmOrder` · `toAPI.updateOrderStatus` · `p
 
 | `src/pages/reports-module/CancellationsMockup.jsx` | Cluster B: BUG-714 clear `scopeFilter` on non-all scope tab (L662); BUG-715 punch time `timeZone:'Asia/Kolkata'` (L1015); BUG-729 Daily-Trend x-axis `tickFormatter` → "DD Mon" (L854). Markers `// BUG-714/715/729` | Cluster B IMPL 2026-11-20 |
 | `src/pages/reports-module/CancelDetailMockup.jsx` | Cluster B: BUG-715 punch TZ (L169); BUG-716 empty-state row (L173); BUG-717 subtitle (L122)/Order-date format (L163)/scope option order (L144); BUG-718 export punch time IST-formatted (L109). Markers `// BUG-715/716/717/718` | Cluster B IMPL 2026-11-20 |
+
+| `src/api/transforms/creditTransform.js` | CR-527/BB-09: `creditEntryFromAPI` maps `dinerName`/`dinerMobile` from `diner_name`/`diner_mobile` (null default). Marker `// CR-527/BB-09` | CR-527 IMPL 2026-11-20 |
+| `src/components/credit/CreditCustomerDetailSheet.jsx` | CR-527/BB-09: local mapper mirrors diner fields (L249); `CreditRow` new Diner cell + `holder` prop (— when null or == holder); `CREDIT_TABLE_HEAD` +Diner `<th>`; diner filter OD-527-C (2-5 chips / 6+ searchable Command dropdown) + active summary; `dinerFilter`/`dinerMenuOpen` state. Markers `// CR-527`. Same sheet as CR-526 (additive, different region) | CR-527 IMPL 2026-11-20 |
+| `src/api/transforms/__tests__/creditTransform.cr527.test.js` | CR-527 unit test (diner field mapping + null default). 2/2 PASS | CR-527 IMPL 2026-11-20 |

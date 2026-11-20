@@ -13,6 +13,8 @@ import { createPortal } from 'react-dom';
 import { Loader2, PlusCircle, AlertTriangle, Info, ChevronDown, ChevronRight, Zap, FileText, Calendar, Users, Trash2 } from 'lucide-react'; // CR-526
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '../ui/sheet';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../ui/tooltip';
+import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover'; // CR-527
+import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from '../ui/command'; // CR-527
 import { COLORS } from '../../constants';
 import { getTabCustomerRecords } from '../../api/services/creditService';
 import {
@@ -109,11 +111,15 @@ function CoverageBadge({ status }) {
   );
 }
 
+// CR-527: diner identity helpers (name+mobile snapshot from the order at credit time)
+const dinerKeyOf = (c) => (c?.dinerName ? `${c.dinerName}|${c.dinerMobile || ''}` : '__NONAME__');
+const dinerLabelOf = (c) => (c?.dinerName ? c.dinerName : '(no name)');
+
 /**
  * Renders the shared columns for a credit row inside any bucket section.
  * `coverage` is the per-row FIFO coverage object.
  */
-function CreditRow({ entry, index, coverage, onViewBill, onRemove, canRemove }) {
+function CreditRow({ entry, index, coverage, onViewBill, onRemove, canRemove, holder }) {
   const c = entry;
   return (
     <tr key={c.id} style={{ borderTop: `1px solid ${COLORS.borderGray}` }} data-testid={`credit-txn-row-${c.id}`}>
@@ -123,6 +129,17 @@ function CreditRow({ entry, index, coverage, onViewBill, onRemove, canRemove }) 
       </td>
       <td className="px-3 py-2" style={{ color: COLORS.darkText }} data-testid={`credit-txn-order-${c.id}`}>
         {c.restaurantOrderId || (c.orderId > 0 ? `#${c.orderId}` : '—')}
+      </td>
+      {/* CR-527: Diner on the order (may differ from credit holder) */}
+      <td
+        className="px-3 py-2 max-w-[160px] truncate"
+        title={c.dinerName || ''}
+        style={{ color: COLORS.darkText }}
+        data-testid={`credit-txn-diner-${c.id}`}
+      >
+        {(!c.dinerName || (c.dinerName === holder?.name && (c.dinerMobile || '') === (holder?.mobile || '')))
+          ? '—'
+          : c.dinerName}
       </td>
       <td className="px-3 py-2 text-right font-semibold" style={{ color: COLORS.primaryOrange }} data-testid={`credit-txn-amount-${c.id}`}>
         {formatINR(c.amount)}
@@ -178,6 +195,7 @@ const CREDIT_TABLE_HEAD = (
       <th className="px-3 py-2 text-left text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>#</th>
       <th className="px-3 py-2 text-left text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Date</th>
       <th className="px-3 py-2 text-left text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Order ID</th>
+      <th className="px-3 py-2 text-left text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Diner</th>{/* CR-527 */}
       <th className="px-3 py-2 text-right text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Credit ( Bill )</th>
       <th className="px-3 py-2 text-left text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Status</th>
       <th className="px-3 py-2 text-right text-xs font-semibold uppercase" style={{ color: COLORS.grayText }}>Detail</th>
@@ -206,6 +224,8 @@ export default function CreditCustomerDetailSheet({
   const canRemoveCredit = hasPermission?.('order_unpaid') ?? false;
   const [removeTarget, setRemoveTarget] = useState(null); // CR-526: order to remove from credit
   const [removePending, setRemovePending] = useState(false);
+  const [dinerFilter, setDinerFilter] = useState('ALL'); // CR-527: selected diner key or 'ALL'
+  const [dinerMenuOpen, setDinerMenuOpen] = useState(false); // CR-527: 6+ diners dropdown
 
   // Phase 2A: client-side date range filter (temporary — Q4=C)
   const [dateFrom, setDateFrom] = useState('');
@@ -247,6 +267,8 @@ export default function CreditCustomerDetailSheet({
         createdAt: c.created_at || null,
         orderCreatedAt: c.order_created_at || null,
         hasOrderDetail: Number(c.order_id) > 0,
+        dinerName: c.diner_name ?? null,     // CR-527/BB-09
+        dinerMobile: c.diner_mobile ?? null, // CR-527/BB-09
       }));
       const debits = (raw?.debits || []).map((d) => ({
         id: d.id,
@@ -304,6 +326,8 @@ export default function CreditCustomerDetailSheet({
       setBillOrder(null);
       setDateFrom('');
       setDateTo('');
+      setDinerFilter('ALL'); // CR-527
+      setDinerMenuOpen(false); // CR-527
     }
   }, [open, customer?.id, fetchDetail]);
 
@@ -574,10 +598,113 @@ export default function CreditCustomerDetailSheet({
                   );
                   const openDue = openItems.reduce((s, e) => s + e.credit.amount, 0);
 
+                  // CR-527: distinct diners for the filter (built from the full date-filtered set;
+                  // FIFO coverage above is untouched — diner is a display lens only).
+                  const dinerMap = new Map();
+                  filteredCredits.forEach((c, i) => {
+                    const cov = coverages[i];
+                    const openAmt = cov?.type === 'open'
+                      ? (c.amount || 0)
+                      : cov?.type === 'partial'
+                        ? Math.max(0, (c.amount || 0) - (cov.coveredAmount || 0))
+                        : 0;
+                    const key = dinerKeyOf(c);
+                    const cur = dinerMap.get(key) || { key, label: dinerLabelOf(c), count: 0, open: 0, noName: !c.dinerName };
+                    cur.count += 1;
+                    cur.open += openAmt;
+                    dinerMap.set(key, cur);
+                  });
+                  const diners = [...dinerMap.values()].sort(
+                    (a, b) => (Number(a.noName) - Number(b.noName)) || (b.count - a.count),
+                  );
+                  const distinctDinerCount = diners.length;
+                  const matchesDiner = (c) => dinerFilter === 'ALL' || dinerKeyOf(c) === dinerFilter;
+                  const activeDiner = dinerFilter === 'ALL' ? null : diners.find((d) => d.key === dinerFilter);
+                  const coveredShown = coveredItems.filter((e) => matchesDiner(e.credit));
+                  const partialShown = partialItems.filter((e) => matchesDiner(e.credit));
+                  const openShown = openItems.filter((e) => matchesDiner(e.credit));
+
                   return (
-                    <div className="space-y-3" data-testid="credit-buckets">
+                    <>
+                      {distinctDinerCount > 1 && (
+                        <div className="mb-3" data-testid="credit-diner-filter">
+                          {distinctDinerCount <= 5 ? (
+                            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                              <span style={{ color: COLORS.grayText }}>Diner:</span>
+                              <button
+                                type="button"
+                                data-testid="credit-diner-chip-ALL"
+                                onClick={() => setDinerFilter('ALL')}
+                                className="px-2 py-1 rounded-full border transition-colors"
+                                style={dinerFilter === 'ALL'
+                                  ? { background: '#1A1A1A', color: '#fff', borderColor: '#1A1A1A' }
+                                  : { color: COLORS.darkText, borderColor: COLORS.borderGray }}
+                              >
+                                All ({filteredCredits.length})
+                              </button>
+                              {diners.map((d) => (
+                                <button
+                                  key={d.key}
+                                  type="button"
+                                  data-testid={`credit-diner-chip-${d.key}`}
+                                  onClick={() => setDinerFilter(d.key)}
+                                  className="px-2 py-1 rounded-full border transition-colors"
+                                  style={dinerFilter === d.key
+                                    ? { background: '#1A1A1A', color: '#fff', borderColor: '#1A1A1A' }
+                                    : { color: COLORS.darkText, borderColor: COLORS.borderGray }}
+                                >
+                                  {d.label} ({d.count})
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <Popover open={dinerMenuOpen} onOpenChange={setDinerMenuOpen}>
+                              <PopoverTrigger asChild>
+                                <button
+                                  type="button"
+                                  data-testid="credit-diner-dropdown"
+                                  className="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border"
+                                  style={{ color: COLORS.darkText, borderColor: COLORS.borderGray }}
+                                >
+                                  Diner:{' '}
+                                  <b>{activeDiner ? activeDiner.label : `All (${filteredCredits.length} orders · ${distinctDinerCount} diners)`}</b>
+                                  <ChevronDown className="w-3 h-3" />
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="p-0 w-[300px]" align="start">
+                                <Command>
+                                  <CommandInput placeholder="Search diner…" data-testid="credit-diner-search" />
+                                  <CommandList>
+                                    <CommandEmpty>No diner found.</CommandEmpty>
+                                    <CommandItem value="__all__" onSelect={() => { setDinerFilter('ALL'); setDinerMenuOpen(false); }}>
+                                      <span className="flex-1">All</span>
+                                      <span className="text-xs text-zinc-400">{filteredCredits.length}</span>
+                                    </CommandItem>
+                                    {diners.map((d) => (
+                                      <CommandItem
+                                        key={d.key}
+                                        value={`${d.label} ${d.key}`}
+                                        onSelect={() => { setDinerFilter(d.key); setDinerMenuOpen(false); }}
+                                      >
+                                        <span className="flex-1 truncate" title={d.label}>{d.label}</span>
+                                        <span className="text-xs text-zinc-400 whitespace-nowrap">{d.count} · {formatINR(d.open)}</span>
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )}
+                          {activeDiner && (
+                            <div className="mt-1.5 text-xs" data-testid="credit-diner-active-summary" style={{ color: COLORS.grayText }}>
+                              {activeDiner.label}: {activeDiner.count} orders · {formatINR(activeDiner.open)} open
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <div className="space-y-3" data-testid="credit-buckets">
                       {/* COVERED bucket — collapsible accordion */}
-                      {coveredItems.length > 0 && (
+                      {coveredShown.length > 0 && (
                         <div className="rounded-lg" style={{ border: `1px solid ${COLORS.borderGray}` }} data-testid="bucket-covered">
                           <button
                             type="button"
@@ -590,7 +717,7 @@ export default function CreditCustomerDetailSheet({
                             <span className="flex items-center gap-2 text-sm font-medium" style={{ color: '#166534' }}>
                               {coveredExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#16A34A' }} />
-                              {coveredItems.length} covered
+                              {coveredShown.length} covered
                             </span>
                             <span className="text-xs" style={{ color: '#166534' }} data-testid="bucket-covered-banner">
                               {formatINR(settledTotal)} of {formatINR(totalCredit)} settled ({settledPct}%)
@@ -601,7 +728,7 @@ export default function CreditCustomerDetailSheet({
                               <table className="w-full text-sm">
                                 {CREDIT_TABLE_HEAD}
                                 <tbody>
-                                  {coveredItems.map((e) => (
+                                  {coveredShown.map((e) => (
                                     <CreditRow
                                       key={e.credit.id}
                                       entry={e.credit}
@@ -610,6 +737,7 @@ export default function CreditCustomerDetailSheet({
                                       onViewBill={setBillOrder}
                                       onRemove={() => {}}
                                       canRemove={false}
+                                      holder={customer}
                                     />
                                   ))}
                                 </tbody>
@@ -620,7 +748,7 @@ export default function CreditCustomerDetailSheet({
                       )}
 
                       {/* PARTIAL bucket — always visible if any */}
-                      {partialItems.length > 0 && (
+                      {partialShown.length > 0 && (
                         <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${COLORS.borderGray}` }} data-testid="bucket-partial">
                           <div
                             className="flex items-center justify-between px-3 py-2.5"
@@ -628,7 +756,7 @@ export default function CreditCustomerDetailSheet({
                           >
                             <span className="flex items-center gap-2 text-sm font-medium" style={{ color: '#92400E' }}>
                               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#D97706' }} />
-                              Partial ({partialItems.length})
+                              Partial ({partialShown.length})
                             </span>
                             <span className="text-xs" style={{ color: '#92400E' }}>
                               {formatINR(partialDue)} due on this row
@@ -637,7 +765,7 @@ export default function CreditCustomerDetailSheet({
                           <table className="w-full text-sm">
                             {CREDIT_TABLE_HEAD}
                             <tbody>
-                              {partialItems.map((e) => (
+                              {partialShown.map((e) => (
                                 <CreditRow
                                   key={e.credit.id}
                                   entry={e.credit}
@@ -646,6 +774,7 @@ export default function CreditCustomerDetailSheet({
                                   onViewBill={setBillOrder}
                                   onRemove={() => {}}
                                   canRemove={false}
+                                  holder={customer}
                                 />
                               ))}
                             </tbody>
@@ -654,7 +783,7 @@ export default function CreditCustomerDetailSheet({
                       )}
 
                       {/* OPEN bucket — always visible if any */}
-                      {openItems.length > 0 && (
+                      {openShown.length > 0 && (
                         <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${COLORS.borderGray}` }} data-testid="bucket-open">
                           <div
                             className="flex items-center justify-between px-3 py-2.5"
@@ -662,7 +791,7 @@ export default function CreditCustomerDetailSheet({
                           >
                             <span className="flex items-center gap-2 text-sm font-medium" style={{ color: '#991B1B' }}>
                               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#DC2626' }} />
-                              Open ({openItems.length})
+                              Open ({openShown.length})
                             </span>
                             <span className="text-xs" style={{ color: '#991B1B' }} data-testid="bucket-open-due">
                               {formatINR(openDue)} due
@@ -671,7 +800,7 @@ export default function CreditCustomerDetailSheet({
                           <table className="w-full text-sm">
                             {CREDIT_TABLE_HEAD}
                             <tbody>
-                              {openItems.map((e) => (
+                              {openShown.map((e) => (
                                 <CreditRow
                                   key={e.credit.id}
                                   entry={e.credit}
@@ -680,6 +809,7 @@ export default function CreditCustomerDetailSheet({
                                   onViewBill={setBillOrder}
                                   onRemove={(c) => setRemoveTarget({ orderId: c.orderId, restaurantOrderId: c.restaurantOrderId, amount: c.amount })}
                                   canRemove={canRemoveCredit}
+                                  holder={customer}
                                 />
                               ))}
                             </tbody>
@@ -687,6 +817,7 @@ export default function CreditCustomerDetailSheet({
                         </div>
                       )}
                     </div>
+                    </>
                   );
                 })()}
               </section>
