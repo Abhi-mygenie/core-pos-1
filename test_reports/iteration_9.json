@@ -1,0 +1,47 @@
+{
+  "summary": "Frontend-only QA of CR-557 (shared PopoutItemRow in ScanOrderPopOut) against the live preprod backend, logged in as Owner@thegoankitchen.com. LOGIN: PASS. It lands on /dashboard with 0 console errors and no 4xx/5xx responses. LIVE DATA LIMITATION: the account has only 3 running orders (1578953 t2 web f_order_status=1, 1578942 t1 web f_order_status=1, 1578881 room RM/pos) plus 1 Zomato delivery. None has f_order_status=7 and none has a food_status=7 line, so the ScanOrderPopOut never opens naturally. Mode A and Mode B cannot be reached with live data. To still check how the rows render, I ran Playwright response interception (client-side only, nothing written to the backend). I edited the browser's copy of employee-orders-list: (A) t1 set to f_order_status=7 with a food_status=3 line, a ₹1 line, a multi-group variation, an add-on and a note; (B) t2 kept confirmed, with some lines set to food_status=7 plus variations, add-on and note. Accept, Confirm-cancel and KOT print were never clicked, because they would act on real orders. RESULTS (simulated data): Mode A V1-V4 PASS. Mode B V5-V8 PASS. V9 PASS in both modes. V10 PASS in both modes. V11 PASS. BUG-679, BUG-702 and CR-545 in Mode B: PASS (simulated). CR-558: controls are present; no selective accept checkbox exists. The end-to-end flow is NOT TESTABLE (DATA). One issue already present before CR-557: the 'Check In' marker item leaks into the popout.",
+  "per_test_case_results": {
+    "LOGIN_SMOKE": "PASS - landing URL /dashboard. Console errors: 0. Only Firebase 'notification permission DENIED' warnings and the 'New version available' toast.",
+    "CR-557_ModeA_V1_APS": "PASS (simulated) - ₹1 row shows the APS badge and 'Price TBD' and is sorted to the top.",
+    "CR-557_ModeA_V2_cancelled": "PASS (simulated) - food_status=3 row is line-through, labelled '(Cancelled)', price hidden, no KOT checkbox, no X.",
+    "CR-557_ModeA_V3_variations": "PASS (simulated) - one line per option with its price: poil(+₹10), Hot(+₹15), Extra Cheese(+₹20).",
+    "CR-557_ModeA_V4_addons_note_comp": "PASS for add-on (+ TEST_Dip +₹25) and note. Comp tag NOT TESTABLE: no complimentary item in the data.",
+    "CR-557_ModeB_V5_V8_parity": "PASS (simulated) - new rows show APS + Price TBD (melo fish ₹1), Large(+₹30)/Foam(+₹5), + TEST_Honey(+₹12) and the note. A cancelled NEW row cannot happen by design: newItems drops status 'cancelled', and a cancelled line has food_status 3, so it shows under the previous items with strikethrough.",
+    "CR-557_V9_cancel_modal": "PASS in Mode A (popout-item-cancel-2) and Mode B (popout-cancel-new-item-1). cancel-food-modal opens; cancel-modal-close-btn closes it and the popout stays open. Confirm was not clicked.",
+    "CR-557_V10_KOT": "PASS in both modes - Mode A: KOT (7) → untick → KOT (6) / 'Select all (7)' → deselect-all → 'KOT', disabled=true → select-all → KOT (7). Mode B: KOT (2) → KOT (1) → disabled → KOT (2).",
+    "CR-557_V11_prev_readonly": "PASS (simulated) - 'Previously ordered items (20)' is collapsed by default. Rows have opacity 0.6 and no checkbox or button.",
+    "BUG-679_ModeB": "PASS (simulated, using a real food_status=3 line on t2) - previous 'melo fish (Cancelled)' is struck through with no price.",
+    "BUG-702_ModeB": "PASS (simulated) - new and previous rows show their variation options with prices (prev row: poil(+₹10), Mild(+₹7)).",
+    "CR-545_ModeB": "PASS (simulated) - ₹1 new item shows APS + Price TBD.",
+    "CR-558_OptionB": "PARTIAL - Accept and per-item X are present and work up to the cancel modal; there is no selective accept checkbox (the only accept test-id is popout-accept-btn-{id}). End-to-end cancel → Accept → confirmed is NOT TESTABLE (DATA): no real web-edit order, and running it on intercepted data would change real orders."
+  },
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ScanOrderPopOut / PopoutItemRow", "issue": "Already present before CR-557, not a regression. The backend 'Check In' system item (isCheckInMarker, price zeroed in orderTransform.js ~L299-306) is not filtered. It shows as '1× check in ₹0.00' with a KOT checkbox and a cancel X, adds to the KOT (n) count, and is included in the item count. OrderEntry and RePrintButton already filter on isCheckInMarker.", "selector": "popout-new-item-*, popout-item-row-*", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "ScanOrderPopOut item row", "issues": ["Row 1 uses justify-between across three children (name, price, cancel X). The price therefore sits in the middle of the row instead of right-aligned next to the X. Read-only rows (no X) right-align the price, so the price columns do not line up.", "Line total shows unit×qty only and leaves out variation and add-on prices (₹100.00 shown while the options add +₹45 and the add-on +₹25). This may be intended, but it can confuse staff."]}
+    ]
+  },
+  "critical_code_review_comments": [
+    "Filter isCheckInMarker in ScanOrderPopOut: the Mode A list, newItems, prevItems, formatItemCount and the KOT selectable set.",
+    "Mode A sort (L632-635) treats any unitPrice===1 as APS, including Comp items, while PopoutItemRow leaves Comp out of APS. Minor inconsistency.",
+    "ScanOrderPopOut.jsx is 769 lines (over 700); the selectable filter is copied 4 times in L595-627. Extract it into a helper.",
+    "Already noted in the handover, not CR-557: ScanOrderPopOut.test.jsx uses orderFrom:'web' instead of isWebOrder:true, causing 22 failures that were already there before CR-557."
+  ],
+  "test_report_links": ["/app/tests/cr557_intercept.py"],
+  "action_items": [
+    "Filter isCheckInMarker items out of ScanOrderPopOut lists, the item count and the KOT selection.",
+    "Right-align the price in PopoutItemRow, e.g. put price and X in one right-hand group or add ml-auto.",
+    "Create a real YTC Scan&Order web order and a real web-EDIT on preprod to re-verify V1-V8 and CR-558 end-to-end on real data."
+  ],
+  "updated_files": ["/app/tests/cr557_intercept.py"],
+  "success_rate": {"backend": "N/A", "frontend": "100% of reachable cases pass on simulated data; Mode A/B and CR-558 end-to-end NOT TESTABLE on live data"},
+  "test_credentials": "Owner@thegoankitchen.com / Qplazm@10 (from the review request; /app/memory/test_credentials.md is missing)",
+  "seed_data_creation": "None. Nothing was written to the backend; changes were made only to the browser's copy of the employee-orders-list response.",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Live preprod has no YTC web orders. Use page.route('**/employee-orders-list**') to set f_order_status=7 on 1578942 (Mode A) or food_status=7 on some lines of 1578953 (Mode B). Do NOT click Accept, cancel-confirm-btn or popout-print-kot-* on intercepted data. 'check in' items are system markers; use 'melo fish' (₹1) for APS."
+}

@@ -1,3 +1,6 @@
+**CURRENT 2026-11-20 — QA Cluster F (ScanOrderPopOut) executed (testing_agent iteration_9 + CR547 unit 6/6 PASS).** CR-557 + Mode-B reopens (BUG-679/702/CR-545) = **PASS on all reachable cases** (verified via read-only `employee-orders-list` interception — live account had NO YTC web order / no `food_status=7` line, so popout can't open naturally). CR-558 Option B controls verified present (Accept + per-item X; no selective-accept checkbox = correct); full cancel→Accept e2e **NOT TESTABLE (data)**. Final CR-557/CR-558 sign-off needs an **owner smoke on a real YTC web order + web-EDIT order**. **BUG-731 QA-CONFIRMED reproducible** (check-in `isCheckInMarker` leaks into popout as "1× check in ₹0.00" with KOT checkbox + X, inflates KOT/item count; OrderEntry/RePrintButton already filter it — ScanOrderPopOut does not) → route to Gate 2 IA. BUG-738 still GATE_1_INTAKE (needs #1578881 RM→Dine-In case). Report: `test_reports/CLUSTER_F_QA_REPORT_2026-11-20.md`. No app code changed (QA role).
+
+
 **CURRENT 2026-11-19 — CR-558 CLOSED (DONE_NO_CODE).** Owner declined OD-558-02 ("Accept is fine"). CR-558 Option B ships via existing cancel+Accept (probe-verified); no code, no backend. Remaining for the F-cluster = live QA of CR-558 + BUG-679/702/CR-545 Mode-B (all resolved-by-CR-557).
 
 
