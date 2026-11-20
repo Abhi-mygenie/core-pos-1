@@ -1,3 +1,6 @@
+**CURRENT 2026-11-19 — CR-558 CLOSED (DONE_NO_CODE).** Owner declined OD-558-02 ("Accept is fine"). CR-558 Option B ships via existing cancel+Accept (probe-verified); no code, no backend. Remaining for the F-cluster = live QA of CR-558 + BUG-679/702/CR-545 Mode-B (all resolved-by-CR-557).
+
+
 **CURRENT 2026-11-19 — CR-558 confirm probe DONE (OD-558-01=YES).** Preprod order 1578881: order-level confirm (`waiter-dinein-order-status-update`, `order_status=cooking`) flipped all 4 appended `food_status 7→1`. CR-558 **Option B works with the existing Accept — no backend needed, near-zero FE** (only optional OD-558-02 "N items confirmed" toast). Evidence `evidence/CR-558/CONFIRM_PROBE_2026_11_19.md`.
 
 

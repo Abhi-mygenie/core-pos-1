@@ -41390,7 +41390,7 @@
       "client": "ALL",
       "source": "QA_REPORT_NOV_SPRINT_2026-11-19.md (QA-FOUND) | merged into main (renumbered from CR-558) 2026-11-19",
       "intake_doc": "change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md",
-      "status": "GATE_2_IA_COMPLETE 2026-11-19 — Option B. PROBE DONE (preprod order 1578881): order-level confirm (waiter-dinein-order-status-update, order_status=cooking) FLIPPED all appended food_status 7->1. OD-558-01=YES → near-zero FE (optional OD-558-02 'N confirmed' toast), NO backend needed. Per-item cancel + reject-all already exist. Evidence evidence/CR-558/CONFIRM_PROBE_2026_11_19.md; IA impact/CR-558_BUG679_702_CR545_MODEB_IA_2026_11_19.md",
+      "status": "DONE_NO_CODE 2026-11-19 — Option B works via EXISTING controls (per-item cancel + Accept), probe-verified (order 1578881: appended food_status 7->1). OD-558-02 (toast/relabel) DECLINED by owner ('Accept is fine'). NO code, NO backend. Remaining: live QA only. Evidence evidence/CR-558/CONFIRM_PROBE_2026_11_19.md; IA impact/CR-558_BUG679_702_CR545_MODEB_IA_2026_11_19.md",
       "gate": "GATE_2",
       "current_gate": 2,
       "blocked_on": "",

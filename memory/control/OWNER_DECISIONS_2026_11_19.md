@@ -43,6 +43,6 @@ Owner decision: **do NOT push to remote** for now. All updates kept local only.
 - **BUG-679 / BUG-702 / CR-545 (Mode B) = RESOLVED BY CR-557.** The shared `<PopoutItemRow>` now gives Mode-B lists the cancelled styling, variation/option prices, and APS/Price-TBD. No further code — **verify-only** on a live web-edit order, then close as resolved-by-CR-557.
 - **CR-558 = Option B** (owner, confirmed). Per-item cancel + reject-all already exist; the old "Reject uses items[0] only" note is STALE (CR-552 loops all).
 - **OD-558-01 = YES (preprod probe, order 1578881).** Order-level confirm (`waiter-dinein-order-status-update`, `order_status=cooking`) flipped all appended `food_status 7→1`. So the existing **Accept** already confirms the remaining non-cancelled appended items → **no backend needed, near-zero FE.** Evidence: `evidence/CR-558/CONFIRM_PROBE_2026_11_19.md`.
-- **OD-558-02 (OPEN, minor UX):** in edit mode, show a "N item(s) confirmed" toast and/or relabel Accept → "Accept remaining"? Recommend yes (small). Does NOT block — CR-558 already functions.
+- **OD-558-02 (DECLINED 2026-11-19):** owner — "Accept is fine". No toast/relabel. CR-558 ships as-is with existing Accept.
 
-**Status:** CR-558 functionally works today via existing controls. Remaining = optional OD-558-02 polish + live QA. BUG-679/702/CR-545 Mode-B = live QA only.
+**Status:** CR-558 DONE — no code required (works via existing cancel + Accept, probe-verified). Remaining = live QA only. BUG-679/702/CR-545 Mode-B = live QA only.
