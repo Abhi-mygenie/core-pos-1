@@ -3,7 +3,7 @@
 **Role:** PLANNING (Gate 3) · **Sprint:** nov_cr_batch · **Risk:** LOW/MEDIUM · **Code Reality:** FULL (re-validated 2026-11-20)
 **Items:** BUG-724 (P0; native P1), BUG-725, BUG-726, BUG-728 (P0; native P2), BUG-727, BUG-737 (P0; native P3). *(BUG-735 was in C's IA and is now SHIPPED — excluded.)*
 **IA:** `impact/CLUSTER_C_IMPACT_ANALYSIS_2026_11_19.md` (Gate-2 VALIDATED 2026-11-20; line anchors shifted +1/+2 after BUG-733 landed in the same file).
-**Gate status:** BUG-724/725/726/727/737 → GATE_3 plan ready, **Gate 4 GO** needed. **BUG-728 → GATE_2**, blocked on **OD-728-01** (+ a row-field feasibility check) — plan below is provisional.
+**Gate status:** BUG-724/725/726/727/737 → **GATE_3 CLOSED** (plan complete), **Gate 4 GO** needed to implement. **BUG-728 → PARKED 2026-11-20 by owner** (OD-728-01 deferred; Gate-3 section below retained for when it resumes).
 
 ---
 
@@ -86,7 +86,8 @@ Root cause: `fetchData` (L309) has no request-sequence guard and is triggered by
   - Summary (L629–630): render the `{totalFilteredOrders} orders` / amount only `{showMetrics && (...)}` (or dashes) while the first load is in flight.
 - Verify: rapid Apply / range-change never shows an older result (manually trigger two quick ranges); no `0 orders / ₹0` flash on initial load; a genuine empty range still shows the existing empty-state (L651). **This should land before 726/728 so QA sees a stable table (per IA sequencing).**
 
-### BUG-728 — Cancelled KPI vs tab rows; day-header totals vs filtered subset · P2 · **OWNER-GATED**
+### BUG-728 — Cancelled KPI vs tab rows; day-header totals vs filtered subset · P2 · **PARKED 2026-11-20 (owner)**
+> **PARKED:** owner deferred this item on 2026-11-20 (OD-728-01 left open). The analysis + provisional edits below are retained verbatim for when it resumes; do NOT implement until un-parked and OD-728-01 answered.
 Two facets, both counts/labels only (no money mutation):
 - **(a)** KPI `Cancelled` (L606 `stats.cancelOrders`, backend whole-range) ≠ Cancelled-tab visible rows (client-filtered by `payment_method ∈ {cancel,cancelled}`, L126–128) → e.g. 41 vs 25.
 - **(b)** Day-header Revenue/Sales/Discount (L679–681) use whole-day backend aggregates (`day.paid_revenue/total_sales/total_discount`), not the active tab's filtered rows — so on a filtered tab the header $ doesn't match the visible rows (the day `Total`, L682, already uses the filtered `dayAmount`).
@@ -129,4 +130,4 @@ Suggested unit test: `getPaymentBadge` mapping + Title-Case fallback (BUG-725) �
 - [ ] webpack 0 new warnings; getPaymentBadge unit test green.
 
 ## Handover
-5 of 6 items (724/725/726/727/737) are GO-ready pending **Gate 4 GO**. BUG-728 needs **OD-728-01** + a row-field feasibility check before its Gate 4. All OrderBeta edits land in the single locked session; edit sites are line-disjoint from the already-shipped 711/671/735/733.
+**Gate 3 CLOSED for Cluster C** — BUG-724/725/726/727/737 are GO-ready pending **Gate 4 GO** (implement in the single locked OrderBeta session; AllOrders/737 isolated). **BUG-728 is PARKED (owner, 2026-11-20)** — excluded from the implementation batch; resume needs un-park + OD-728-01. Edit sites are line-disjoint from the already-shipped 711/671/735/733.

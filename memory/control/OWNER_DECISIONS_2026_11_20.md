@@ -87,6 +87,12 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 
 ---
 
+## Cluster C — OD-728-01 PARKED 2026-11-20 (owner)
+**Decision:** Owner parked **BUG-728** (Cancelled KPI whole-range vs Cancelled-tab row count; day-header Revenue/Sales/Discount whole-day vs active-tab filtered). OD-728-01 (A/B/C) left **unanswered — deferred**. No code for BUG-728 until un-parked.
+**Not blocking the rest:** Cluster C **Gate 3 is CLOSED** for BUG-724/725/726/727/737 — those proceed to Gate 4 GO independently. Analysis + provisional edits for BUG-728 are preserved in `plans/CLUSTER_C_IMPLEMENTATION_PLAN_2026_11_20.md` (marked PARKED) and the IA. Registry: BUG-728 gate=PARKED, parked=true.
+
+---
+
 ## BUG-733 — OD-733-01 RESOLVED 2026-11-20 = (a) (date-input swap to shadcn DatePicker)
 **Context:** PLANNING Gate 2 + Gate 3 done (`impact/BUG-733_IMPACT_ANALYSIS.md`, `plans/BUG-733_IMPLEMENTATION_PLAN.md`). Reuse existing `components/reports/DatePicker.jsx`; swap native `<input type="date">` on `OrderReportBetaPage` (L553/556) + `CreditCustomerDetailSheet` (L448/457). Format-identical `YYYY-MM-DD` → no report-fetch / client-filter change.
 

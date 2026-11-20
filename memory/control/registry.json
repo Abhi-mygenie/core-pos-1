@@ -41104,8 +41104,8 @@
       "client": "ALL",
       "source": "QA_REPORT_NOV_SPRINT_2026-11-19.md (QA-FOUND) | merged into main (renumbered from BUG-721) 2026-11-19",
       "intake_doc": "change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md",
-      "status": "GATE_2_IA_VALIDATED 2026-11-20 \u2014 Gate-3 plan drafted but BLOCKED on OD-728-01 (Cancelled KPI vs tab rows / day-header totals) + row-field feasibility check",
-      "gate": "GATE_2",
+      "status": "PARKED 2026-11-20 (owner) \u2014 OD-728-01 deferred (Cancelled KPI vs tab rows / day-header totals + row-field feasibility). Gate-3 plan drafted; resume later.",
+      "gate": "PARKED",
       "current_gate": 2,
       "blocked_on": "",
       "registered_date": "2026-11-19",
@@ -41116,7 +41116,8 @@
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Cancelled KPI (41) != Cancelled tab rows (25); Cancelled-tab day headers still show whole-day Revenue/Sales. QA Group 1.",
-      "severity": "P0"
+      "severity": "P0",
+      "parked": true
     },
     {
       "type": "BUG",
