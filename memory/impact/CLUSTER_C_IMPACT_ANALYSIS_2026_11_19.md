@@ -1,5 +1,7 @@
 # Impact Analysis (Gate 2) — Cluster C: Order Report Beta — 2026-11-19
 
+> **GATE-2 VALIDATED 2026-11-20** (re-checked against current code; BUG-735 SHIPPED and removed from active scope; line anchors shifted +1/+2 after BUG-733 landed in this file). Registry advanced 724/725/726/727/737 → Gate 3; BUG-728 → Gate 2 (OD-728-01 open). Gate-3 plan: `plans/CLUSTER_C_IMPLEMENTATION_PLAN_2026_11_20.md`.
+
 **Role:** PLANNING (Gate 2) · **Sprint:** nov_cr_batch · **Client:** ALL
 **Items:** BUG-724, BUG-725, BUG-726, BUG-727, BUG-728, BUG-735, BUG-737
 **Priority:** P0 (owner flat-override) · **Native sev:** 724=P1, 735=P2, 725/726/728=P2, 727/737=P3 · **Risk:** LOW/MEDIUM

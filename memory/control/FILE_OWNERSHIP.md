@@ -1,3 +1,13 @@
+## FILE_OWNERSHIP — Cluster C PLANNING Gate 3 (2026-11-20) — planned, markers `// BUG-724/725/726/727/737`
+
+| File | Planned change | Planning |
+|------|---------------|----------|
+| `src/pages/reports-module/OrderReportBetaPage.jsx` | BUG-724 (import useRef; `fetchSeqRef` sequence guard in `fetchData` L309; hide KPI/summary numbers until `data` to kill "0 orders" flash) · BUG-725 (`getPaymentBadge` L37-49 add upi/card/room/merge + Title-Case fallback) · BUG-726 (remove stray `<td>` L746-750, fold cancel reason into Status `<td>` L744) · BUG-727 (remove space `</th> {/* CR-349 */}` L705) · [BUG-728 gated: day-header $ L679-681 / KPI label L606 — pending OD-728-01]. **Shared hotspot** (711/671/735/733 landed) — one session/PR, edit sites line-disjoint. | Cluster C PLANNING 2026-11-20 |
+| `src/pages/AllOrdersReportPage.jsx` | BUG-737 — delete CR-003 diagnostic `useEffect` L141-154 + drop now-unused `permissions` from `useAuth()` destructure L132. Isolated. | Cluster C PLANNING 2026-11-20 |
+
+> Planned only — no code written. 5/6 await Gate 4 GO; BUG-728 awaits OD-728-01 + row-field check.
+
+
 ## FILE_OWNERSHIP — BUG-733 IMPL (2026-11-20) — marker `// BUG-733`
 
 | File | Change | Owner |
