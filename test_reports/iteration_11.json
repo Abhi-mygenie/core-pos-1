@@ -1,0 +1,29 @@
+{
+  "summary": "BUG-723 frontend verification on preview URL (preprod data, browser date 2026-11-20). Login OK. All navigation between report screens was client-side (Dashboard back button, Dashboard tiles, and history.pushState+popstate). A window marker stayed set the whole time, which shows the page never reloaded. CORE FIX PASSES: after FY or LM is picked on Audit, Dashboard, Sales and Cancellations each show that one chip as active, with matching From/To dates (6/6). PROPAGATION PASSES: Sales LM -> Cancellations, Cancellations MTD -> Dashboard, Sales 30D -> Dashboard and Audit. CUSTOM RANGE PASSES: Apply on Sales, Cancellations and Dashboard leaves no chip active, and the custom range carries over to the other screens with no chip active there either. ONE FAILURE: the Dashboard '30D' chip does nothing. DashboardMockup.handlePreset has no '30D' case and its default branch returns, so clicking it changes neither the dates nor the chip, and nothing propagates. This bug existed before BUG-723 but is in the same preset feature.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "DashboardMockup handlePreset (L107-150)", "issue": "The switch has cases for Today, 7D, LM, MTD and FY but none for '30D', which is in DATE_PRESETS. Clicking the 30D chip hits default: return, so the chip, dates and shared range don't change. Reproduced: with Today active, clicking reports-date-preset-30d kept Today and 2026-11-20..2026-11-20.", "selector": "[data-testid='reports-date-preset-30d']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "DashboardMockup.handlePreset: add a '30D' case, or better, replace the hand-written switch with computePresetRange(preset) from utils/datePresets, as Sales and Cancellations do, so Dashboard can't drift from the shared preset definitions."
+  ],
+  "critical_code_review_comments": [
+    "DashboardMockup builds its own preset ranges, duplicating computePresetRange (a DRY violation), and that is why 30D got missed.",
+    "FY means the LAST COMPLETED financial year: in Nov 2026 it is 2025-04-01..2026-03-31, not the current FY 2026-27. It is the same on every screen (CR-481 behaviour), but please confirm with the product owner that this is intended.",
+    "activePreset is set only once, in the useState initializer. That is fine because each screen remounts on navigation. If a screen ever stays mounted while the shared range changes (for example a split view), the chip would go stale.",
+    "Edge case: after midnight, the stored Today/7D/30D/MTD ranges no longer match matchPreset, so no chip shows. Acceptable."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "94% (16/17 checks; only the Dashboard 30D chip failed)"},
+  "test_credentials": "owner@cafe103.com / Qplazm@10 (from /app/memory/test_credentials.md) worked",
+  "seed_data_creation": "None. Read-only UI state testing.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "After login, wait for /loading to finish (about 10-20s). Then page.goto /reports-module/audit-log once and navigate with history.pushState + dispatchEvent(new PopStateEvent('popstate')), which keeps the InsightsCacheProvider state. Audit chips have no data-testid, so select them by text inside [data-testid=audit-presets]. A chip is active when its class contains 'bg-white text-zinc-900' and 'shadow-sm'. Wait for buttons to match :not([disabled]) before clicking, because chips are disabled while loading. Dashboard tiles render only after the data loads, which is slow for FY.",
+  "rca of the issue": "Original BUG-723: each screen started activePreset from a hard-coded value (7D or Today) instead of deriving it from the shared range. The fix (matchPreset in useState) is verified working. New Dashboard 30D issue: the hand-written switch in DashboardMockup.handlePreset never got a 30D case when CR-481 added 30D to DATE_PRESETS."
+}

@@ -118,6 +118,12 @@ const DashboardMockup = () => {
         f = fmtDate(d); t = fmtDate(now);
         break;
       }
+      case '30D': { // BUG-723: was missing — 30D chip did nothing
+        const d = new Date(now);
+        d.setDate(d.getDate() - 29);
+        f = fmtDate(d); t = fmtDate(now);
+        break;
+      }
       case 'LM': {
         const d1 = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const d2 = new Date(now.getFullYear(), now.getMonth(), 0);
