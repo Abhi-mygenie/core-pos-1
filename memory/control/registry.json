@@ -39241,7 +39241,8 @@
       "registered_date": "2026-11-17",
       "qa_gate_status": "QA BLOCKED (prereq: no live web order) — code OK / IMPLEMENTED",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "rebatch": "B5-SCAN-POPOUT"
     },
     {
       "id": "CR-547",
@@ -40177,7 +40178,8 @@
           "type": "impact"
         }
       ],
-      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md"
+      "impact_doc": "memory/impact/AUDIT_REPORT_QA_BUGS_695-700_IMPACT_ANALYSIS.md",
+      "rebatch": "B3-AUDIT-BACKEND"
     },
     {
       "id": "BUG-697",
@@ -40421,7 +40423,8 @@
       "blocked_on": null,
       "notes": "[REOPEN QA Nov Sprint] edit-mode prev items draw no variation/option row. 2026-11-18 INTAKE. ScanOrderPopOut L475-482 and L609-631 render v.name / Number(v.price) (group name + non-existent price); backend shape is v.values=[{label,optionPrice}] (orderTransform.js L705-737, stored raw L136). Correct reference renderer CartPanel.jsx L111-124 / L213-216 / L417-419 — popup should mirror it. RELATED to BUG-573 (same data shape) but DISTINCT: BUG-573 fixed OrderCard variant parser (CLOSED), this is the ScanOrderPopOut popup, never patched. Risk LOW (display-only, 1 file). Evidence: evidence/INV-POS-3BUGS/. Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 2). | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-702_IMPACT_ANALYSIS.md). OD-702-01=Option A (selected option name(s) + each price, mirror CartPanel). Design approved (design/POS_INVEST_GATE2_5_MOCKUPS_2026_11_18.html). Risk LOW. Same-file as CR-547 (batch ScanOrderPopOut edits). RELATED BUG-573 (OrderCard, distinct). | 2026-11-18 PLANNING Gate 3: line-by-line impl plan complete (plans/BUG-702_IMPLEMENTATION_PLAN_2026_11_18.md). 1 file (ScanOrderPopOut.jsx), 3 edit sites: 2 module helpers + collapsed L481 + expanded L609-631. Marker // BUG-702. Batch with CR-547 (same file). No code changed. | 2026-11-18 IMPLEMENTATION (Gate 5A): ScanOrderPopOut.jsx — added getSelectedVariationOptions + flattenVariationOptions helpers; collapsed + expanded render show selected option label + (+optionPrice) per Option A. Compile PASS (no new warning), 4 // BUG-702 markers, helper logic self-tested. Browser verification on a live web-edit order PENDING (needs RID-69 edit order). 1 file.",
       "registered_date": "2026-11-18",
-      "release_date": "2026-11-17"
+      "release_date": "2026-11-17",
+      "rebatch": "B5-SCAN-POPOUT"
     },
     {
       "id": "BUG-703",
@@ -40921,7 +40924,8 @@
       "gate": "GATE_1",
       "current_gate": 1,
       "code_reality": "N/A (backend latency)",
-      "confidence": "CONFIRMED"
+      "confidence": "CONFIRMED",
+      "rebatch": "B3-AUDIT-BACKEND"
     },
     {
       "type": "BUG",
@@ -40943,7 +40947,8 @@
       "risk": "CRITICAL",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Low-rights user can deep-link to /settings, /menu, /employees, /inventory-*, /pms/* — App.js L253-289 use ProtectedRoute not PermissionRoute. /employees exposes all staff email+phone with editable password/role/status. Only reports routes are gated. QA Group 4.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B1-PERMISSIONS"
     },
     {
       "type": "BUG",
@@ -40965,7 +40970,8 @@
       "risk": "HIGH",
       "duplicate_check": "RELATED BUG-711, CR-515",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel. ChannelColumn L321 does not pass canPrintBill/canCancelOrder to TableCard (OrderCard is gated). Captain could print/cancel. QA Group 4.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B1-PERMISSIONS"
     },
     {
       "type": "BUG",
@@ -40991,7 +40997,8 @@
       "relates_to": [
         "BUG-696",
         "BUG-719"
-      ]
+      ],
+      "rebatch": "B2-AUDIT-UI (FE) / B3-AUDIT-BACKEND (BE)"
     },
     {
       "type": "BUG",
@@ -41013,7 +41020,8 @@
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-697, BUG-704",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Sales/Cancellations/Dashboard preset chip hard-coded useState(7D)/Today (SalesMockup L121, CancellationsMockup L199); does not match the FY/LM range shared from Audit. matchPreset fix landed only in AuditLogMockup. SalesMockup FY branch (L157) also omits setSharedFrom/To. QA Group 1.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B4-PRESETS"
     },
     {
       "type": "BUG",
@@ -41168,7 +41176,8 @@
       "risk": "LOW",
       "duplicate_check": "RELATED CR-543, CR-555",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Audit Card-1 drill-down shows High Risk badge on every row incl doubt/risk tiers; no Risk-tier or Duration column in UI (only Excel); multi-day rows not time-ordered. QA Group 1.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B2-AUDIT-UI"
     },
     {
       "type": "BUG",
@@ -41212,7 +41221,8 @@
       "risk": "LOW",
       "duplicate_check": "RELATED BUG-685",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] After in-place cart edit the edited row jumps to the bottom of the cart. QA Group 2.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B6-CART-CREDIT"
     },
     {
       "type": "BUG",
@@ -41256,7 +41266,8 @@
       "risk": "MEDIUM",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Credit/remove flow shows [null] item names; a Remove failure is not surfaced to the user (no toast). Split-payment inputs overflow; card needs 4-digit txn id with no hint. QA Group 2.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B6-CART-CREDIT"
     },
     {
       "type": "BUG",
@@ -41300,7 +41311,8 @@
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] New version available / Update now toast pinned bottom-center overlaps table rows on every page. QA Group 1.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B1-PERMISSIONS"
     },
     {
       "type": "BUG",
@@ -41344,7 +41356,8 @@
       "risk": "MEDIUM",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Channel/amount mismatch: order #1578881 has order_in=RM (table 9239); dashboard places it under the Room column at Rs8,622 but the ScanOrderPopOut labels it Dine-In at Rs411 and OrderEntry shows raw table id 9239. QA Group 3.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B5-SCAN-POPOUT"
     },
     {
       "type": "BUG",
@@ -41366,7 +41379,8 @@
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Audit Total Events KPI counts unique orders (38) not events (misleading label); Excel Summary leaves Restaurant ID and Generated By empty and exports Risk as raw high_risk. QA Group 1.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B2-AUDIT-UI"
     },
     {
       "type": "CR",
@@ -41410,7 +41424,8 @@
       "risk": "MEDIUM",
       "duplicate_check": "RELATED CR-552",
       "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Add true per-item Accept in ScanOrderPopOut web-edit. Today Accept is order-level confirmOrder and ignores the KOT selection; Reject modal uses items[0] only. Owner decision on desired behaviour. QA Group 3. | 2026-11-19 PLANNING Gate 2 IA (impact/CR-558_BUG679_702_CR545_MODEB_IA_2026_11_19.md): OWNER chose OPTION B (cancel unwanted then Accept-all) — true per-item Accept OUT. Reject already loops ALL new items (CR-552 handleRejectNewItems) so 'items[0] only' note is STALE. Per-item cancel already works. OPEN OD-558-01: does order-level confirmOrder flip appended food_status=7 lines on a status-2 order? Probe needed (shares CR-552 OD-552-01 backend dep). YES→near-zero FE; NO→backend brief.",
-      "severity": "P0"
+      "severity": "P0",
+      "rebatch": "B5-SCAN-POPOUT"
     },
     {
       "id": "CR-559",
