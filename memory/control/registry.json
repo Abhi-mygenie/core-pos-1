@@ -41590,7 +41590,7 @@
       "status": "GATE_2_IA_CLOSED 2026-11-20 \u2014 fix: customItemFromAPI add station:data.station||null (OD-742-C auto). DECISIVE Gate-3 check: confirm add-single-product returns station (write-only, not read-only probable) else BACKEND_BRIEF. CRITICAL (printing). OD-742-A/B still open.",
       "gate": "GATE_2",
       "current_gate": 2,
-      "blocked_on": "VERIFICATION PENDING: confirm add-single-product response returns station (write-only, not read-only probable) \u2014 owner to approve controlled test or confirm with backend; plus OD-742-A/B",
+      "blocked_on": "BACKEND_BRIEF issued: backend to confirm add-single-product response returns station. If NO \u2192 backend must add it before FE 1-liner is sufficient. (OD-742-A P1 / OD-742-B full gate both locked.)",
       "registered_date": "2026-11-20",
       "release_date": "",
       "id": "BUG-742",
@@ -41604,14 +41604,14 @@
       "impact_doc": "impact/BUG-742_IMPACT_ANALYSIS.md",
       "open_decisions": [
         "OD-742-C: LOCKED \u2014 system decides kitchen automatically (backend-assigned station; no modal selector)",
-        "OD-742-A: OPEN \u2014 severity P1 vs P2",
-        "OD-742-B: OPEN \u2014 risk downgrade vs full gate (CRITICAL default)"
+        "OD-742-A: LOCKED \u2014 severity P1",
+        "OD-742-B: LOCKED \u2014 full gate (no planning-skip; CRITICAL retained)"
       ]
     }
   ],
   "meta": {
     "last_updated": "2026-11-20",
-    "last_action": "Decisions locked: CR-561 OD-561-B refined (price before final bill); BUG-742 OD-742-C=auto station. BUG-742 backend station-in-response verification PENDING. No app code changed.",
+    "last_action": "BUG-742: OD-742-A=P1, OD-742-B=full gate locked; BACKEND_BRIEF issued for add-single-product station field. No app code changed.",
     "current_gate": "2",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",

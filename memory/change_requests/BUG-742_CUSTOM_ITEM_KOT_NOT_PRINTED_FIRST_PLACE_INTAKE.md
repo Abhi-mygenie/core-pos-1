@@ -48,13 +48,13 @@ SMALL — 1 file, 1 line: `api/transforms/orderTransform.js:2326` (`customItemFr
 
 ## Owner decisions
 - **OD-742-C** — LOCKED 2026-11-20: **the system decides the kitchen automatically** (use the backend-assigned station; **no** station selector in the custom-item modal).
-- **OD-742-A** — OPEN: confirm severity (P1 vs P2).
-- **OD-742-B** — OPEN: downgrade risk to allow planning-skip, or run full gate (CRITICAL default)?
+- **OD-742-A** — LOCKED 2026-11-20: severity **P1**.
+- **OD-742-B** — LOCKED 2026-11-20: **run the full gate** (no planning-skip; CRITICAL risk retained — printing/KOT routing).
 
 ## Verification PENDING (blocks Gate 3 readiness)
 The one-line fix (`station: data.station || null`) only works **if the `add-single-product` response includes a `station` field**. This is a WRITE call, so it was NOT run in the read-only probe.
 - Supporting evidence (read-only probe 2026-11-20): existing backend food/product records DO carry `station` (e.g. "KDS") — see `evidence/BUG-703/PROBE_TRANSFORM_MAPPING_2026-11-20.md`. Encouraging but NOT proof for the create-item response.
-- **Awaiting owner answer:** either approve one controlled create-item test on preprod, or confirm with backend that the add-single-product response returns `station`.
+- **Awaiting owner answer:** BACKEND_BRIEF issued → see `change_requests/BUG-742_BACKEND_BRIEF_ADD_SINGLE_PRODUCT_STATION.md`. Backend to confirm whether the add-single-product response returns `station`.
 - If NO → raise BACKEND_BRIEF (backend must include `station` in the response); the FE 1-liner alone is insufficient.
 
 ## Next
