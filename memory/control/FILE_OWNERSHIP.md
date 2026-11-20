@@ -1,3 +1,16 @@
+## FILE_OWNERSHIP — BUG-733 IMPL (2026-11-20) — marker `// BUG-733`
+
+| File | Change | Owner |
+|------|--------|-------|
+| `src/components/reports/DatePicker.jsx` | E-D1/E-D2: `if (!value) return;` guard added to `handlePrevDay` (L176) + `handleNextDay` (L183) — empty-value chevron no-op for the Credit optional range. Additive, backward-compatible (seeded consumers never empty). | BUG-733 IMPL 2026-11-20 |
+| `src/pages/reports-module/OrderReportBetaPage.jsx` | E-O1 import DatePicker (L25); E-O2/E-O3 From/To native `<input type="date">` (L553/556) → `<DatePicker>` wrapped in `<span data-testid="from-date\|to-date">`. Date inputs only; Apply/fetch flow untouched. **Shared hotspot** (BUG-711/671/735 + Cluster C) — landed this session, edits L553-559 line-disjoint. | BUG-733 IMPL 2026-11-20 |
+| `src/components/credit/CreditCustomerDetailSheet.jsx` | E-C1 import DatePicker (L26); E-C2/E-C3 From/To native inputs (L448/457) → `<DatePicker>` wrapped in `<span data-testid="credit-date-from\|credit-date-to">`. Kept Calendar icon + "Date Range:" + "to" + Clear button (OD-733-01=a). Client-side filter (L321-336) untouched. | BUG-733 IMPL 2026-11-20 |
+| `src/__tests__/components/reports/DatePicker.bug733.test.jsx` | NEW — 5 tests for the empty-value chevron guard. 5/5 PASS. | BUG-733 IMPL 2026-11-20 |
+
+NOT touched: report fetch / `handleApply` / `appliedFrom`/`appliedTo` · Credit client filter logic · statement callbacks · any transform/service · backend · other ~63 native-date screens.
+
+---
+
 ## FILE_OWNERSHIP — BUG-733 PLANNING Gate 3 (2026-11-20) — planned, marker `// BUG-733`
 
 | File | Planned change | Planning agent |

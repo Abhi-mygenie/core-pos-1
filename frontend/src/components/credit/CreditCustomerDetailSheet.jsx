@@ -23,6 +23,7 @@ import {
 } from '../../api/transforms/creditTransform';
 import CreditClearanceModal from './CreditClearanceModal';
 import OrderDetailSheet from '../reports/OrderDetailSheet';
+import DatePicker from '../reports/DatePicker'; // BUG-733
 import { useAuth } from '../../contexts'; // CR-526
 import { makeOrderUnpaid } from '../../api/services/paymentMutationService'; // CR-526
 import MarkUnpaidConfirmDialog from '../reports/MarkUnpaidConfirmDialog'; // CR-526
@@ -443,23 +444,15 @@ export default function CreditCustomerDetailSheet({
             <div className="mt-3 flex items-center gap-2 bg-zinc-50 rounded-lg px-3 py-2" data-testid="credit-date-filter">
               <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: COLORS.grayText }} />
               <span className="text-xs font-medium" style={{ color: COLORS.grayText }}>Date Range:</span>
-              <input
-                data-testid="credit-date-from"
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="text-xs border rounded px-2 py-1 bg-white focus:outline-none"
-                style={{ borderColor: COLORS.borderGray, color: COLORS.darkText }}
-              />
+              {/* BUG-733: native date input → shadcn DatePicker */}
+              <span data-testid="credit-date-from">
+                <DatePicker value={dateFrom} onChange={setDateFrom} />
+              </span>
               <span className="text-xs" style={{ color: COLORS.grayText }}>to</span>
-              <input
-                data-testid="credit-date-to"
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="text-xs border rounded px-2 py-1 bg-white focus:outline-none"
-                style={{ borderColor: COLORS.borderGray, color: COLORS.darkText }}
-              />
+              {/* BUG-733 */}
+              <span data-testid="credit-date-to">
+                <DatePicker value={dateTo} onChange={setDateTo} />
+              </span>
               {(dateFrom || dateTo) && (
                 <button
                   data-testid="credit-date-clear"

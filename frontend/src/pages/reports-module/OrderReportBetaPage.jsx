@@ -22,6 +22,7 @@ import { isMutationAllowedForSelectedDate } from '../../utils/businessDay'; // C
 import WhatsAppPaymentModal from '../../components/cards/WhatsAppPaymentModal'; // CR-164
 import CollectBillPanelDrawer from '../../components/reports/CollectBillPanelDrawer'; // CR-503
 import { fmtISO, DATE_PRESETS, computePresetRange } from '../../utils/datePresets'; // BUG-640 + CR-481
+import DatePicker from '../../components/reports/DatePicker'; // BUG-733
 
 // CR-117: Platform badge
 const getPlatformBadge = (p) => {
@@ -550,11 +551,11 @@ export default function OrderReportBetaPage() {
 
           <div className="flex items-center gap-2 ml-4">
             <label className="text-xs text-zinc-500">From</label>
-            <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)}
-              className="h-8 px-2 rounded-lg border border-zinc-300 text-xs" data-testid="from-date" />
+            {/* BUG-733: native date input → shadcn DatePicker */}
+            <span data-testid="from-date"><DatePicker value={fromDate} onChange={setFromDate} /></span>
             <label className="text-xs text-zinc-500">To</label>
-            <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)}
-              className="h-8 px-2 rounded-lg border border-zinc-300 text-xs" data-testid="to-date" />
+            {/* BUG-733 */}
+            <span data-testid="to-date"><DatePicker value={toDate} onChange={setToDate} /></span>
             <button onClick={handleApply}
               className="h-8 px-4 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700"
               data-testid="apply-btn">

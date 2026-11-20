@@ -173,13 +173,14 @@ const DatePicker = ({ value, onChange, disabled = false, tooltip = '' }) => {
   const isToday = value === getToday();
 
   const handlePrevDay = () => {
+    if (!value) return; // BUG-733: no-op while empty (Credit optional range)
     const d = new Date(value);
     d.setDate(d.getDate() - 1);
     onChange(formatApiDate(d));
   };
 
   const handleNextDay = () => {
-    if (isToday) return;
+    if (!value || isToday) return; // BUG-733: no-op while empty
     const d = new Date(value);
     d.setDate(d.getDate() + 1);
     onChange(formatApiDate(d));
