@@ -41411,9 +41411,9 @@
       "priority": "P1",
       "severity": "P1",
       "risk": "CRITICAL",
-      "status": "GATE_2_IA_COMPLETE 2026-11-20 — imported from external branch (was CR-554 there; ID collided with this branch's CR-554=cancellation-detail columns). Option A payload parity (backend-locked OD-1/2/3). OWNER OD-4 (2026-11-20)=Option 1: gate Accept printer_agent on scanOrderAutoPrint (backend scan_order_auto_print) being ON. NEW sub-task: surface scan_order_auto_print from profile into runtime restaurant.settings (profileTransform) — today it loads only in printer-config settings screen (printerAgentConfigTransform), not useRestaurant(). Gate-3 plan must be REVISED to add this gate before build.",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_IMPL_PLAN_COMPLETE 2026-11-20 (REVISED for OD-4) — 4-file additive plan: E1 profileTransform expose scanOrderAutoPrint; E2 orderService.confirmOrder +printerAgent param (omit when empty); E3/E4 DashboardPage.handleConfirmOrder build printer_agent web-only + gated on settings.scanOrderAutoPrint (OD-4), KOT=all/food_status-7 + BILL (OD-1/2/3), no print_kot, no printOrder; E5 OrderContext.orderItemsByTableId carry isWebOrder (RC-2). +2 unit tests. BLOCKED_ON PROBE-1 (is scan_order_auto_print in the profile payload? only printer-config endpoint known today). Plan: plans/CR-559_IMPLEMENTATION_PLAN.md",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "sprint_key": "nov_cr_batch",
       "area": "Order Flow / Printing",
       "client": "ALL",
@@ -41422,7 +41422,7 @@
       "intake_doc": "change_requests/CR-559_ACCEPT_PRINTER_PARITY_import/01_INTAKE.md",
       "ia_doc": "change_requests/CR-559_ACCEPT_PRINTER_PARITY_import/05_IMPACT_ANALYSIS.md",
       "duplicate_check": "DISTINCT (web/scan equivalent of aggregator CR-108/CR-118; related CR-130, POS2-003-REOPEN-A). NOT registered in this branch before import.",
-      "blocked_on": "",
+      "blocked_on": "PROBE-1: confirm scan_order_auto_print present in profile/useRestaurant payload (else backend brief or secondary fetch)",
       "relates_to": [
         "CR-108",
         "CR-118",
@@ -41434,7 +41434,8 @@
       "notes": "Target files: DashboardPage.handleConfirmOrder (build printer_agent web-only + NEW gate on scanOrderAutoPrint), orderService.confirmOrder (add printer_agent param), OrderContext.orderItemsByTableId (carry isWebOrder), profileTransform (expose scan_order_auto_print into settings). Do NOT send print_kot (backend decides); do NOT call printOrder after accept (double print). Web orders only.",
       "registered_date": "2026-11-20",
       "release_date": "2026-11-17",
-      "code_reality": "NONE (this branch)"
+      "code_reality": "NONE (this branch)",
+      "impl_plan_doc": "plans/CR-559_IMPLEMENTATION_PLAN.md"
     }
   ],
   "meta": {
