@@ -1371,10 +1371,25 @@ const DashboardPage = () => {
       // order_status comes from profile API def_ord_status (mapped via F_ORDER_STATUS)
       await confirmOrder(order.orderId, permissions?.[0] || 'Manager', defaultOrderStatus);
       // Socket handler will process order-engage + update-order-paid
+
+      // CR-559 (OD-2/OD-3/OD-4): web/scan orders only, and only when the restaurant's
+      // Scan-Order Auto-print toggle is ON → auto-print the KOT by reusing the manual-KOT
+      // process (printOrder → order-temp-store + update-print-status kot_print:'Yes').
+      // KOT only (no BILL). Backend auto-print is suppressed, so this is the print trigger.
+      if (order.isWebOrder && settings?.scanOrderAutoPrint) {
+        const items = Array.isArray(order.items) ? order.items : [];
+        const isWebEdit = items.some(it => it.isNotConfirmed);               // Mode B = web edit
+        const confirmItems = isWebEdit ? items.filter(it => it.isNotConfirmed) : items; // OD-2
+        const stations = getStationsFromOrderItems(confirmItems, getProductById);
+        if (stations.length > 0) {
+          const stationKot = stations.map(s => s.station).join(',');
+          await printOrder(order.orderId, 'kot', stationKot, order, 0, {}, printerAgents || []);
+        }
+      }
     } catch (err) {
       console.error('[DashboardPage] Failed to confirm order:', err);
     }
-  }, [getOrderDataForEntry, permissions, defaultOrderStatus]);
+  }, [getOrderDataForEntry, permissions, defaultOrderStatus, settings, printerAgents, getProductById]);
 
   // --- Cancel scan order (red cross) → open modal ---
   const handleCancelOrder = useCallback((tableEntry) => {

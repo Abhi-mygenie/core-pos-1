@@ -2466,3 +2466,12 @@ NOT touched: `DashboardPage.jsx` · `RestaurantSettingsPage.jsx` · `restaurantS
 | `src/pages/reports-module/OrderReportBetaPage.jsx` | **L267:** `taxLabel` derived from `restaurant.tax.gstStatus`/`vatStatus`. **L502/700/882:** hardcoded "GST" → `{taxLabel}`. **L779:** Reprint gated with `hasPermission('print_icon')`. | BUG-706 + BUG-711 IMPL 2026-11-19 |
 | `src/pages/reports-module/ItemSalesLedgerMockup.jsx` | **L166:** LM preset branch now calls `setSharedFrom/setSharedTo` so Last-Month persists across navigation. | BUG-704 IMPL 2026-11-19 |
 | `src/pages/reports-module/CancellationsMockup.jsx` | **L736 + L954:** Date/Time cell now formatted via `toLocaleString('en-IN', {day,month,hour,minute})` matching Punch Time. | BUG-707 IMPL 2026-11-19 |
+
+## CR-559 — Web/Scan Accept KOT auto-print (IMPLEMENTED 2026-11-20, Gate-4)
+| File | Change | Status |
+|---|---|---|
+| `src/api/transforms/profileTransform.js` | settings block: `scanOrderAutoPrint: toBoolean(apiSettings.settings?.scan_order_auto_print ?? apiSettings.scan_order_auto_print)` (~L378). marker `// CR-559` | CR-559 IMPL 2026-11-20 |
+| `src/pages/DashboardPage.jsx` | `handleConfirmOrder` (L1364): after `confirmOrder`, if `order.isWebOrder && settings?.scanOrderAutoPrint` → reuse manual-KOT process (`getStationsFromOrderItems` + `printOrder('kot', …)`), KOT only, OD-2 item selection; deps +`settings,printerAgents,getProductById`. marker `// CR-559`. Same file as CR-547/CR-552/BUG-703 (additive, different fn) | CR-559 IMPL 2026-11-20 |
+| `src/contexts/OrderContext.jsx` | `orderItemsByTableId` whitelist (L348): add `isWebOrder: order.isWebOrder || false` (RC-2). marker `// CR-559` | CR-559 IMPL 2026-11-20 |
+
+NOT touched: `orderService.js`/`confirmOrder` · `toAPI.updateOrderStatus` · `printOrder` · `handleScanPrintKOT` · `printerAgentConfigTransform.js` · aggregator accept path · Place/Update builders · `ScanOrderPopOut.jsx`.

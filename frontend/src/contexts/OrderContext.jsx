@@ -345,6 +345,7 @@ export const OrderProvider = ({ children }) => {
           isRoom: order.isRoom,
           associatedOrders: order.associatedOrders || [],
           fOrderStatus: order.fOrderStatus,
+          isWebOrder: order.isWebOrder || false, // CR-559: handleConfirmOrder web gate (table/room path)
           // ROOM_CHECKIN_GAP3 (Stage 2 follow-up, 2026-04-25): preserve room
           // booking financials through the orderItemsByTableId memo whitelist
           // so OrderEntry → CartPanel + CollectPaymentPanel can render the

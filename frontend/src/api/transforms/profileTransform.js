@@ -375,6 +375,10 @@ export const fromAPI = {
       // Same regression pattern as autoKot above. Restoring the correct
       // root-level snake_case path.
       autoBill:          toBoolean(apiSettings.billing_auto_bill_print),
+      // CR-559 (OD-4/OD-5-A): Scan-Order Auto-print gate for web/scan Accept KOT printing.
+      // Backend surfaces this nested under restaurants[0].settings (confirmed live probe
+      // 2026-11-20: settings.scan_order_auto_print = "Yes"). Root fallback for safety.
+      scanOrderAutoPrint: toBoolean(apiSettings.settings?.scan_order_auto_print ?? apiSettings.scan_order_auto_print),
       keyboardShortcuts: toBoolean(apiSettings.settings?.keyboard_shortcuts), // CR-482: off by default, backend brief filed
       reconcileAmount:   toBoolean(apiSettings.settings?.reconcile_amount), // CR-483: received amount feature toggle (nested path — confirmed probe 2026-11-07)
       defaultPrepTime: parseInt(apiSettings.default_prep_time) || 15,

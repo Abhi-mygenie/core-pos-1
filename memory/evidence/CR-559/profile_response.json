@@ -352,7 +352,8 @@
         "reconcile_amount": "No",
         "order_edit_access": "No",
         "edit_order_confirm_web": "Yes",
-        "cancel_note_mandatory": "No"
+        "cancel_note_mandatory": "No",
+        "scan_order_auto_print": "Yes"
       },
       "edc": {
         "id": 69,
