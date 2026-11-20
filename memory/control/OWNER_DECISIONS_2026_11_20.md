@@ -84,3 +84,14 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 - **⚠ Caveat (not fully "tested"):** Nov-sprint QA was **BLOCKED by BUG-685** (place-order crash prevented creating a self-made split order), so the split→Unpaid click was **never executed**. Status = **RETEST pending**. So: backend-confirmed + FE-implemented, but end-to-end QA on a real split order is still outstanding.
 - **Net:** Step 2 is **unblocked** — no backend wait. Remaining work for BUG-671 = QA retest only.
 **Shared-file lock:** `OrderReportBetaPage.jsx` is touched by BUG-711/671/733/735 + all of Cluster C → one owner-session/PR at a time (line-ranges are disjoint).
+
+---
+
+## BUG-733 — OD-733-01 RESOLVED 2026-11-20 = (a) (date-input swap to shadcn DatePicker)
+**Context:** PLANNING Gate 2 + Gate 3 done (`impact/BUG-733_IMPACT_ANALYSIS.md`, `plans/BUG-733_IMPLEMENTATION_PLAN.md`). Reuse existing `components/reports/DatePicker.jsx`; swap native `<input type="date">` on `OrderReportBetaPage` (L553/556) + `CreditCustomerDetailSheet` (L448/457). Format-identical `YYYY-MM-DD` → no report-fetch / client-filter change.
+
+**How other reports manage the date (code-checked):** the 3 existing DatePicker consumers — `AllOrdersReportPage` (L158), `RoomOrdersReportPage` (L331), `OrderSummaryPage` (L27) — all use a SINGLE date seeded to `today()`, never empty, with NO Clear button and NO range. So the empty-value edge never arises there; chevrons are always safe. Order Beta already matches that (from/to seeded `today()`). The **Credit sheet is the only screen with an optional/clearable range** (`dateFrom/dateTo=''` = unbounded + Clear button), which no existing report models — the reason OD-733-01 was raised.
+
+**OD-733-01 = (a) — owner approved:** keep the Credit **Clear** button (empty = unbounded, renders as "Select date"); add a 2-line guard to `DatePicker` prev/next-day handlers so clicking a chevron on an empty value is a no-op (prevents `NaN-NaN-NaN`). Backward-compatible for the 3 seeded consumers (never empty). 
+
+**Status:** BUG-733 = GATE_3_PLAN_COMPLETE. **OD-733-01 closed = (a).** Only **Gate 4 GO** remains before IMPLEMENTATION. Shared-file lock on `OrderReportBetaPage.jsx` (711/671/735/Cluster C) — land in the single locked session; edits L553-557 are line-disjoint.

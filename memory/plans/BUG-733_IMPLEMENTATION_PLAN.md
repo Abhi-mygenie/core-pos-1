@@ -1,7 +1,7 @@
 # Implementation Plan (Gate 3) — BUG-733 — 2026-11-20
 
 **Role:** PLANNING (Gate 3) · **Sprint:** nov_cr_batch · **Risk:** LOW · **Code Reality:** FULL
-**Depends on:** Gate 2 IA `impact/BUG-733_IMPACT_ANALYSIS.md` · **Owner gate:** needs Gate 4 GO + answer to **OD-733-01** (default assumed = **(a)**).
+**Depends on:** Gate 2 IA `impact/BUG-733_IMPACT_ANALYSIS.md` · **Owner gate:** needs Gate 4 GO. **OD-733-01 RESOLVED 2026-11-20 = (a)** (owner approved) — plan below is the (a) path; E-D1/E-D2 guard + Clear retained are now mandatory, not conditional.
 **Reuse:** `src/components/reports/DatePicker.jsx` (single-date, `value`/`onChange` in `YYYY-MM-DD`). No new component (OD-P0-1=a).
 
 Plan is written for **OD-733-01 = (a)** (keep Clear button; guard chevrons on empty). If owner picks (b) or (c), edits E-C* change — flagged inline.

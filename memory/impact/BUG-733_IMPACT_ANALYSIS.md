@@ -58,8 +58,9 @@
 
 ## Owner decisions (block Gate-2 sign-off)
 
-**OD-733-01 — Credit date filter "empty/unbounded" semantics.** With `DatePicker` there is no empty state and the prev/next-day chevrons misbehave on an empty value. Choose:
-- **(a) RECOMMENDED — keep Clear, neutralise chevrons while empty.** Keep the existing **Clear** button (sets `''` → picker shows "Select date"); on the Credit instances treat an empty value as "no bound". Simplest safe option: the chevrons only shift a concrete date — guard them so an empty value is a no-op (the plan's E-C3 guard), preserving today's "optional range" behaviour exactly.
+**OD-733-01 — RESOLVED 2026-11-20 = (a)** (owner approved). *Rationale confirmed against code: the 3 existing `DatePicker` reports (`AllOrdersReportPage` L158, `RoomOrdersReportPage` L331, `OrderSummaryPage` L27) all use a single date seeded to `today()`, never empty, no Clear/range — so none hits the empty-value case. Order Beta already matches that (from/to seeded `today()`). The Credit sheet is the only screen with an optional/clearable range, so option (a) keeps that behaviour.* 
+With `DatePicker` there is no empty state and the prev/next-day chevrons misbehave on an empty value. Choose:
+- **(a) ✅ CHOSEN — keep Clear, neutralise chevrons while empty.** Keep the existing **Clear** button (sets `''` → picker shows "Select date"); on the Credit instances treat an empty value as "no bound". Simplest safe option: the chevrons only shift a concrete date — guard them so an empty value is a no-op (the plan's E-C3 guard), preserving today's "optional range" behaviour exactly.
 - **(b)** Seed Credit `dateFrom/dateTo` with real defaults (e.g. first-of-month → today) so the picker is never empty, and drop the Clear button. Changes current UX (range is always bounded).
 - **(c)** Leave Credit on the native input; migrate Order Beta only. (Partially satisfies the P0, defers the Credit facet.)
 

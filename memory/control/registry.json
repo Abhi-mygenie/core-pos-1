@@ -41225,7 +41225,7 @@
       "priority": "P0",
       "risk": "LOW",
       "duplicate_check": "DISTINCT",
-      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Native browser date input on Credit sheet and Order Report Beta instead of shadcn calendar. QA Groups 2 & 4. [PLANNING 2026-11-20: Gate2 impact/BUG-733_IMPACT_ANALYSIS.md + Gate3 plans/BUG-733_IMPLEMENTATION_PLAN.md. Reuse components/reports/DatePicker.jsx; swap native date inputs on OrderReportBetaPage L553/556 + CreditCustomerDetailSheet L448/457. OD-733-01 (Credit empty/clearable semantics) OPEN, default=a.]",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MINOR] Native browser date input on Credit sheet and Order Report Beta instead of shadcn calendar. QA Groups 2 & 4. [PLANNING 2026-11-20: Gate2 impact/BUG-733_IMPACT_ANALYSIS.md + Gate3 plans/BUG-733_IMPLEMENTATION_PLAN.md. Reuse components/reports/DatePicker.jsx; swap native date inputs on OrderReportBetaPage L553/556 + CreditCustomerDetailSheet L448/457. OD-733-01 RESOLVED 2026-11-20 = (a): keep Credit Clear button + guard DatePicker prev/next-day chevrons on empty value.]",
       "severity": "P0"
     },
     {
