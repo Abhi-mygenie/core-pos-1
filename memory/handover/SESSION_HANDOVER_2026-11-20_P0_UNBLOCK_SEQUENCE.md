@@ -29,9 +29,9 @@
 - Do NOT claim fixed until backend confirms partial-order reversal semantics.
 - Files: payment mutation path (`paymentMutationService.makeOrderUnpaid`) + wherever the Unpaid gate lives (`OrderReportBetaPage.jsx` L764, Credit page).
 
-### Step 3 — BUG-733 (after scope decision)
-- Build reusable `<DateRangePicker>` wrapping `components/ui/calendar.jsx`.
-- Migrate ONLY Credit + `OrderReportBetaPage.jsx` L553/556 now. Leave the other ~63 screens as a separate tracked rollout.
+### Step 3 — BUG-733 (OD-P0-1 = (a), RESOLVED)
+- **REUSE the existing `components/reports/DatePicker.jsx`** (shadcn Calendar; already used by AllOrders/RoomOrders/OrderSummary). Do NOT build a new component.
+- Migrate ONLY Credit + `OrderReportBetaPage.jsx` L553/556 now. Leave the other ~63 screens (native input + CalendarIcon style) as a separate tracked UI-consistency rollout.
 
 ### Then (fall-out, not in the three)
 - **BUG-735** → trivial: hide Change/Unpaid on split rows (`payment_method_raw !== 'partial'` on L754/L764), consistent with BUG-671.
@@ -41,7 +41,7 @@
 ---
 
 ## DECISIONS NEEDED FROM OWNER (block Step 2 & 3)
-- **D1 (BUG-733 scope):** (a) shared picker + migrate ONLY Credit + Order Beta now [RECOMMENDED]; or (b) full ~65-screen rollout [separate large effort].
+- **D1 (BUG-733 scope): RESOLVED = (a)** — reuse existing `components/reports/DatePicker.jsx`, migrate ONLY Credit + Order Beta now; full ~65-screen rollout is a separate effort.
 - **D2 (BUG-671 backend):** confirm partial/split order → unpaid is supported server-side and the expected effect on the already-paid leg. FE cannot finish without this.
 
 ## Shared-file lock

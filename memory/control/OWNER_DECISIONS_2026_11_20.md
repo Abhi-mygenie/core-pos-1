@@ -74,6 +74,6 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 
 **Order:** (1) BUG-711 quick P0 win → (2) BUG-671 Gate-2 IA + backend brief in parallel → (3) BUG-733 shared picker + 2 screens. Then BUG-735 becomes a trivial split-row gating tweak, and Cluster C ships as the clean FE batch; Cluster G references the new picker.
 
-**OD-P0-1 (BUG-733 scope) — PENDING:** (a) shared picker + migrate ONLY Credit + Order Beta now [RECOMMENDED]; or (b) full ~65-screen rollout [separate large effort].
+**OD-P0-1 (BUG-733 scope) — RESOLVED 2026-11-20 = (a).** Migrate ONLY Credit + Order Beta now; full ~65-screen standardisation tracked as a SEPARATE UI-consistency effort. **No new component needed** — reuse the EXISTING `components/reports/DatePicker.jsx` (shadcn Calendar; already used by AllOrdersReportPage/RoomOrdersReportPage/OrderSummaryPage). Scope = swap native `<input type="date">` on OrderReportBetaPage (L553/556) + Credit screen for `<DatePicker>`. Note: the other ~63 screens use a 3rd style (native input + CalendarIcon dress-up) — out of scope here.
 **OD-P0-2 (BUG-671 backend) — PENDING:** confirm partial/split order → unpaid is supported server-side and the expected effect on the already-paid leg. FE cannot finish without this.
 **Shared-file lock:** `OrderReportBetaPage.jsx` is touched by BUG-711/671/733/735 + all of Cluster C → one owner-session/PR at a time (line-ranges are disjoint).
