@@ -41533,7 +41533,7 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_3_PLAN READY 2026-11-20 — price entry both places + pre-final-bill guard (CollectPaymentPanel, financial/R5). HIGH. Implement LAST, after BUG-741 + CR-547/552/558. Track 2.",
+      "status": "GATE_3_PLAN SUPERSEDED 2026-11-20 — re-plan required. Probe: web-order APS price is BACKEND-BLOCKED (no update-food-price [HTTP 404]; update-place-order cart-update has no line id = add-only; loaded lines placed:true, update sends unplaced-only). FE-only interim = pre-bill guard (OD-561-B). Needs OD-561-A re-confirm + backend brief (OD-561-C). Evidence: evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md.",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",

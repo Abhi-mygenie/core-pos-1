@@ -1,5 +1,12 @@
 # CR-561 — Gate 3 Implementation Plan — APS ₹1 price entry (POS-1)
 
+> ⛔ **SUPERSEDED 2026-11-20 — DO NOT IMPLEMENT AS-IS. RE-PLAN REQUIRED.**
+> Probe found NO FE-only path to persist a web-order APS price (no `update-food-price` [404]; `cart-update` has no line id → add-only; loaded lines are `placed:true`, update sends unplaced-only).
+> **Edit #2 (price into accept payload) is impossible — delete it.** Gap A/B price persistence is **backend-blocked** (needs B3/B4 endpoint).
+> Still valid FE-only: **Edit #4 pre-bill guard (OD-561-B)**. Sequencing note stale (CR-547/552/557/558 all settled).
+> Next: re-confirm OD-561-A + file backend brief (OD-561-C), then rewrite. Evidence: `evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md`.
+
+
 **Risk:** HIGH (now touches billing gate, financial/R5) · **Decisions:** LOCKED — OD-561-A both places; OD-561-B allow ₹1 placeholder but **real price required before final bill prints**.
 **Sequencing:** implement AFTER BUG-741 (shared `PopoutItemRow`) and after open CR-547/552/558 settle on `ScanOrderPopOut.jsx`. Do this item LAST in the batch.
 
