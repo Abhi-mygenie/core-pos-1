@@ -1,3 +1,15 @@
+## FILE_OWNERSHIP — BUG-733 PLANNING Gate 3 (2026-11-20) — planned, marker `// BUG-733`
+
+| File | Planned change | Planning agent |
+|------|---------------|----------------|
+| `src/pages/reports-module/OrderReportBetaPage.jsx` | E-O1 import DatePicker; E-O2/E-O3 swap native From/To `<input type="date">` (L553/556) → `<DatePicker value={fromDate\|toDate} onChange={setFromDate\|setToDate} />` wrapped in `<span data-testid="from-date\|to-date">`. Date inputs ONLY. **Shared hotspot** (BUG-711/671/735 + Cluster C) — one session/PR; edits L553-557 line-disjoint. | BUG-733 PLANNING 2026-11-20 |
+| `src/components/credit/CreditCustomerDetailSheet.jsx` | E-C1 import DatePicker; E-C2/E-C3 swap native From/To `<input type="date">` (L448/457) → `<DatePicker>` wrapped in `<span data-testid="credit-date-from\|credit-date-to">`. KEEP Calendar icon + "Date Range:" + Clear button (OD-733-01=a). Date-filter block L442-471 only. ⚠ future BUG-734 (same file) — sequence together. | BUG-733 PLANNING 2026-11-20 |
+| `src/components/reports/DatePicker.jsx` | E-D1/E-D2 add `if (!value) return;` guard to `handlePrevDay`/`handleNextDay` (empty-value no-op for Credit optional range). Additive, backward-compatible (3 seeded consumers never empty). | BUG-733 PLANNING 2026-11-20 |
+| `src/__tests__/components/reports/DatePicker.bug733.test.jsx` | NEW — unit test for empty-value chevron guard. | BUG-733 PLANNING 2026-11-20 |
+
+> Planned only — no code written yet. Awaiting Gate 4 GO.
+
+
 | `frontend/src/components/dashboard/ScanOrderPopOut.jsx` | BUG-731 IMPL 2026-11-20: added `visibleItems` (`!isCheckInMarker`) source + routed list/count/KOT-selection through it; added `scan-order-popout-item-count` test-id. Presentation+selection only; no payload value change (marker already price-0). | BUG-731 IMPL 2026-11-20 |
 | `frontend/src/__tests__/components/dashboard/BUG731_CheckInMarker.test.jsx` | **NEW** — asserts marker hidden / uncounted / un-KOT-selectable + regression. | BUG-731 IMPL 2026-11-20 |
 

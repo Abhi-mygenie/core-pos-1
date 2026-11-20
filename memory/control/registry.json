@@ -41214,7 +41214,7 @@
       "client": "ALL",
       "source": "QA_REPORT_NOV_SPRINT_2026-11-19.md (QA-FOUND) | merged into main (renumbered from BUG-726) 2026-11-19",
       "intake_doc": "change_requests/MERGE_QA_NOV_SPRINT_2026_11_19.md",
-      "status": "GATE_3_PLAN_COMPLETE 2026-11-20 \u2014 IA + Implementation Plan written (PLANNING); awaiting Gate 4 GO + OD-733-01",
+      "status": "GATE_3_PLAN_COMPLETE 2026-11-20 \u2014 IA + Implementation Plan written (PLANNING); OD-733-01 RESOLVED=(a); awaiting Gate 4 GO",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",

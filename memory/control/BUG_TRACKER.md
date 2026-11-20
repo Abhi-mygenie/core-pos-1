@@ -63,7 +63,7 @@ Incoming `BUG-713…732` collided with our `BUG-713…719`, so renumbered to **B
 | **BUG-730** | Audit drill-down shows "High Risk" on every row; no Risk/Duration col in UI | P2 | LOW | Reports/Audit |
 | **BUG-731** | ScanOrderPopOut check-in marker shown as KOT item; count includes marker/cancelled | P2 | MEDIUM | Order Entry/ScanOrderPopOut |
 | **BUG-732** | Cart edit — edited row jumps to bottom | P3 | LOW | Order Entry/Cart |
-| **BUG-733** | Native date input instead of shadcn calendar (Credit, Order Report Beta) | P3 | LOW | Credit/Reports |
+| **BUG-733** | Native date input instead of shadcn calendar (Credit, Order Report Beta) | P0 (owner-override; native P3) | LOW | Credit/Reports | GATE_3_PLAN_COMPLETE 2026-11-20 · OD-733-01=(a) · awaiting Gate 4 GO |
 | **BUG-734** | Credit `[null]` item names + silent Remove failure | P2 | MEDIUM | Credit |
 | **BUG-735** | Change-Method/Mark-Unpaid shown on split row (inconsistent gating vs BUG-671) | P2 | MEDIUM | Reports/Credit |
 | **BUG-736** | "Update now" toast overlaps table rows | P3 | LOW | Shell/UX |
