@@ -1,3 +1,13 @@
+## FILE_OWNERSHIP — Cluster C IMPL (2026-11-20) — markers `// BUG-724/725/726/727/737`
+
+| File | Change (shipped) | Owner |
+|------|------------------|-------|
+| `src/pages/reports-module/OrderReportBetaPage.jsx` | BUG-724 (`useRef` import; `fetchSeqRef` sequence guard in `fetchData`; KPI strip + summary render `—` until `data` to kill "0 orders" flash) · BUG-725 (`getPaymentBadge` +upi/card/room/merge + Title-Case fallback) · BUG-726 (removed phantom cancelled-row `<td>`, folded reason into Status `<td>`) · BUG-727 (removed space in `</th>{/* CR-349 */}`). | Cluster C IMPL 2026-11-20 |
+| `src/pages/AllOrdersReportPage.jsx` | BUG-737 (deleted CR-003 diagnostic `useEffect`; dropped unused `permissions` from `useAuth()`). | Cluster C IMPL 2026-11-20 |
+
+BUG-728 PARKED — not implemented.
+
+
 ## FILE_OWNERSHIP — Cluster C PLANNING Gate 3 (2026-11-20) — planned, markers `// BUG-724/725/726/727/737`
 
 | File | Planned change | Planning |

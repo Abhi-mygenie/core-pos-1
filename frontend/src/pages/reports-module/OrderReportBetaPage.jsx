@@ -1,7 +1,7 @@
 // CR-117: Order Report Beta — Combined Backend-Aggregated Daily Order Report
 // New isolated page. No transform file — displays backend fields directly.
 // Design mockup: /cr117-mockup.html
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cancelAndRefund } from '../../api/services/razorpayRefundService'; // CR-165
 import CancelOrderModal from '../../components/order-entry/CancelOrderModal'; // CR-165
@@ -44,8 +44,13 @@ const getPaymentBadge = (pm) => {
     payment_gateway: { label: 'PG', cls: 'bg-cyan-100 text-cyan-800' },
     partial: { label: 'Split Bill', cls: 'bg-blue-100 text-blue-800' }, // BUG-546
     cash_on_delivery: { label: 'COD', cls: 'bg-emerald-100 text-emerald-800' },
+    upi:   { label: 'UPI',    cls: 'bg-indigo-100 text-indigo-800' }, // BUG-725
+    card:  { label: 'Card',   cls: 'bg-sky-100 text-sky-800' },       // BUG-725
+    room:  { label: 'Room',   cls: 'bg-purple-100 text-purple-800' }, // BUG-725
+    merge: { label: 'Merged', cls: 'bg-zinc-100 text-zinc-700' },     // BUG-725
   };
-  return map[pm?.toLowerCase()] || { label: pm || '—', cls: 'bg-zinc-100 text-zinc-600' };
+  const key = pm?.toLowerCase(); // BUG-725: Title-Case fallback so unmapped methods never show raw lowercase
+  return map[key] || { label: pm ? pm.charAt(0).toUpperCase() + pm.slice(1) : '—', cls: 'bg-zinc-100 text-zinc-600' };
 };
 
 // CR-117: Status badge
@@ -306,24 +311,27 @@ export default function OrderReportBetaPage() {
 
   // CR-117: Fetch data (declared first to avoid TDZ in downstream useCallback deps)
   // BUG-353: passes onProgress so chunked fetches show "month X of N" in spinner
+  const fetchSeqRef = useRef(0); // BUG-724: ignore stale responses
   const fetchData = useCallback(async (from, to) => {
+    const seq = ++fetchSeqRef.current; // BUG-724
     setIsLoading(true);
     setError(null);
     setFetchProgress(null); // BUG-353: reset on each new fetch
     try {
       const result = await getOrderReportBetaCombined(from, to, (current, total) => {
-        if (total > 1) setFetchProgress({ current, total }); // BUG-353: only show when > 1 chunk
+        if (seq === fetchSeqRef.current && total > 1) setFetchProgress({ current, total }); // BUG-353 + BUG-724
       });
+      if (seq !== fetchSeqRef.current) return; // BUG-724: a newer fetch started — drop this stale result
       setData(result);
       // Auto-expand all days
       const days = new Set((result.daily_reports || []).map(d => d.date));
       setExpandedDays(days);
     } catch (err) {
+      if (seq !== fetchSeqRef.current) return; // BUG-724
       console.error('[CR-117] Fetch failed:', err);
       setError(err?.message || 'Failed to load report');
     } finally {
-      setIsLoading(false);
-      setFetchProgress(null); // BUG-353: always clear on completion
+      if (seq === fetchSeqRef.current) { setIsLoading(false); setFetchProgress(null); } // BUG-724 + BUG-353
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -600,10 +608,10 @@ export default function OrderReportBetaPage() {
 
           {/* KPI Strip */}
           <div className="flex gap-3" data-testid="kpi-strip">
-            <KpiCard label="Total Orders" value={stats.paidOrders + stats.unpaidOrders + stats.cancelOrders || 0} color="#18181b" testId="kpi-total" />
-            <KpiCard label="Paid Orders" value={stats.paidOrders || 0} color="#16a34a" testId="kpi-paid" />
-            <KpiCard label="Unpaid Orders" value={stats.unpaidOrders || 0} color="#eab308" testId="kpi-unpaid" />
-            <KpiCard label="Cancelled" value={stats.cancelOrders || 0} color="#dc2626" testId="kpi-cancelled" />
+            <KpiCard label="Total Orders" value={data ? (stats.paidOrders + stats.unpaidOrders + stats.cancelOrders || 0) : '—'} color="#18181b" testId="kpi-total" />{/* BUG-724: no 0-flash until data */}
+            <KpiCard label="Paid Orders" value={data ? (stats.paidOrders || 0) : '—'} color="#16a34a" testId="kpi-paid" />
+            <KpiCard label="Unpaid Orders" value={data ? (stats.unpaidOrders || 0) : '—'} color="#eab308" testId="kpi-unpaid" />
+            <KpiCard label="Cancelled" value={data ? (stats.cancelOrders || 0) : '—'} color="#dc2626" testId="kpi-cancelled" />
           </div>
 
           {/* Filter Bar */}
@@ -626,8 +634,8 @@ export default function OrderReportBetaPage() {
               onChange={(v) => setFilters(p => ({ ...p, pg: v }))} testId="filter-pg" />
 
             <div className="ml-auto text-xs text-zinc-500 flex items-center gap-3">
-              <span data-testid="summary-orders">{totalFilteredOrders} orders</span>
-              <span className="font-semibold text-zinc-700" data-testid="summary-amount">{fmtINR(totalFilteredAmount)}</span>
+              <span data-testid="summary-orders">{data ? `${totalFilteredOrders} orders` : '—'}</span>{/* BUG-724 */}
+              <span className="font-semibold text-zinc-700" data-testid="summary-amount">{data ? fmtINR(totalFilteredAmount) : '—'}</span>
             </div>
           </div>
 
@@ -702,7 +710,7 @@ export default function OrderReportBetaPage() {
                           <th className="px-3 py-2 text-right">Service</th>
                           <th className="px-3 py-2 text-left">Payment</th>
                           <th className="px-3 py-2 text-left">Status</th>
-                          <th className="px-3 py-2 text-right">Actions</th> {/* CR-349 */}
+                          <th className="px-3 py-2 text-right">Actions</th>{/* CR-349 */}
                         </tr>
                       </thead>
                       <tbody>
@@ -741,13 +749,15 @@ export default function OrderReportBetaPage() {
                               <td className="px-3 py-2 text-right text-zinc-500">{fmtINR(row.gst_amount)}</td>
                               <td className="px-3 py-2 text-right text-zinc-500">{fmtINR(row.service_tax)}</td>
                               <td className="px-3 py-2"><Pill label={pay.label} cls={pay.cls} /></td>
-                              <td className="px-3 py-2"><Pill label={status.label} cls={status.cls} /></td>
-                              {/* BUG-674 B2b: cancel info on cancelled rows */}
-                              {row.cancellation_reason && (
-                                <td className="px-3 py-2 text-xs text-red-600" colSpan={1} data-testid={`cancel-reason-${row.order_id}`}>
-                                  {row.cancellation_reason}{row.cancellation_note ? ` — ${row.cancellation_note}` : ''}{row.canceled_by_name ? ` (${row.canceled_by_name})` : ''}
-                                </td>
-                              )}
+                              {/* BUG-726: fold cancel reason into Status cell so row cell-count == header count */}
+                              <td className="px-3 py-2">
+                                <Pill label={status.label} cls={status.cls} />
+                                {row.cancellation_reason && (
+                                  <div className="text-[10px] text-red-600 mt-0.5 max-w-[160px] whitespace-normal" data-testid={`cancel-reason-${row.order_id}`}>
+                                    {row.cancellation_reason}{row.cancellation_note ? ` — ${row.cancellation_note}` : ''}{row.canceled_by_name ? ` (${row.canceled_by_name})` : ''}
+                                  </div>
+                                )}
+                              </td>
                               {/* CR-349: action buttons — Change / Unpaid / Reprint / Refund */}
                               <td className="px-3 py-2">
                                 <div className="flex items-center justify-end gap-1 flex-wrap">

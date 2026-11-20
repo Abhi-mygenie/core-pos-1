@@ -1,3 +1,6 @@
+**Last Updated:** 2026-11-20 — **IMPLEMENTATION Cluster C: BUG-724/725/726/727/737 SHIPPED (GATE_5A_IMPLEMENTED), webpack clean.** BUG-724 fetch sequence-guard + no "0 orders" flash; BUG-725 UPI/Card/Room/Merged labels + Title-Case fallback; BUG-726 cancelled-row cell-count fixed (reason folded into Status cell); BUG-727 `<tr>` whitespace node removed; BUG-737 CR-003 console diagnostic deleted. BUG-728 still PARKED. Authenticated browser QA pending (preprod creds in test_credentials.md). Handover: `handover/QA_HANDOVER_CLUSTER_C_2026-11-20.md`.
+
+
 **Last Updated:** 2026-11-20 — **Cluster C Gate 3 CLOSED** for BUG-724/725/726/727/737 (plans final; awaiting **Gate 4 GO**). **BUG-728 PARKED by owner** (OD-728-01 deferred) — excluded from the batch, provisional analysis retained. No open Cluster C questions remain besides the parked item.
 
 

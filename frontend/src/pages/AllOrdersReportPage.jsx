@@ -129,7 +129,7 @@ const TAB_FILTERS = {
 const AllOrdersReportPage = () => {
   const navigate = useNavigate();
   const { restaurant, paymentTypes: restaurantPaymentTypes, printerAgents, cancellation } = useRestaurant(); // BUG-682: +cancellation
-  const { hasPermission, permissions, user } = useAuth();
+  const { hasPermission, user } = useAuth(); // BUG-737: dropped unused `permissions`
   const { toast } = useToast();
   const schedules = useMemo(() => restaurant?.schedules || [], [restaurant?.schedules]);
   // BUG-361: persist sidebar state across reloads
@@ -138,20 +138,7 @@ const AllOrdersReportPage = () => {
   );
   const [isSilentMode, setIsSilentMode] = useState(false);
 
-  // CR-003 diagnostic — once-per-mount log of the logged-in user's
-  // permissions so we can confirm whether `update_payment` /
-  // `order_unpaid` are present on the Owner role on preprod. Remove or
-  // gate behind a debug flag once confirmed.
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('[CR-003 DIAGNOSTIC] Logged-in user/permissions:', {
-      user_id: user?.id,
-      role: user?.roleName,
-      permissions,
-      has_update_payment: hasPermission?.('update_payment') ?? false,
-      has_order_unpaid: hasPermission?.('order_unpaid') ?? false,
-    });
-  }, [user?.id, user?.roleName, permissions, hasPermission]);
+  // BUG-737: removed CR-003 once-per-mount diagnostic console.log (purpose served)
   
   // Report state
   const [activeTab, setActiveTab] = useState('all');
