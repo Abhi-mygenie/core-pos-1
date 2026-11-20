@@ -40432,7 +40432,7 @@
       "title": "Table View: accepted aggregator order has no open/expand path (TableCard click disabled + AggregatorOrderPopOut gated to status 0/7)",
       "priority": "P0",
       "risk": "MEDIUM",
-      "status": "GATE_2_IA_CLOSED 2026-11-20 (REOPENED) \u2014 live ChannelColumnsLayout not passed onAggregatorView; fix = thread prop through ChannelColumnsLayout+ChannelColumn + DashboardPage:2048. 3 files. \u2192 Gate 3.",
+      "status": "GATE_3_PLAN READY 2026-11-20 \u2014 3-file onAggregatorView prop threading (ChannelColumn+ChannelColumnsLayout+DashboardPage:2048). No deps. Ship first (Track 1).",
       "sprint_key": "nov_cr_batch",
       "area": "Dashboard / Aggregator",
       "assignee": "Abhishek",
@@ -40444,9 +40444,10 @@
       "notes": "2026-11-18 INTAKE. TableCard.jsx L312 onClick no-op for isAggregator (// CR-106); AggregatorOrderPopOut.jsx L15-18/L44-53 queue only isAggregator && fOrderStatus in (0,7) -> accepted aggregator orders (status 1/2/5) have no re-open path; DashboardPage.jsx L1490 handleTableClick never reached for aggregator tiles. Fix direction: read-only view mode in AggregatorOrderPopOut OR explicit expand affordance on aggregator TableCard. Risk MEDIUM. Planning-skip NOT eligible. Related CR-106. Evidence: evidence/INV-POS-3BUGS/ (06_dashboard_tableview.jpeg). Report: investigations/INV-POS-3BUGS_INVESTIGATION_REPORT.md (Issue 1). OD-703-01 open. | 2026-11-18 PLANNING Gate 2+2.5: IA complete (impact/BUG-703_IMPACT_ANALYSIS.md). OD-703-01=Option A (tap tile -> read-only AggregatorOrderPopOut view mode, no Accept/Reject). Design approved. Risk MEDIUM. Files: AggregatorOrderPopOut.jsx + TableCard.jsx:312 + DashboardPage.jsx. Related CR-106. | 2026-11-19 PLANNING Gate 3: Implementation Plan complete (plans/BUG-703_IMPLEMENTATION_PLAN.md). OD-703-02=ALL statuses open view-only; OD-703-03=KOT+Bill printable in view-only, Accept/Reject hidden, close returns. 4 files: AggregatorOrderPopOut.jsx (view-only mode) + TableCard.jsx:312 (route aggregator click) + DashboardPage.jsx (aggregatorViewOrder state+handler+props) + TableSection.jsx (prop thread). Mandatory 0/7 queue untouched (precedence). Awaiting Gate 4 GO. | 2026-11-19 IMPLEMENTED (Gate 4 GO): view-only mode in AggregatorOrderPopOut.jsx (VIEW ONLY badge, Accept/Reject+prep hidden, footer=Print KOT/Print Bill/Close via manuallyPrintAggregator) + TableCard.jsx:314 aggregator tile tap -> onAggregatorView(table.order) + DashboardPage.jsx aggregatorViewOrder state/handleAggregatorView/viewOrder+onCloseView + TableSection.jsx prop thread. ALL statuses. Mandatory 0/7 queue precedence kept. webpack compiled clean. marker // BUG-703.",
       "registered_date": "2026-11-18",
       "release_date": "2026-11-17",
-      "gate": "GATE_2",
-      "current_gate": 2,
-      "impact_doc": "impact/BUG-703_IMPACT_ANALYSIS.md"
+      "gate": "GATE_3",
+      "current_gate": 3,
+      "impact_doc": "impact/BUG-703_IMPACT_ANALYSIS.md",
+      "plan_doc": "plans/BUG-703_IMPLEMENTATION_PLAN.md"
     },
     {
       "id": "BUG-704",
@@ -41532,9 +41533,9 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_2_IA_CLOSED 2026-11-20 \u2014 both-places + pre-final-bill price guard (OD-561-B); scope grew to billing gate (CollectPaymentPanel R5). Code reality PARTIAL. Sequence after CR-547/552/558 on ScanOrderPopOut. \u2192 Gate 3.",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_PLAN READY 2026-11-20 \u2014 price entry both places + pre-final-bill guard (CollectPaymentPanel, financial/R5). HIGH. Implement LAST, after BUG-741 + CR-547/552/558. Track 2.",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
       "release_date": "",
@@ -41550,7 +41551,8 @@
         "OD-561-A: LOCKED \u2014 both places (Accept pop-up + Order-Entry edit)",
         "OD-561-B: LOCKED \u2014 allow accepting unpriced (\u20b91 placeholder) BUT real price required before final bill prints (pre-bill guard; billing path in scope, financial/R5)"
       ],
-      "impact_doc": "impact/CR-561_IMPACT_ANALYSIS.md"
+      "impact_doc": "impact/CR-561_IMPACT_ANALYSIS.md",
+      "plan_doc": "plans/CR-561_IMPLEMENTATION_PLAN.md"
     },
     {
       "type": "BUG",
@@ -41560,9 +41562,9 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 2)",
       "intake_doc": "change_requests/BUG-741_POS2_POPUP_CANCEL_WORDING_INTAKE.md",
-      "status": "GATE_2_IA_CLOSED 2026-11-20 \u2014 wording/label only (CancelFoodModal/PopoutItemRow), keep per-item behaviour. LOW\u2013MEDIUM. \u2192 Gate 3 / implement.",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_PLAN READY 2026-11-20 \u2014 wording-only (CancelFoodModal title/button + PopoutItemRow label). Keep per-item behaviour. Implement before CR-561. Track 2.",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
       "release_date": "",
@@ -41577,7 +41579,8 @@
       "open_decisions": [
         "POS-2: LOCKED \u2014 keep per-item cancel, clarify wording only"
       ],
-      "impact_doc": "impact/BUG-741_IMPACT_ANALYSIS.md"
+      "impact_doc": "impact/BUG-741_IMPACT_ANALYSIS.md",
+      "plan_doc": "plans/BUG-741_IMPLEMENTATION_PLAN.md"
     },
     {
       "type": "BUG",
@@ -41587,9 +41590,9 @@
       "client": "ALL",
       "source": "AGENT-DISCOVERED; investigations/INV-KOT-CUSTOM-ITEM-2026-11-20.md (HIGH confidence, 8/10 steps)",
       "intake_doc": "change_requests/BUG-742_CUSTOM_ITEM_KOT_NOT_PRINTED_FIRST_PLACE_INTAKE.md",
-      "status": "GATE_2_IA_CLOSED 2026-11-20 \u2014 FE-ONLY fix CONFIRMED (no backend). customItemFromAPI add station:data.station_name||null. Backend already resolves category->station (station_source=category) and returns station_name on the product record (verified read-only get-products-list: station_name=\"KDS\"). Backend brief WITHDRAWN. OD-742-A=P1, OD-742-B=full gate, OD-742-C=auto station. READY for Gate 3.",
-      "gate": "GATE_2",
-      "current_gate": 2,
+      "status": "GATE_3_PLAN READY 2026-11-20 \u2014 FE 1-liner customItemFromAPI station:data.station_name||null. Full gate (OD-742-B), P1. Dev-test: confirm add-single-product returns station_name. No backend. Track 1.",
+      "gate": "GATE_3",
+      "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
       "release_date": "",
@@ -41607,13 +41610,14 @@
         "OD-742-A: LOCKED \u2014 severity P1",
         "OD-742-B: LOCKED \u2014 full gate (no planning-skip; CRITICAL retained)"
       ],
-      "verification": "DONE (read-only) \u2014 product records carry station_name resolved from category; evidence/BUG-742/PRODUCT_STATION_PROBE_2026-11-20.md"
+      "verification": "DONE (read-only) \u2014 product records carry station_name resolved from category; evidence/BUG-742/PRODUCT_STATION_PROBE_2026-11-20.md",
+      "plan_doc": "plans/BUG-742_IMPLEMENTATION_PLAN.md"
     }
   ],
   "meta": {
     "last_updated": "2026-11-20",
-    "last_action": "BUG-742: backend brief WITHDRAWN (owner correct) \u2014 category->station already resolved by backend (station_name on product record, verified). Fix is FE-only 1-liner (data.station_name). BUG-742 now Gate-3 READY. No app code changed.",
-    "current_gate": "2",
+    "last_action": "PLANNING Gate 3: implementation plans written for BUG-703, BUG-742, BUG-741, CR-561 (two tracks). No app code changed.",
+    "current_gate": "3",
     "last_qa_batch": "CR-528 + CR-546 (Audit Report v3) 2026-11-18",
     "last_qa_date": "2026-11-18",
     "qa_group_c_report": "test_reports/QA_REPORT_GROUP_C_2026_07_31.md",
