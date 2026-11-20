@@ -41,3 +41,14 @@ into `restaurant.settings` so `DashboardPage.handleConfirmOrder` can read it.
 - **Option B (no-backend fallback):** frontend calls `printer-agent-config` once at load and merges `scanOrderAutoPrint` into `restaurant.settings`.
 
 **Status:** CR-559 Gate-3 plan REVISED v2 at `plans/CR-559_IMPLEMENTATION_PLAN.md`. Blocked on OD-5 only.
+
+---
+
+## CR-559 — FINAL direction + GATE-3 GO (2026-11-20)
+- **OD-1 SUPERSEDED:** no `printer_agent` on the confirm payload; confirm endpoint untouched.
+- **OD-2 KEPT:** KOT stations = new web order → ALL items; web edit → food_status-7 (`isNotConfirmed`) items only.
+- **OD-3 SUPERSEDED:** **KOT only** on Accept, **no BILL**.
+- **OD-4 KEPT:** Accept KOT auto-print gated by `scanOrderAutoPrint` toggle.
+- **OD-5 = Option A:** backend adds `scan_order_auto_print` at profile `restaurants[0]` root (brief: `backend_briefs/BACKEND_BRIEF_CR-559_2026-11-20.md`).
+- **Mechanism:** Accept reuses the manual-KOT process (`printOrder('kot', ...)` → order-temp-store + update-print-status `kot_print:'Yes'`). Prior "no printOrder after accept" rule reversed (safe: backend auto-print suppressed + web-only + gated).
+- **GATE-3 GO** given by owner. **Implementation deferred** until PRE-IMPL VALIDATION (profile probe shows `scan_order_auto_print`) passes. Plan: `plans/CR-559_IMPLEMENTATION_PLAN.md` (FINAL v3).

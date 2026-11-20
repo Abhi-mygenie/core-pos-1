@@ -1,143 +1,118 @@
-# IMPLEMENTATION PLAN (Gate 3, REVISED v2 — PROBE-1 RESOLVED) — CR-559
+# IMPLEMENTATION PLAN (Gate 3, FINAL v3 — GATE-3 GO) — CR-559
 
 **Date:** 2026-11-20 · **Role:** PLANNING (Gate 3 — plan only, NO code) · **Risk:** CRITICAL (printing / order flow) · **Priority:** P1
-**Item:** CR-559 — Web/Scan **Accept** must send `printer_agent` (KOT+BILL) on confirm, **gated by the Scan-Order Auto-print setting** (OD-4 / Option 1).
-**IA:** `change_requests/CR-559_ACCEPT_PRINTER_PARITY_import/05_IMPACT_ANALYSIS.md` · **Decisions:** `control/OWNER_DECISIONS_2026_11_20.md`
-**Branch verified:** `67b3e41` (fresh re-pull 2026-11-20). **Supersedes** plan v1 (which left PROBE-1 open).
+**Item:** CR-559 — Web/Scan **Accept** auto-prints the **KOT** by reusing the manual-KOT process, gated by the Scan-Order Auto-print setting.
+**Branch verified:** `67b3e41` (re-pull 2026-11-20). **Supersedes** plan v1/v2.
+**Status:** GATE-3 GO (owner, 2026-11-20). **Implementation deferred** until PRE-IMPL VALIDATION passes (backend must surface the flag in the profile payload).
 
 ---
 
-## Step 0 — Code Reality (re-verified on branch 67b3e41, 2026-11-20)
-**NONE implemented.** Target files unchanged from v1 Step 0:
-- `api/services/orderService.js:70` — `confirmOrder(orderId, roleName, orderStatus='paid')`; payload = `toAPI.updateOrderStatus` → `{order_id, role_name, order_status}`. No `printer_agent`, no 4th param.
-- `pages/DashboardPage.jsx:1364-1377` — `handleConfirmOrder` calls `confirmOrder(order.orderId, permissions?.[0]||'Manager', defaultOrderStatus)`; deps `[getOrderDataForEntry, permissions, defaultOrderStatus]`. No `printerAgents`, no `isWebOrder` gate. Does NOT import `selectAgentsForKot/Bill/cartStationsToSet`.
-- `contexts/OrderContext.jsx:327-360` — `orderItemsByTableId` whitelist carries `fOrderStatus` (L347) but **NOT `isWebOrder`** (RC-2 confirmed). `getOrderDataForEntry` (DashboardPage:1324-1361) returns full order for takeaway/delivery/walk-in (L1329-1331) and the BUG-082 fallback (L1356) — `isWebOrder` intact there — but for a **physical table / room** it returns a whitelisted entry from `orderItemsByTableId` (L1342), which drops `isWebOrder`. So the web gate breaks only on the table/room path → E5 required.
-- `api/transforms/profileTransform.js:345-442` — `settings` block exposes `autoKot`(=`print_kot`), `autoBill`, `aggregatorAutoKot/Bill`, etc., but **no `scanOrderAutoPrint`** and no `settings_config` read.
-- Helpers reusable: `printerAgentSelector.js` → `selectAgentsForKot` (L78), `selectAgentsForBill` (L71), `cartStationsToSet` (L99). `toAPI.updateOrderStatus` at `orderTransform.js`. Only caller of `confirmOrder` = DashboardPage:1372. `handleScanNewOrder` already sets `isWebOrder` on inserted orders (`socketHandlers.js:575,589`).
-
-## Step 1 — Conflict Pre-Check
-4 target files, additive. No open (non-CLOSED) item owns an overlapping change. Open **BUG-721** also edits DashboardPage but a different area (TableCard permission gating), not `handleConfirmOrder` → no line overlap, second-lander rebases. → **CLEAN**.
+## Locked owner decisions
+- **OD-1 — SUPERSEDED.** Accept does NOT add `printer_agent` to the confirm payload. The confirm endpoint stays byte-identical.
+- **OD-2 — KEPT.** KOT station set: new web order = ALL items; web edit = ONLY food_status-7 (`isNotConfirmed`) items.
+- **OD-3 — SUPERSEDED.** **KOT only** on Accept. **No BILL** is auto-printed on Accept.
+- **OD-4 — KEPT.** Auto-print on Accept is gated by the restaurant's **Scan-Order Auto-print** toggle (`scanOrderAutoPrint`).
+- **OD-5 — Option A (backend).** Backend adds `scan_order_auto_print` to the **profile** payload at `restaurants[0]` root (parity with `print_kot` / `billing_auto_bill_print`). FE maps it one line.
+- **Accept mechanism:** reuse the proven manual-KOT process — `printOrder(orderId, 'kot', stationKot, order, 0, {}, printerAgents)` → `POST /order-temp-store` (builds `printer_agent` internally) then `POST /update-print-status { kot_print: 'Yes' }`. The prior "do NOT call printOrder after accept" rule is intentionally reversed (safe: backend auto-print suppressed + web-only + toggle-gated → no double print).
 
 ---
 
-## ✅ PROBE-1 — RESOLVED: profile payload does NOT carry the flag
+## Step 0 — Code Reality (branch 67b3e41, 2026-11-20) — NONE implemented
+- `pages/DashboardPage.jsx:1364-1377` `handleConfirmOrder` → `confirmOrder(order.orderId, permissions?.[0]||'Manager', defaultOrderStatus)`; deps `[getOrderDataForEntry, permissions, defaultOrderStatus]`. No print, no gate.
+- `pages/DashboardPage.jsx:1748-1768` `handleScanPrintKOT` already does `getStationsFromOrderItems(items, getProductById)` → `printOrder(id,'kot',stationKot, order,0,{}, printerAgents)`. **`printOrder`, `getStationsFromOrderItems`, `getProductById` are already imported/in-scope** → E4 reuses them inline (no new imports).
+- `api/transforms/profileTransform.js:345-442` settings block exposes `autoKot`(=`print_kot`), `autoBill`, etc. — **no `scanOrderAutoPrint`**.
+- `contexts/OrderContext.jsx:327-360` `orderItemsByTableId` whitelist carries `fOrderStatus` (L347) but **NOT `isWebOrder`** (RC-2). Table/room path of `getOrderDataForEntry` (DashboardPage:1342) drops the flag; takeaway/delivery/walk-in (1329-1331) + BUG-082 fallback (1356) keep it.
+- `printOrder` (`orderService.js:134-200`) internally builds `printer_agent` via `selectAgentsForKot`; confirm print via CONFIRM_PRINT_STATUS `kot_print:'Yes'`. UNTOUCHED by this CR.
 
-Live probe, owner account `owner@thegoankitchen.com` (The Goan Kitchen — web/scan tenant), 2026-11-20. Evidence saved:
-- `memory/evidence/CR-559/profile_response.json` + `CR-559_probe.py`
-- `memory/evidence/CR-559/printer_agent_config_response.json` + `CR-559_probe2.py`
+## Step 1 — Conflict Pre-Check — CLEAN
+3 target files, additive. Open **BUG-721** edits DashboardPage but a different area (TableCard permission gating), not `handleConfirmOrder` — no line overlap; second lander rebases. `orderService.js` / `profileTransform.js` / `OrderContext.jsx` — no non-CLOSED item owns an overlapping change.
 
-| Probe | Endpoint | Result |
-|---|---|---|
-| **PROBE-1** | `GET /api/v1/vendoremployee/profile` (what `profileService.getProfile` → `profileTransform` consumes) | **scan_order_auto_print ABSENT.** No `auto_printing`, no `settings_config` anywhere. `restaurants[0].settings.scan_order_auto_print` = undefined. |
-| **PROBE-2** | `GET /api/v2/vendoremployee/restaurant-settings/printer-agent-config` (printer-config screen only) | **PRESENT:** `settings_config.auto_printing.scan_order_auto_print = "Yes"`. This is the single source today (`printerAgentConfigTransform.js:185-208`, `ap = sc.auto_printing`). |
-
-**Consequence:** v1 edit **E1 (map an existing profile field) is NOT POSSIBLE** — the field is on a different endpoint the dashboard never calls. The gate source must be decided → **OD-5 below.**
-
----
-
-## ⚠ OPEN OWNER DECISION — OD-5 (blocks Gate-4 build)
-
-OD-4 requires `handleConfirmOrder` to read `settings.scanOrderAutoPrint`, but PROBE-1 proves the profile payload lacks it. Two ways to supply it:
-
-| Option | What changes | Pros | Cons | Risk |
-|---|---|---|---|---|
-| **A — Backend parity (RECOMMENDED)** | Backend adds `scan_order_auto_print` to the **profile** payload at `restaurants[0]` root (exactly like `print_kot`/`billing_auto_bill_print` already are). Frontend E1 then maps it one line. | Consistent with every existing auto-print flag; gate read stays synchronous; zero extra network call; smallest, lowest-risk FE change. | Needs a backend change + lead time (BACKEND_BRIEF). | LOW (FE) |
-| **B — Frontend fetch-and-merge (no-backend fallback)** | At app load, also call `printerAgentConfigService.getPrinterAgentConfig()` (already wired), read `scanOrderAutoPrint`, merge into `restaurant.settings`. | No backend dependency; flag confirmed available now (="Yes"). | Extra boot network call + wiring in a hotspot provider (RestaurantContext/LoadingPage); boot-timing/edge-cache risk; two sources of truth. | MEDIUM |
-
-**Recommendation: Option A** (backend parity) — mirrors `autoKot`/`autoBill`, keeps the CRITICAL printing gate simple and synchronous. If the owner needs to ship without waiting on backend, pick **Option B**.
-**Do not build E1/E4's gate until OD-5 is chosen.** A `BACKEND_BRIEF_CR-559` should be filed if Option A is chosen (endpoint: profile; ask: surface `scan_order_auto_print` at `restaurants[0]` root; evidence: the two probe JSONs).
+## Probe evidence (PROBE-1 / PROBE-2)
+`memory/evidence/CR-559/` — profile payload lacks the flag today; `printer-agent-config` has `settings_config.auto_printing.scan_order_auto_print = "Yes"`. Backend (OD-5-A) will add the same value at profile root.
 
 ---
 
 ## Edits (exact)
 
-**E1 — `api/transforms/profileTransform.js` (~L377, settings block)** — expose the flag. Path depends on OD-5:
+**E1 — `api/transforms/profileTransform.js` (~L377, settings block)** — map the backend-added flag (OD-5 Option A, root path parity with `print_kot`):
 ```js
-// CR-559 (OD-4): Scan-Order Auto-print gate for web/scan Accept printing.
-// OD-5 Option A (backend adds it to profile root, like print_kot):
+// CR-559 (OD-4): Scan-Order Auto-print gate for web/scan Accept KOT printing.
 scanOrderAutoPrint: toBoolean(apiSettings.scan_order_auto_print),
-// OD-5 Option B (merged from printer-agent-config at load): set on restaurant.settings
-// by the loader instead of here — see E1b.
 ```
-**E1b (only if OD-5 = Option B)** — in the profile/restaurant loader (`RestaurantContext`/`LoadingPage`, exact site TBD at build): after profile load, `const pac = await getPrinterAgentConfig(); restaurant.settings.scanOrderAutoPrint = pac.scanOrderAutoPrint;` (guard failures → default false, non-blocking).
 
-**E2 — `api/services/orderService.js:70-74`** — accept + forward agents, omit when empty:
-```js
-export const confirmOrder = async (orderId, roleName, orderStatus = 'paid', printerAgent = []) => {
-  const payload = toAPI.updateOrderStatus(orderId, roleName, orderStatus);
-  if (Array.isArray(printerAgent) && printerAgent.length > 0) payload.printer_agent = printerAgent; // CR-559
-  const response = await api.put(API_ENDPOINTS.CONFIRM_ORDER, payload);
-  return response.data;
-};
-```
-(`toAPI.updateOrderStatus` UNTOUCHED — shared with ready/serve/cancel.)
-
-**E3 — `pages/DashboardPage.jsx` imports (top)**:
-```js
-import { selectAgentsForKot, selectAgentsForBill, cartStationsToSet } from '../api/transforms/printerAgentSelector'; // CR-559
-```
-(`printerAgents` + `settings` already come from `useRestaurant()` — reuse; no new hook.)
-
-**E4 — `pages/DashboardPage.jsx:1364-1377` `handleConfirmOrder`** — build `printer_agent`, web-only + auto-print-gated:
+**E4 — `pages/DashboardPage.jsx:1364-1377` `handleConfirmOrder`** — after confirm, web-only + gate-on → run the KOT process (inline mirror of handleScanPrintKOT; `settings` + `printerAgents` already come from `useRestaurant()`):
 ```js
 const handleConfirmOrder = useCallback(async (tableEntry) => {
   const order = getOrderDataForEntry(tableEntry);
   if (!order?.orderId) return;
-
-  // CR-559 (OD-1/2/3/4): web/scan orders only, and only when Scan-Order Auto-print is ON
-  let printerAgent = [];
-  if (order.isWebOrder && settings?.scanOrderAutoPrint
-      && Array.isArray(printerAgents) && printerAgents.length > 0) {
-    const items = Array.isArray(order.items) ? order.items : [];
-    const isWebEdit = items.some(it => it.isNotConfirmed);             // Mode B = web edit
-    const confirmItems = isWebEdit ? items.filter(it => it.isNotConfirmed) : items; // OD-2
-    const kot = selectAgentsForKot(printerAgents, cartStationsToSet(confirmItems));
-    printerAgent = [...kot, ...selectAgentsForBill(printerAgents)];    // OD-3: BILL appended
-  }
   try {
-    await confirmOrder(order.orderId, permissions?.[0] || 'Manager', defaultOrderStatus, printerAgent);
+    await confirmOrder(order.orderId, permissions?.[0] || 'Manager', defaultOrderStatus);
+
+    // CR-559 (OD-2/OD-4): web/scan orders only, and only when Scan-Order Auto-print is ON.
+    // KOT only (OD-3 superseded). Reuses the manual-KOT process via printOrder.
+    if (order.isWebOrder && settings?.scanOrderAutoPrint) {
+      const items = Array.isArray(order.items) ? order.items : [];
+      const isWebEdit = items.some(it => it.isNotConfirmed);               // Mode B = web edit
+      const confirmItems = isWebEdit ? items.filter(it => it.isNotConfirmed) : items; // OD-2
+      const stations = getStationsFromOrderItems(confirmItems, getProductById);
+      if (stations.length > 0) {
+        const stationKot = stations.map(s => s.station).join(',');
+        await printOrder(order.orderId, 'kot', stationKot, order, 0, {}, printerAgents || []);
+      }
+    }
   } catch (err) {
     console.error('[DashboardPage] Failed to confirm order:', err);
   }
-}, [getOrderDataForEntry, permissions, defaultOrderStatus, printerAgents, settings]);
+}, [getOrderDataForEntry, permissions, defaultOrderStatus, settings, printerAgents, getProductById]);
 ```
-Do NOT send `print_kot` (backend decides). Do NOT call `printOrder` after (no double print).
+Do NOT print BILL. Do NOT send `printer_agent` on the confirm call. Printing is non-blocking relative to the confirm (confirm already succeeded).
 
-**E5 — `contexts/OrderContext.jsx:347` (orderItemsByTableId whitelist)** — carry the web flag (RC-2 fix):
+**E5 — `contexts/OrderContext.jsx:347` (orderItemsByTableId whitelist)** — carry the web flag so the gate works on table/room web orders (RC-2 fix):
 ```js
-isWebOrder: order.isWebOrder || false, // CR-559: needed by handleConfirmOrder web gate (table/room path)
+isWebOrder: order.isWebOrder || false, // CR-559: handleConfirmOrder web gate (table/room path)
 ```
-(additive; default false; no existing reader breaks.)
+
+**Dropped from earlier plans:** E2 (`orderService.confirmOrder` 4th param) and E3 (printerAgentSelector imports in DashboardPage) — NOT needed; `printOrder` already encapsulates agent selection.
 
 ## Tests (add)
-- `api/services/__tests__/orderService.confirmOrder.cr559.test.js` (NEW): payload has `printer_agent` when a non-empty array passed; **omitted** when `[]`; `order_status` preserved.
-- extend `api/transforms/__tests__/profileTransform.test.js`: `scanOrderAutoPrint` reads the confirmed key (Option A); false when absent.
-- Browser QA (live, Goan Kitchen): gate behaviour (matrix below).
+- extend `api/transforms/__tests__/profileTransform.test.js`: `scanOrderAutoPrint` true when `scan_order_auto_print:'Yes'` at root; false when absent.
+- NEW `pages/__tests__/DashboardPage.confirmPrint.cr559.test.js` (or service-level): on web order + gate ON, Accept triggers one KOT `printOrder` with the correct `station_kot`; gate OFF or non-web → no `printOrder` call; `confirmOrder` payload unchanged.
 
-## Verification Matrix (seeds QA)
-| # | Scenario | Expected | Auto? |
-|---|----------|----------|:---:|
-| 1 | Web NEW order, Auto-print ON, Accept | PUT includes `printer_agent`=[KOT stations + BILL]; no `print_kot`; no 2nd print | NO (net-intercept) |
-| 2 | Web EDIT order, Auto-print ON, Accept | `printer_agent` from food_status-7 items only + BILL | NO |
-| 3 | Web order, Auto-print **OFF**, Accept | NO `printer_agent` in payload; nothing auto-prints | NO |
-| 4 | **Non-web** POS status-7 confirm | payload unchanged (`{order_id,role_name,order_status}`); no printer_agent | NO |
-| 5 | Web order on a **physical table/room** (E5 path), Auto-print ON | gate passes (isWebOrder survived whitelist); `printer_agent` built | NO |
-| 6 | printerAgents empty | accept succeeds; no `printer_agent` key | YES (unit) |
-| 7 | confirmOrder unit | key added only when non-empty | YES |
+## Verification Matrix (seeds QA — browser net-intercept, no real prints)
+| # | Scenario | Expected |
+|---|----------|----------|
+| 1 | Web NEW order, Auto-print ON, Accept | 1× confirm (unchanged payload) → 1× `order-temp-store` KOT (all items' stations) → `update-print-status kot_print:'Yes'`. No BILL. |
+| 2 | Web EDIT order, Auto-print ON, Accept | KOT `station_kot` from food_status-7 (`isNotConfirmed`) items only. No BILL. |
+| 3 | Web order, Auto-print **OFF**, Accept | confirm only; **no** `order-temp-store`, nothing prints. |
+| 4 | **Non-web** confirm | confirm only; no print path entered. |
+| 5 | Web order on physical table/room (E5 path), ON | gate passes (isWebOrder survived whitelist); KOT fires. |
+| 6 | Gate ON but stations empty | confirm succeeds; no KOT call (guarded by `stations.length`). |
+| 7 | profileTransform unit | `scanOrderAutoPrint` maps root flag; false when missing. |
 
 ## Risk Register
 | Risk | Likelihood | Mitigation |
 |---|---|---|
-| Printing fires on non-web confirms | Low | `order.isWebOrder` gate + empty-array omission |
-| Fires when owner wanted it OFF | Low | `settings.scanOrderAutoPrint` gate (OD-4) |
-| Double KOT | Low | No `printOrder` after accept |
-| Gate never true (flag missing from profile) | **RESOLVED→Med** | PROBE-1 done; **OD-5** picks the source before build |
-| Option B boot-timing / extra call | Med (if B) | non-blocking fetch, default false on failure |
+| KOT fires on non-web confirm | Low | `order.isWebOrder` gate |
+| Fires when owner wanted OFF | Low | `settings.scanOrderAutoPrint` gate (OD-4) + backend flag (OD-5-A) |
+| Double KOT (manual button + accept) | Low | distinct user actions; backend auto-print suppressed; accept gated |
+| Gate never true (flag missing from profile) | **Med** | **PRE-IMPL VALIDATION** blocks build until profile carries `scan_order_auto_print` |
 | isWebOrder leak breaks table consumers | Low | additive, default false |
+| Print error rolls back confirm | None | print is after confirm; wrapped; confirm already persisted |
 
 ## Scope lock
-WILL change: `DashboardPage.jsx`, `orderService.js`, `OrderContext.jsx`, `profileTransform.js` (+2 tests) [+ one loader file IF OD-5=B].
-WILL NOT touch: `toAPI.updateOrderStatus`, aggregator accept path, manual KOT button (CR-545/547), Place/Update payload builders, `ScanOrderPopOut.jsx`, `printerAgentConfigTransform.js`.
+WILL change: `profileTransform.js`, `DashboardPage.jsx`, `OrderContext.jsx` (+2 tests).
+WILL NOT touch: `orderService.js` / `confirmOrder` / `toAPI.updateOrderStatus`, `printOrder`, `handleScanPrintKOT`, aggregator accept path, Place/Update builders, `ScanOrderPopOut.jsx`, `printerAgentConfigTransform.js`.
 
-## Handover
-Gate-3 plan REVISED v2. **PROBE-1 resolved = profile lacks `scan_order_auto_print`** (evidence in `memory/evidence/CR-559/`). Code reality on `67b3e41` = NONE implemented, matrix + scope lock ready. **One blocker remains: OD-5** (flag source — Option A backend parity [recommended] vs Option B FE fetch-merge). On OD-5 decision → Gate-4 GO → implement E1(+E1b if B)/E2-E5 + 2 tests → QA via matrix (browser net-intercept, no real prints).
+## PRE-IMPLEMENTATION VALIDATION (owner-gated — blocks Gate-4 build)
+Before coding, re-run and confirm the profile now carries the flag:
+```
+cd /app && python3 memory/evidence/CR-559/CR-559_probe.py
+# PASS = restaurants[0].scan_order_auto_print present (expect "Yes" for Goan Kitchen)
+```
+Only on PASS → IMPLEMENTATION (E1, E4, E5 + 2 tests) → QA via matrix.
+
+## Post-Code Registry Checklist (for IMPLEMENTATION agent)
+- [ ] registry.json: CR-559 → IMPLEMENTED
+- [ ] CR_REGISTRY.md row updated
+- [ ] FILE_OWNERSHIP.md: profileTransform.js, DashboardPage.jsx, OrderContext.jsx
+- [ ] Code markers: `// CR-559` in each modified file
