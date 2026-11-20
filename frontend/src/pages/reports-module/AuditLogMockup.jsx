@@ -84,7 +84,7 @@ const EVENT_BADGE = {
 
 // Card overlap badge
 const CARD_BADGES = {
-  card1: { label: 'High Risk', bg: '#FEE2E2', color: '#991B1B' },
+  card1: { label: 'Late Cancel', bg: '#FEE2E2', color: '#991B1B' }, // BUG-730: pill names the bucket, not a per-row risk assertion (true tier column is P3/backend)
   card2: { label: 'After Unpaid', bg: '#FEF3C7', color: '#92400E' },
   card3: { label: 'After Print', bg: '#FFEDD5', color: '#9A3412' },
 };
@@ -222,7 +222,7 @@ const AuditReportPage = () => {
     if (!appliedFrom || !appliedTo) return;
     setIsLoading(true); setError(null);
     try { const r = await fetchInsightsDashboard(appliedFrom, appliedTo); setRawData(r.data || r); setHasLoadedOnce(true); }
-    catch (e) { setError(e.message || 'Failed to load'); }
+    catch (e) { setError(e.message || 'Failed to load'); setRawData(null); /* BUG-722: clear stale KPIs/cards on error — also disables Download (analytics→null) */ }
     finally { setIsLoading(false); }
   }, [appliedFrom, appliedTo]);
   useEffect(() => { fetchData(); }, [fetchData]);
@@ -248,8 +248,7 @@ const AuditReportPage = () => {
     const card3Events = allEvents.filter(e => CARD_3_TYPES.has(e.type));
     const card3Leakage = card3Events.reduce((s, e) => s + (parseFloat(e.amount) || parseFloat(e.discount_amount) || 0), 0);
 
-    // KPI bar (D11, D13, D19): 4 items, deduplicated total
-    const uniqueOrderIds = new Set(allEvents.map(e => e.order_id));
+    // KPI bar (D11, D13, D19): 4 items. BUG-739: "Total Events" = true event count (not unique orders)
     const makeUnpaidCount = audits.make_unpaid_count || allEvents.filter(e => e.type === 'make_unpaid').length;
     const payChangeCount = audits.payment_method_change_count || allEvents.filter(e => e.type === 'payment_method_change').length;
     const postPrintCount = card3Events.length;
@@ -266,7 +265,7 @@ const AuditReportPage = () => {
       allEvents, card1Events, card2Events, card3Events,
       card1Doubt, card1Risk, card1HighRisk, card1Leakage,
       card2Leakage, card3Leakage,
-      totalEvents: uniqueOrderIds.size,
+      totalEvents: allEvents.length, // BUG-739: true event count (was uniqueOrderIds.size); backend audits.total agrees
       makeUnpaidCount, payChangeCount, postPrintCount,
       card1OverlapCard2, card1OverlapCard3, card2OverlapCard3,
     };
@@ -277,8 +276,8 @@ const AuditReportPage = () => {
     if (!analytics) return null;
     return {
       title: 'Audit Report', subtitle: 'Theft detection: cancellations, unpaid leakage, post-print edits',
-      restaurant: { name: restaurant?.name || '' }, dateRange: { from: appliedFrom, to: appliedTo },
-      generatedBy: restaurant?.ownerName || '',
+      restaurant: { name: restaurant?.name || '', id: restaurant?.id || '' }, dateRange: { from: appliedFrom, to: appliedTo }, // BUG-739: pass restaurant id → Excel Summary "Restaurant ID"
+      generatedBy: (typeof localStorage !== 'undefined' && localStorage.getItem('user_email')) || restaurant?.name || '', // BUG-739: ownerName never existed → use logged-in user email
       kpis: [
         { label: 'Total Events', value: analytics.totalEvents, format: 'text' },
         { label: 'Made Unpaid', value: analytics.makeUnpaidCount, format: 'text' },
