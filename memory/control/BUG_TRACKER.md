@@ -32,6 +32,7 @@
 
 | ID | Title | Sev | Risk | Status | Doc |
 |---|---|---|---|---|---|
+| **BUG-740** | Prepaid placement saves/credits a higher amount than submitted — placed ₹127 but order saved & TAB-credited ₹132.71 (postpaid same scenario correct at ₹127). ~₹5.71 (~4.5%) gap, suspected SC/tax added to saved amount; FE-vs-backend TBD. Repro: preprod rest 672, order 1578984 bill 000823 (control: order 1578985 postpaid OK). DISTINCT from BUG-666/684. Relates CR-527/BB-09, CR-483. | **P0** | **CRITICAL** | **GATE_1_INTAKE_COMPLETE 2026-11-20** — Code reality: NEEDS INVESTIGATION. Assignee Gyan (suspected backend). Intake: `change_requests/BUG-740_PREPAID_AMOUNT_DISCREPANCY_INTAKE.md`. Next: Gate 2 INVESTIGATION. | `src/api/transforms/orderTransform.js` (R5) / backend order-save |
 | **BUG-713** | Cancellation Report — Punch Time & Duration columns off-screen / not visible (CR-524 cols are last-of-13 inside `overflow-x-auto`; `CancellationsMockup.jsx` th L944-945 / td L980-981, container L930) | **P0** | **LOW** | GATE_1_INTAKE 2026-11-19 — GAP A RE-OPENED (reverses handover withdrawal); matches investigation GAP A; owner confirms not visible on screen | `change_requests/BATCH_INTAKE_2026_11_19_CR524_CANCELLATION_PARITY_RISKBADGE_FILTERS.md` |
 
 Source: `investigations/INV-CR524-BUG579-RISK-BADGE_2026_11_19.md` GAP A (visibility). Relates CR-524 (added the columns) + CR-554 (Item Cancellation Detail parity). Fix direction (Gate 2+): surface Punch Time + Duration without horizontal scroll (reorder/pin columns or responsive layout).
