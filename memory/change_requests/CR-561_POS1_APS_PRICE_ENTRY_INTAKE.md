@@ -18,7 +18,7 @@ Reuse the existing `dynamicPriceItem` "Enter Price" model for APS rows in the Ac
 
 ## Owner decisions — LOCKED 2026-11-20
 - **OD-561-A** — LOCKED: **Both places** — price can be entered from the Accept pop-up (before Accept) **and** from the Order-Entry edit view.
-- **OD-561-B** — LOCKED: **Allow accepting an unpriced APS item** with the ₹1 placeholder; price can be entered later (do NOT block Accept).
+- **OD-561-B** — LOCKED: **Allow accepting an unpriced APS item** with the ₹1 placeholder (do NOT block Accept). **BUT a real price MUST be set before the final bill prints** — add a pre-final-bill guard that blocks billing/collect while any APS item is still at the ₹1 placeholder. (This pulls the billing/collect path into scope — financial, R5.)
 
 ## Blast radius
 MEDIUM — `ScanOrderPopOut.jsx`, `PopoutItemRow.jsx`, `OrderEntry.jsx` (+ confirm no double-charge on existing dynamic-price path).

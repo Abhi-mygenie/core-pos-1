@@ -47,9 +47,15 @@ Per v0.7 Risk Classification, **printing** is a CRITICAL trigger (and order-flow
 SMALL — 1 file, 1 line: `api/transforms/orderTransform.js:2326` (`customItemFromAPI`). Hotspot touched: **YES** (R5: `orderTransform.js`).
 
 ## Owner decisions
-- **OD-742-A** — confirm severity (P1 vs P2).
-- **OD-742-B** — downgrade risk to allow planning-skip, or run full gate (CRITICAL default)?
-- **OD-742-C** — add a station selector to the custom-item modal, or rely on backend category-based station assignment?
+- **OD-742-C** — LOCKED 2026-11-20: **the system decides the kitchen automatically** (use the backend-assigned station; **no** station selector in the custom-item modal).
+- **OD-742-A** — OPEN: confirm severity (P1 vs P2).
+- **OD-742-B** — OPEN: downgrade risk to allow planning-skip, or run full gate (CRITICAL default)?
+
+## Verification PENDING (blocks Gate 3 readiness)
+The one-line fix (`station: data.station || null`) only works **if the `add-single-product` response includes a `station` field**. This is a WRITE call, so it was NOT run in the read-only probe.
+- Supporting evidence (read-only probe 2026-11-20): existing backend food/product records DO carry `station` (e.g. "KDS") — see `evidence/BUG-703/PROBE_TRANSFORM_MAPPING_2026-11-20.md`. Encouraging but NOT proof for the create-item response.
+- **Awaiting owner answer:** either approve one controlled create-item test on preprod, or confirm with backend that the add-single-product response returns `station`.
+- If NO → raise BACKEND_BRIEF (backend must include `station` in the response); the FE 1-liner alone is insufficient.
 
 ## Next
 Intake → **Planning (Gate 2)** unless owner approves planning-skip with risk-downgrade rationale. No code changed.
