@@ -23,7 +23,7 @@ When a **custom / out-of-menu item** is added and the order is **placed for the 
 ## Recommended fix (reference — NOT implemented at intake)
 Add one line to `customItemFromAPI`:
 ```javascript
-station: data.station || null,   // use backend-assigned station; null preserves "no station = no KOT"
+station: data.station_name || null,   // backend resolves station from the item's category (station_source:'category') and returns it as station_name; null preserves "no station = no KOT"
 ```
 `|| null` (not `|| 'KDS'`) keeps the existing "no station ⇒ no KOT" contract when the backend returns none.
 
@@ -51,11 +51,11 @@ SMALL — 1 file, 1 line: `api/transforms/orderTransform.js:2326` (`customItemFr
 - **OD-742-A** — LOCKED 2026-11-20: severity **P1**.
 - **OD-742-B** — LOCKED 2026-11-20: **run the full gate** (no planning-skip; CRITICAL risk retained — printing/KOT routing).
 
-## Verification PENDING (blocks Gate 3 readiness)
-The one-line fix (`station: data.station || null`) only works **if the `add-single-product` response includes a `station` field**. This is a WRITE call, so it was NOT run in the read-only probe.
-- Supporting evidence (read-only probe 2026-11-20): existing backend food/product records DO carry `station` (e.g. "KDS") — see `evidence/BUG-703/PROBE_TRANSFORM_MAPPING_2026-11-20.md`. Encouraging but NOT proof for the create-item response.
-- **Awaiting owner answer:** BACKEND_BRIEF issued → see `change_requests/BUG-742_BACKEND_BRIEF_ADD_SINGLE_PRODUCT_STATION.md`. Backend to confirm whether the add-single-product response returns `station`.
-- If NO → raise BACKEND_BRIEF (backend must include `station` in the response); the FE 1-liner alone is insufficient.
+## Verification — DONE (FE-only, no backend needed)
+Read-only probe 2026-11-20 (`get-products-list`) confirms every product record carries `station_name`="KDS", `station_source`="category", `category_id`=11187. The backend already resolves **category → station** and surfaces it as **`station_name`** on the product record (which `add-single-product` creates and returns). So:
+- Fix = `customItemFromAPI` reads **`data.station_name`** (1 line). **No backend change.**
+- BACKEND_BRIEF **WITHDRAWN** (`change_requests/BUG-742_BACKEND_BRIEF_ADD_SINGLE_PRODUCT_STATION.md`). Evidence: `evidence/BUG-742/PRODUCT_STATION_PROBE_2026-11-20.md`.
+- Residual (FE Gate-3 dev test, not a blocker): confirm the add-single-product response key is literally `station_name`.
 
 ## Next
 Intake → **Planning (Gate 2)** unless owner approves planning-skip with risk-downgrade rationale. No code changed.
