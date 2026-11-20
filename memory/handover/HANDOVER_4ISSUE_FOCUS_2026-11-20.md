@@ -18,9 +18,9 @@
 | ID | Item | Class | Risk | Registry status | Recommended gate |
 |---|---|---|---|---|---|
 | **BUG-680** | Show applied order-discount on dashboard (wire V2 endpoint + render) | FE (financial display) | **HIGH / P0** | `GATE_1_INTAKE_COMPLETE — OD LOCKED` (OD-680-01 = Option B) | **Planning (Gate 2)** — NOT planning-skip |
-| **POS-1** | APS ₹1 item: price not enterable from Accept pop-up / web-order edit | FE_GAP | **HIGH** | not yet registered | **Intake → Planning (CR)** |
-| **POS-2** | Pop-up "cancel" reads as item-level, not order-level (wording) | FE_UX | MEDIUM | not yet registered | Owner decision → Intake (BUG/CR) |
-| **POS-3 (BUG-703)** | Aggregator expand in **Table mode** does nothing | FE_BUG | MEDIUM (P0 in tracker) | **marked IMPLEMENTED — but BROKEN → REOPEN** | short Planning → fix |
+| **POS-1** | APS ₹1 item: price not enterable from Accept pop-up / web-order edit | FE_GAP | **HIGH** | **CR-561** — GATE_1_INTAKE 2026-11-20 | **Planning (Gate 2)** |
+| **POS-2** | Pop-up "cancel" reads as item-level, not order-level (wording) | FE_UX | MEDIUM | **BUG-741** — GATE_1_INTAKE 2026-11-20 | Owner decision → implement |
+| **POS-3 (BUG-703)** | Aggregator expand in **Table mode** does nothing | FE_BUG | MEDIUM (P0 in tracker) | **BUG-703 REOPENED 2026-11-20** (was IMPLEMENTED) | short Planning → fix |
 | **POS-4 / KOT** | Custom (out-of-menu) item KOT not printing on first placement | FE_BUG | LOW (1 file/1 line) | not yet registered | **Planning-skip eligible** (owner approve) |
 
 (V2 discount handoff file = the backend **contract reference** for BUG-680, plus 2 open backend findings — see bottom.)
@@ -52,15 +52,15 @@ API base: `https://preprod.mygenie.online`. Use an employee Bearer token for the
 **Next step:** progress to **Planning Gate 2** (Option B FE impl). Owner decisions: (a) confirm v1→v2 switch vs backend alias; (b) display scope — OrderCard only, or full parity.
 **Verification gap to close FIRST:** confirm the **running-orders list** endpoint (the one feeding the dashboard, not just `get-single-order-new`) returns recalculated `order_amount` + `restaurant_discount_amount` — live call with `poki@macha.com`/`owner@mantri.com` before/with the FE change.
 
-### POS-1 — APS ₹1 price from Accept pop-up  (HIGH)
+### POS-1 / CR-561 — APS ₹1 price from Accept pop-up  (HIGH)  [REGISTERED 2026-11-20]
 "Enter Price" model works only for a **fresh ₹1 tap in Order Entry** (`OrderEntry.jsx:850 → setDynamicPriceItem → modal :3038-3101 → confirmDynamicPriceAndAdd :880-928`). The **Accept pop-up** row is presentation-only and shows a read-only "Price TBD" badge (`PopoutItemRow.jsx:116-118`) — no price entry. Same gap when the web order is opened in Order-Entry **Edit** (line already in cart, ₹1 trigger never fires).
 **Next step:** Intake as a **CR** → Planning. Owner decision: where price is entered (pop-up before Accept, or forced in Order-Entry edit) and whether an unpriced APS item may be accepted. Reuse existing `dynamicPriceItem` model.
 
-### POS-2 — pop-up cancel wording  (MEDIUM)
+### POS-2 / BUG-741 — pop-up cancel wording  (MEDIUM)  [REGISTERED 2026-11-20]
 Two cancel affordances in the pop-up: **per-item ✕** → `CancelFoodModal` (item-level, title "Cancel <item>", "Cancel Item" — correct per CR-545) and the bottom **"Reject"** button → `CancelOrderModal` (order-level). The per-item modal just *reads* like an order cancel.
 **Next step:** UX/wording only (no backend). Owner decision: keep per-item cancel + clearer labels vs make pop-up cancel order-wise → Intake (LOW–MEDIUM).
 
-### POS-3 / BUG-703 — aggregator expand in Table mode  (MEDIUM) — **REOPEN**
+### POS-3 / BUG-703 — aggregator expand in Table mode  (MEDIUM) — **REOPENED 2026-11-20**
 Registry says **IMPLEMENTED**, but the fix was threaded through the **inactive** layout. Live flag `USE_CHANNEL_LAYOUT = true` (`constants/featureFlags.js:20`) → active path is `ChannelColumnsLayout → ChannelColumn → TableCard`, which is **never passed `onAggregatorView`**. BUG-703 wired it only to the old `TableSection.jsx:52` / old grid `TableCard` (`DashboardPage.jsx:2191`, `USE_CHANNEL_LAYOUT===false`). So `TableCard.jsx:317` `onAggregatorView?.(...)` → undefined → **tap is a no-op**. Handler/state/view-mode all exist and are correct (`DashboardPage.jsx:1479 handleAggregatorView`, `:485 state`, `:1950-1958 render`).
 **Fix (~3 files, few lines):** thread `onAggregatorView` through `ChannelColumnsLayout` (destructure + forward) and `ChannelColumn` (forward to `TableCard`), and pass `onAggregatorView={handleAggregatorView}` on the `<ChannelColumnsLayout>` at `DashboardPage.jsx:2048`.
 **Next step:** **reopen BUG-703** (set status back from IMPLEMENTED → REOPENED/GATE_2), short Planning pass (touches shared dashboard wiring), then fix + browser-verify with `poki@macha.com`.
