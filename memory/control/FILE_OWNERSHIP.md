@@ -78,7 +78,7 @@ NOT touched: `orderTransform.js` · `CartPanel.jsx` (read-only ref) · `Dashboar
 **2026-11-18 — Nov Sprint batch (Gate 4):**
 - `components/order-entry/CartPanel.jsx` — BUG-685 (onEdit prop)
 - `hooks/useOrderPollingReconciliation.js` — BUG-686 (skip reconcile on rejected POS fetch)
-- `pages/reports-module/AuditLogMockup.jsx` — BUG-691, 695, 697, 698, 700 (batched)
+- `pages/reports-module/AuditLogMockup.jsx` — BUG-691, 695, 697, 698, 700 (batched); B2 P1 2026-11-20 (BUG-722 E1, BUG-730 E2, BUG-739 E3/E4)
 - `api/socket/socketService.js` — BUG-688 (one join per connection)
 - `components/panels/menu/AddonManagementPanel.jsx` — BUG-690 (await onRefresh)
 
