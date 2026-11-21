@@ -14171,7 +14171,8 @@
       "assignee": "",
       "client": "ALL",
       "batch": "BATCH-A-2026-11-14",
-      "closed_date": "2026-11-14"
+      "closed_date": "2026-11-14",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-059",
@@ -15541,7 +15542,8 @@
           "path": "memory/impact/BATCH-A_IMPACT_ANALYSIS_SUMMARY_2026_11_14.md",
           "type": "impact"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-072",
@@ -16963,7 +16965,8 @@
       "priority": "P2",
       "qa_gate_status": "Gate 5b QA PASS + note (MINOR-2: extra \".com\" appended to auto-generated email domain)",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-230",
@@ -16992,7 +16995,8 @@
       "priority": "P2",
       "qa_gate_status": "Gate 5b QA PASS",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-231",
@@ -24872,7 +24876,8 @@
           "note": "Backend shipped HK + laundry endpoints (BE reply 2026-09-13). Registry flag corrected 2026-09-16 (drift fix)."
         }
       ],
-      "assignee": ""
+      "assignee": "",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-366",
@@ -34524,7 +34529,8 @@
           "path": "memory/impact/BATCH-A_IMPACT_ANALYSIS_SUMMARY_2026_11_14.md",
           "type": "impact"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-605",
@@ -34646,7 +34652,8 @@
           "path": "memory/impact/BATCH-A_IMPACT_ANALYSIS_SUMMARY_2026_11_14.md",
           "type": "impact"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-446",
@@ -36929,7 +36936,8 @@
       ],
       "client": "ALL",
       "batch": "BATCH-A-2026-11-14",
-      "registered_date": "2026-11-06"
+      "registered_date": "2026-11-06",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -36971,7 +36979,8 @@
       ],
       "client": "ALL",
       "batch": "BATCH-A-2026-11-14",
-      "registered_date": "2026-11-06"
+      "registered_date": "2026-11-06",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -37361,7 +37370,8 @@
       "client": "ALL",
       "batch": "BATCH-C-2026-11-14",
       "registered_date": "2026-11-06",
-      "closed_date": ""
+      "closed_date": "",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -37876,7 +37886,8 @@
           "path": "memory/design/BATCH-B_GATE2_5_MOCKUPS_2026_11_15.html",
           "type": "design"
         }
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-515",
@@ -38565,7 +38576,8 @@
       ],
       "related": [
         "CR-494"
-      ]
+      ],
+      "release_date": "2026-11-17"
     },
     {
       "id": "BUG-671",
@@ -39008,7 +39020,8 @@
           "type": "impact"
         }
       ],
-      "registered_date": "2026-11-14"
+      "registered_date": "2026-11-14",
+      "release_date": "2026-11-17"
     },
     {
       "type": "CR",
@@ -39206,7 +39219,8 @@
       "registered_date": "2026-11-17",
       "qa_gate_status": "QA BLOCKED (prereq: no live web/APS order) — code OK / IMPLEMENTED",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-546",
@@ -39242,7 +39256,8 @@
       "qa_gate_status": "QA BLOCKED (prereq: no live web order) — code OK / IMPLEMENTED",
       "qa_date": "2026-11-18",
       "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
-      "rebatch": "B5-SCAN-POPOUT"
+      "rebatch": "B5-SCAN-POPOUT",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-547",
@@ -39522,7 +39537,8 @@
       "implemented_date": "2026-11-18",
       "qa_gate_status": "QA PARTIAL/UNVERIFIED (Collect Bill button disabled; could not compare billed amount)",
       "qa_date": "2026-11-18",
-      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
+      "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A",
+      "release_date": "2026-11-17"
     },
     {
       "id": "CR-552",
@@ -39546,7 +39562,7 @@
       "blocked_by": "NONE",
       "open_decisions": [],
       "notes": "[QA Nov Sprint] registry said \"NOT IN TESTED BUILD\"; confirmed present but PARTIAL (no per-item Accept) — see CR-558. FE-only. 4 files: orderTransform.js, ScanOrderPopOut.jsx, DashboardPage.jsx, reportTransform.js. AFTER CR-545. All anchors validated 2026-11-18. Plan: plans/CR-552_IMPLEMENTATION_PLAN.md. IA: impact/CR-552_IMPACT_ANALYSIS.md. | 2026-11-18: GATE_5A_IMPLEMENTED. 4 edits A/B/C/D across 4 files. 0 new warnings.",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "qa_gate_status": "NOT IN TESTED BUILD (out of scope this pass; present only in newer main)",
       "qa_date": "2026-11-18",
       "qa_source": "memory/handover/HANDOVER_QA_NOV_SPRINT_2026_11_18.md §A"
@@ -40591,7 +40607,7 @@
       "blocked_on": "Live probe of restaurant_discount_amount",
       "notes": "FE reportTransform reads restaurant_discount_amount correctly (L183). Likely backend not storing discount from collect-bill-after-print into restaurant_discount_amount. Needs live probe of priti orders. MEDIUM confidence. | IA (Gate 2) 2026-11-19: OWNER confirmed no discount applied after print on 000804. Live probe proved field works: ruby 000803 after-print discount stored restaurant_discount_amount=59.9 + discount_apply_after_print event. FE reads field correctly. No defect.",
       "registered_date": "2026-11-19",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
@@ -40652,7 +40668,7 @@
       "blocked_on": "",
       "notes": "Collect-Bill/payment flow prints a bill gated only by clear_payment, not print_icon. A collect-only role can trigger a bill print during collection. Owner decision whether Collect should additionally require print_icon. | IA (Gate 2) 2026-11-19: OWNER decision = Collect-flow bill print acceptable as-is; no additional print_icon gate required. Declined/won't fix.",
       "registered_date": "2026-11-19",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "ia_doc": "memory/impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md"
     },
     {
@@ -41498,7 +41514,7 @@
       ],
       "notes": "Repro: rest 672, order 1578984 (prepaid) saved/credited 132.71 vs placed 127; control order 1578985 (postpaid) correct. OD-740-01/02/03 open.",
       "registered_date": "2026-11-20",
-      "release_date": null,
+      "release_date": "2026-11-17",
       "code_reality": "NEEDS INVESTIGATION (orderTransform.placeOrder / received_amount CR-483)",
       "impl_plan_doc": null
     },
@@ -41515,7 +41531,7 @@
       "current_gate": 1,
       "blocked_on": "Backend per-report download endpoints — only 4 known (Order Beta, CR-138 food/variation, calcel-food-sales-report-download, order-cancel-report-download); ~37 reports need endpoints; verify cancel endpoints live; fix static-filename concurrency (CR-138)",
       "registered_date": "2026-11-20",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "id": "CR-560",
       "title": "Server-side Excel for ALL reports — replace frontend reportExporter Excel with backend download endpoints (41 screens)",
       "priority": "P2",
@@ -41538,7 +41554,7 @@
       "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "id": "CR-561",
       "title": "APS ₹1 price not enterable from Accept pop-up / web-order edit (POS-1)",
       "priority": "P1",
@@ -41567,7 +41583,7 @@
       "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "id": "BUG-741",
       "title": "Pop-up 'cancel' reads as item-level not order-level (POS-2)",
       "priority": "P3",
@@ -41595,7 +41611,7 @@
       "current_gate": 3,
       "blocked_on": "",
       "registered_date": "2026-11-20",
-      "release_date": "",
+      "release_date": "2026-11-17",
       "id": "BUG-742",
       "title": "Custom (out-of-menu) item KOT not printed on first placement (POS-4)",
       "priority": "P1",
