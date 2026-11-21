@@ -40988,10 +40988,10 @@
       "release_date": "2026-11-17",
       "id": "BUG-721",
       "title": "Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel",
-      "priority": "P0",
+      "priority": "P1",
       "risk": "HIGH",
       "duplicate_check": "RELATED BUG-711, CR-515",
-      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel. ChannelColumn L321 does not pass canPrintBill/canCancelOrder to TableCard (OrderCard is gated). Captain could print/cancel. QA Group 4.",
+      "notes": "[OWNER OVERRIDE 2026-11-19: priority forced to P0, release 2026-11-17] [QA severity MAJOR] Dashboard TableCard Print KOT (print-btn-*) and YTC Cancel (cancel-btn-*) not gated by print_icon/order_cancel. ChannelColumn L321 does not pass canPrintBill/canCancelOrder to TableCard (OrderCard is gated). Captain could print/cancel. QA Group 4. | PRIORITY RE-GRADED 2026-11-20 (owner): P0->P1; moved P0->P1 fix handover.",
       "severity": "P0",
       "rebatch": "B1-PERMISSIONS"
     },

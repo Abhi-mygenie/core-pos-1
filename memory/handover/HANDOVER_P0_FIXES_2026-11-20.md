@@ -15,9 +15,8 @@ Prepaid order saved & TAB-credited ₹132.71 vs placed ₹127 (~4.5% gap, suspec
 Repro: rest 672 — order **1578984** (prepaid, bill 000823) vs control **1578985** (postpaid, OK).
 Likely backend order-save math; FE suspect `src/api/transforms/orderTransform.js` (R5). OD-740-01/02/03 OPEN. Coordinate with the BACKEND handover — confirm server vs FE before coding. Do NOT guess.
 
-## BUG-721 (P0) — Dashboard Print-KOT / YTC-Cancel not permission-gated  [CONTROL]
-On the dashboard, TableCard `print-btn-*` (Print KOT) and `cancel-btn-*` (YTC Cancel) are ungated — a captain can print/cancel. `ChannelColumn.jsx` L321 does not pass `canPrintBill` / `canCancelOrder` down to `TableCard` (OrderCard IS already gated).
-Fix direction: thread the two permission props ChannelColumn→TableCard and gate the buttons, mirroring OrderCard. Verify HIDDEN for captain, VISIBLE for owner.
+## BUG-721 — MOVED TO P1 2026-11-20 (owner re-grade)
+Re-routed to `HANDOVER_P1_FIXES_2026-11-20.md`.
 
 ## CR-561 (P0 — escalated by owner 2026-11-20) — APS ₹1 price not enterable from Accept popup  [BACKEND-BLOCKED for full fix]
 Web-order APS ₹1 line price can't be entered from the Accept pop-up / web-order edit.

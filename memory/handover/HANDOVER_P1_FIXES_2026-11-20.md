@@ -23,6 +23,9 @@ Owner believes this is largely covered by BUG-645 (QA-passed): any cash part sho
 
 ## CR-510 (P1, was P0) — Aggregator item details in drill-down  [VERIFY FIRST]
 `OrderDetailSheet` should render aggregator item variations/add-ons. BUG-601 (QA-passed) was about menu SAVE, not order display — so this is unconfirmed. ACTION: verify on a REAL Swiggy/Zomato order (owner@thegoankitchen.com) whether variations/add-ons appear; build only the gap. Depends on CR-509. Confirm the aggregator order payload actually carries them (see BACKEND handover).
+## BUG-721 (P1, was P0) — Dashboard Print-KOT / YTC-Cancel not permission-gated  [CONTROL]
+On the dashboard, TableCard `print-btn-*` (Print KOT) and `cancel-btn-*` (YTC Cancel) are ungated — a captain can print/cancel. `ChannelColumn.jsx` L321 does not pass `canPrintBill` / `canCancelOrder` down to `TableCard` (OrderCard IS already gated).
+Fix direction: thread the two permission props ChannelColumn→TableCard and gate the buttons, mirroring OrderCard. Verify HIDDEN for captain, VISIBLE for owner.
 
 ---
 NOTE: BUG-719 (audit 50-day timeout) was re-graded P1 but the real fix is BACKEND latency — it is on the BACKEND handover, not here (FE can only add a timeout/pagination mitigation if owner asks).
