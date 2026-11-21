@@ -34506,10 +34506,10 @@
         "OD-443-03",
         "OD-443-04"
       ],
-      "notes": "[2026-11-14 Gate 2 IA merged] IA: no alert-right key or event endpoints exist (backend). || [2026-11-14 owner decisions] Absorbs CR-496. POS + push; right decides eligibility, employee can mute per device. Phase 2: read tick + open order. || from TT-001, TT-003",
+      "notes": "[2026-11-14 Gate 2 IA merged] IA: no alert-right key or event endpoints exist (backend). || [2026-11-14 owner decisions] Absorbs CR-496. POS + push; right decides eligibility, employee can mute per device. Phase 2: read tick + open order. || from TT-001, TT-003 | DE-PRIORITISED TO P2 2026-11-20 (owner): P1->P2.",
       "blocked_by": "BACKEND",
       "assignee": "Gyan",
-      "priority": "P1",
+      "priority": "P2",
       "client": "ALL",
       "batch": "BATCH-A-2026-11-14",
       "blocked_on": "BACKEND",

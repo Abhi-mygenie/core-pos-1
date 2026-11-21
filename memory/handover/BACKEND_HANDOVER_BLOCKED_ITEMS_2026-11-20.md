@@ -15,7 +15,7 @@ Owner reports this is NOT reproducing. Re-routed to the QA handover (Batch 7) to
 No `update-food-price` endpoint (returns HTTP 404). `update-place-order` cart-update is ADD-ONLY: loaded lines are `placed:true` and update sends unplaced-only, with no per-line id to target.
 NEED: an endpoint (or extend update-place-order) to update the price of an already-placed/loaded line by line id. Until then FE can only guard price entry pre-placement.
 
-## CR-443 (P1) — Employee-Level Notification Mapping Dashboard
+## CR-443 (P2) — Employee-Level Notification Mapping Dashboard
 Gate-2 IA: no alert-right key and no event endpoints exist.
 NEED: per-employee alert-right key(s) + event subscription endpoints (POS + push); "right decides eligibility, employee can mute per device". Absorbs CR-496.
 
@@ -35,4 +35,4 @@ Only Order Report Beta uses backend Excel today; the other 40 FE-excel screens h
 NEED: a server Excel download endpoint matrix for the validated 41 screens (only 4 known). See intake doc for the full screen list.
 
 ---
-Priority for backend: CR-561 (P0, APS price) and BUG-719 (blocks audit) first; then CR-443 (P1); then CR-494/495 (P2) feature-enablers; CR-560 last. (BUG-740 and CR-510 moved to QA — Batch 7.)
+Priority for backend: CR-561 (P0, APS price) and BUG-719 (blocks audit) first; then CR-443/494/495 (all P2) feature-enablers; CR-560 last. (BUG-740 and CR-510 moved to QA — Batch 7.)
