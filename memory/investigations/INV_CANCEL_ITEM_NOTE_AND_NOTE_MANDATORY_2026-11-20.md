@@ -29,3 +29,41 @@ Data-flow trace of `cancel_item_note`:
 ## Evidence
 - Live profile (cafe103): `settings.cancel_note_mandatory = "No"`; running-order lines expose only `food_level_notes` + `cancel_at` (no `cancel_item_note`).
 - Corroborates: `impact/BATCH_2026_11_19_IMPACT_ANALYSIS.md` (BUG-708), `impact/BUG-670_IMPACT_ANALYSIS.md`, `change_requests/BUG-682_*`, contracts `BATCH-A_BUG-670/674_API_CONTRACT`.
+
+---
+
+## RE-VALIDATION 2026-11-21 (owner-provided network evidence)
+
+**Prior conclusion REVERSED.** Owner supplied the live `insights-cancellations` Response tab. For an item-level cancellation the endpoint **DOES** return the staff note:
+
+```
+"scope": "item",
+"reason": "After serving",
+"notes": "",                                        ← food/kitchen level note (empty)
+"cancel_item_note": "this is item level cancellation", ← staff cancellation note (HAS CONTENT)
+"cancel_type": "Pre-Cooking", "cancelled_by": "dobby", "station": "BAR", ...
+```
+
+So `notes` and `cancel_item_note` are **two distinct fields**. Backend is fulfilling the contract. The failure is **100% frontend** — the field is fetched but never mapped/rendered.
+
+### Three FE drop points (all consume `fetchInsightsCancellations().items[]`)
+
+1. **CancellationsMockup.jsx** (main Cancellations report)
+   - Row map (`cancelledItems`, ~L261-296) maps `notes: i.notes` but **never maps `cancel_item_note`**.
+   - "Reason / Notes" cell (~L997) renders `r.notes` only → item-level rows (`notes:""`) show nothing.
+   - **Regression source = BUG-708**: comments at L969 & L994 say "BUG-708: dead Cancel Note column removed" — the column was deleted on the WRONG premise that backend returned it empty. Screenshot disproves that premise.
+
+2. **CancelDetailMockup.jsx** (Item Cancellation Detail)
+   - Spreads raw `...i` so `cancel_item_note` is present in data, but the table has **no column** for it.
+
+3. **OrderNotesMockup.jsx** (Order Note Audit)
+   - Filters `allItems.filter(i => i.notes && i.notes.trim())` → item-level cancellations whose only note is in `cancel_item_note` are **excluded entirely**.
+
+### Fix (frontend-only, now verifiable since backend returns data)
+- CancellationsMockup: add `cancelItemNote: i.cancel_item_note || ''` to row map; render it in the Reason/Notes cell (restore the BUG-708-removed note, as a distinct staff-note line).
+- CancelDetailMockup: surface `cancel_item_note` (column or under Reason).
+- OrderNotesMockup: include rows where `cancel_item_note` has content (`i.notes || i.cancel_item_note`), add note-source awareness.
+
+### CR-493 note-mandatory toggle
+Unchanged from original: cafe103 backend returns `settings.cancel_note_mandatory = "No"`, so OFF is correct behaviour. One latent inconsistency flagged: Settings page transform reads `advanced.cancel_note_mandatory` while profile/OrderEntry read `settings.cancel_note_mandatory` — verify they point at the same stored value if owner expects the Settings toggle to drive enforcement.
+
