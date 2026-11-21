@@ -33,7 +33,7 @@ Note: full 50-day range still times out (BUG-719, backend) — test on ≤7D ran
 
 ## Batch 3 — Order Report Beta + Credit  (owner@palmhouse.com)
 Screens: Order Report Beta (`OrderReportBetaPage.jsx`), All Orders (`AllOrdersReportPage.jsx`), Credit sheet (`CreditCustomerDetailSheet.jsx`).
-Items: BUG-724, BUG-725, BUG-726, BUG-727, BUG-737, BUG-735, BUG-733, BUG-723, CR-523, CR-526, CR-527, BUG-671.
+Items: BUG-724, BUG-725, BUG-726, BUG-727, BUG-737, BUG-735, BUG-733, BUG-723, CR-523, CR-526, CR-527, BUG-671, BUG-672, BUG-481.
 Assert:
 - BUG-724: no "0 orders" flash / double-load.
 - BUG-725: Payment column shows UPI/Card/Room/Merged (not raw lowercase).
@@ -47,6 +47,8 @@ Assert:
 - CR-526: Remove/void unpaid order works (NOTE: see BUG-681 — Remove button render bug may block this; if button absent, FAIL→route to P1 agent).
 - CR-527: group/filter by same phone diff names + Diner column.
 - BUG-671: a partial-payment order can be marked Unpaid (was blocked by BUG-685, now unblocked).
+- BUG-672 (prepaid→credit): a prepaid order (scan/online or cashier) can be moved to Credit via Collect Bill → Credit, and then appears in Credit Management / Credit reports — NOT stuck in Order Beta. Use owner@thegoankitchen.com for a scan/online prepaid order. This is the "credit not working in prepaid" report-routing case.
+- BUG-481 (at owner-smoke, re-verify): a prepaid order made Unpaid then re-settled keeps its correct payment method — must NOT flip to Cash_On_Delivery. If it reverts to COD, root cause is a suspected backend default fallback → route to the backend handover. (Old POS re-settlement path.)
 
 ## Batch 4 — Order Entry + Tax  (tax: owner@beanmeup.com · rest: owner@palmhouse.com)
 Items: CR-493, BUG-670, BUG-674, BUG-678, BUG-683, BUG-684.

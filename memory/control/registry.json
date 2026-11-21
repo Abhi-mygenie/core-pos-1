@@ -30397,7 +30397,7 @@
       "source": "OWNER-REPORTED",
       "registered": "2026-09-27",
       "classification": "BACKEND_BUG",
-      "notes": "When prepaid order is made unpaid and re-settled in Old POS, backend assigns COD as payment method. Likely backend default fallback when payment_method is null/missing on re-settlement call.",
+      "notes": "When prepaid order is made unpaid and re-settled in Old POS, backend assigns COD as payment method. Likely backend default fallback when payment_method is null/missing on re-settlement call. | ADDED TO QA Batch 3 (prepaid->credit) 2026-11-20 for re-verify alongside BUG-672 (suspected backend COD fallback); currently GATE_6_OWNER_SMOKE.",
       "assignee": "Abhishek",
       "priority": "P0",
       "release_date": "2026-11-17"
@@ -38638,7 +38638,7 @@
       "sprint_key": "nov_cr_batch",
       "fast_lane": "NOT eligible",
       "intake_doc": "change_requests/26_BUG-672_PREPAID_ORDER_UNABLE_TO_CREDIT_INTAKE.md",
-      "notes": "[2026-11-15 Gate 2 IA closed] see impact/BUG-672_IMPACT_ANALYSIS.md || [2026-11-14 owner decisions] Prepaid (scan/online + cashier) → Credit via Collect Bill Credit method broken. No extra right. || Prepaid orders stuck — cannot transition to credit payment. Payment status transitions, credit system. | API contract FINAL v1 2026-11-15: contracts/BATCH-B_BUG-672_API_CONTRACT_2026_11_15.md || [2026-11-16 RETROACTIVE] Code verified in orderTransform.js (6 refs), profileTransform.js (2 refs), CollectPaymentPanel.jsx (2 refs).",
+      "notes": "[2026-11-15 Gate 2 IA closed] see impact/BUG-672_IMPACT_ANALYSIS.md || [2026-11-14 owner decisions] Prepaid (scan/online + cashier) → Credit via Collect Bill Credit method broken. No extra right. || Prepaid orders stuck — cannot transition to credit payment. Payment status transitions, credit system. | API contract FINAL v1 2026-11-15: contracts/BATCH-B_BUG-672_API_CONTRACT_2026_11_15.md || [2026-11-16 RETROACTIVE] Code verified in orderTransform.js (6 refs), profileTransform.js (2 refs), CollectPaymentPanel.jsx (2 refs). | ADDED TO QA Batch 3 (prepaid->credit) 2026-11-20: verify prepaid order moves to Credit and lands in Credit reports, not Order Beta.",
       "gate": "GATE_1",
       "current_gate": 1,
       "registered": "2026-11-12",
