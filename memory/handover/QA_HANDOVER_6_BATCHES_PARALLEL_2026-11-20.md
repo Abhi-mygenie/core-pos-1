@@ -78,5 +78,10 @@ Assert:
 - BUG-741: popup per-item "cancel" wording reads item-level ("Cancel item: {name}"), order-level = "Reject".
 CAVEAT: The Meal Break captain lacks a Reports sidebar and we have no fine-grained no-rights staff account → gating coverage is PARTIAL (owner-visible side only). Flag any case you cannot negative-test.
 
+## Batch 7 — Verification (believed-done / not-reproducing)  (owner@beanmeup.com + owner@thegoankitchen.com)
+Items: BUG-740, CR-510.
+- BUG-740 (P0): owner reports the prepaid overcharge is NOT happening now. Place a prepaid order and confirm the SAVED + TAB-credited amount == placed amount (control: a postpaid order); use refs 1578984 / 1578985 if available. If it cannot be reproduced → mark NO DEFECT (route to close); if it DOES reproduce → route to the backend handover.
+- CR-510 (P1): owner believes aggregator variations/add-ons already render via a related CR. On a REAL Swiggy/Zomato order (owner@thegoankitchen.com), open the Order Details sheet and confirm variations + add-ons show. If present → mark done; if missing → route to backend/P1.
+
 ---
 Report format: write `/app/test_reports/iteration_<n>.json` per batch; list PASS/FAIL per item with evidence (order id, testid, screenshot). Route any FAIL that is actually a code bug back to the P0/P1 fix agents (esp. CR-526↔BUG-681, CR-493↔BUG-682).

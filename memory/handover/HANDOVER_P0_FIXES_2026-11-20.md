@@ -19,7 +19,7 @@ Likely backend order-save math; FE suspect `src/api/transforms/orderTransform.js
 On the dashboard, TableCard `print-btn-*` (Print KOT) and `cancel-btn-*` (YTC Cancel) are ungated — a captain can print/cancel. `ChannelColumn.jsx` L321 does not pass `canPrintBill` / `canCancelOrder` down to `TableCard` (OrderCard IS already gated).
 Fix direction: thread the two permission props ChannelColumn→TableCard and gate the buttons, mirroring OrderCard. Verify HIDDEN for captain, VISIBLE for owner.
 
-## CR-561 (P1 by impact, assigned here per owner) — APS ₹1 price not enterable from Accept popup  [BACKEND-BLOCKED]
+## CR-561 (P0 — escalated by owner 2026-11-20) — APS ₹1 price not enterable from Accept popup  [BACKEND-BLOCKED for full fix]
 Web-order APS ₹1 line price can't be entered from the Accept pop-up / web-order edit.
 FE files: `ScanOrderPopOut.jsx`, `PopoutItemRow.jsx` L116-118, `OrderEntry.jsx` L850 / L880-928 / L3038-3101.
 BACKEND BLOCKER: no `update-food-price` endpoint (HTTP 404); `update-place-order` cart-update is add-only (loaded lines are `placed:true`, update sends unplaced-only, no line id). Full fix needs backend (see BACKEND handover).
