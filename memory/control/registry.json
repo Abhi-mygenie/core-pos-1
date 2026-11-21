@@ -41551,7 +41551,7 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_3_UNBLOCKED 2026-11-20 — backend DELIVERED PUT /api/v2/vendoremployee/order/update-food-item-price (targets orderDetails[].id per-line, TBD price=1 items, recalcs order_amount, rejects paid/cancelled, no KOT). CR-561 now FULL FE build — NO LONGER backend-blocked. OD-561-B interim guard superseded.",
+      "status": "GATE_3_READY 2026-11-20 — plan REVALIDATED line-by-line vs delivered contract (PUT update-food-item-price; item_id=orderDetails[].id; returns data.order_amount; rejects paid/cancelled/non-TBD; no KOT). Decisions locked: pre-bill guard DROPPED (no CollectPaymentPanel edit); prices BATCHED, saved in one items[] call on Accept/Update; entry in BOTH Accept pop-up + OE edit. Edits: constants+service(new), PopoutItemRow price input (onPriceChange), ScanOrderPopOut submit-on-accept, OrderEntry edit reprice. Awaiting Gate-4 GO.",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",

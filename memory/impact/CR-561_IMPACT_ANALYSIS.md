@@ -1,11 +1,6 @@
 # CR-561 — Impact Analysis (Gate 2) — APS ₹1 price entry from Accept pop-up / web-order edit (POS-1)
 
-> ⚠️ **GATE-2 RE-VERIFICATION 2026-11-20 — SUPERSEDED / BACKEND-BLOCKED.**
-> Probe (`evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md`) proved the "price flows through place/update-order FE-only" premise is FALSE for a web-order APS line:
-> (1) `update-food-price` endpoint → HTTP 404 (does not exist);
-> (2) `update-place-order` `cart-update` items carry no `orderDetails` line id → add-only, cannot reprice an existing line (`orderTransform.js:766-801`);
-> (3) loaded order lines are `placed:true` (`OrderEntry.jsx:527`) and `update-place-order` sends unplaced-only (`orderTransform.js:1212`).
-> ➡️ Persisting a web-order APS price is **backend-dependent** (B3 `update-food-price` or B4 `price_overrides`/line-id). FE-only interim = pre-bill guard (OD-561-B). Re-confirm OD-561-A. See `control/OWNER_DECISIONS_CR561_PRICE_PERSIST_2026-11-20.md`. Sections 20-35 below are the stale pre-probe analysis.
+> ✅ **GATE-2 RE-VERIFIED 2026-11-20 — UNBLOCKED.** Backend delivered `PUT /api/v2/vendoremployee/order/update-food-item-price` (reprices a placed TBD/₹1 line by `orderDetails[].id`, returns recalculated `data.order_amount`, rejects paid/cancelled, no KOT). The earlier "backend-blocked" finding is RESOLVED — CR-561 is a full FE build. Decisions (2026-11-20): pre-bill guard DROPPED; prices saved BATCHED on Accept/Update; entry in BOTH Accept pop-up + OE edit. Contract: `contracts/CR-561_UPDATE_FOOD_ITEM_PRICE_API_2026-11-20.md`. Revalidated plan: `plans/CR-561_IMPLEMENTATION_PLAN.md`. Sections below are the original pre-delivery analysis (mechanism now provided by the API).
 
 
 **Role:** PLANNING (Gate 2) · **Date:** 2026-11-20 · **Type:** CR / FE_GAP · **Priority:** P1

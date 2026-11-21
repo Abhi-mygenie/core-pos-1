@@ -1,22 +1,13 @@
 # CR-561 — Owner decisions & findings (price-persist) — 2026-11-20
 
-## New finding (changes scope)
-The web-order APS pricing CANNOT be done FE-only. Confirmed by probe (`evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md`):
-- No `update-food-price` endpoint (HTTP 404).
-- `update-place-order` `cart-update` items carry no line id → add-only, cannot reprice an existing line.
-- Loaded/web-order APS lines are `placed:true` and never ride the update payload.
+## RESOLVED — backend delivered the endpoint
+`PUT /api/v2/vendoremployee/order/update-food-item-price` is live (reprices a placed TBD/₹1 line by `orderDetails[].id`, returns recalculated `data.order_amount`, rejects paid/cancelled, no KOT). The earlier "backend-blocked" finding (no `update-food-price` [404]; `update-place-order` add-only) is RESOLVED. Contract: `contracts/CR-561_UPDATE_FOOD_ITEM_PRICE_API_2026-11-20.md`.
 
-➡️ Persisting a price on a web-order APS line is **backend-dependent** (needs `update-food-price` [B3] or line-id/`price_overrides` on an existing endpoint [B4]).
+## Decisions (locked 2026-11-20)
+- **OD-561-A:** price entry in BOTH places — Accept pop-up AND Order-Entry edit. Now fully buildable (endpoint targets the placed line by id).
+- **OD-561-B (pre-bill guard):** **DROPPED.** Backend fully supports repricing; owner chose not to block billing on a still-₹1 item. No CollectPaymentPanel edit.
+- **Save timing:** **BATCHED** — prices collected in the UI and submitted in ONE `items[]` call on Accept/Update (not per-keystroke).
+- **OD-561-C (backend brief):** CLOSED — endpoint delivered; no brief needed.
 
-## Standing decisions (unchanged)
-- **OD-561-B:** allow accepting an APS item at the ₹1 placeholder, BUT a real price MUST be set before the final bill prints. → FE-only pre-bill guard still valid as interim.
-
-## Decisions NEEDED from owner
-- **OD-561-A (RE-CONFIRM):** original = "price entry in BOTH places (Accept pop-up + Order-Entry edit)". The Accept pop-up has no payload path to persist a price without a backend endpoint. Choose:
-  1. Keep "both places" → requires backend endpoint first (B3/B4).
-  2. Switch to: accept at ₹1 → set price in Order-Entry (still needs backend for an already-placed line).
-  3. Interim: ship the pre-bill guard only (blocks billing until priced), real price entry deferred until backend ships.
-- **OD-561-C (NEW):** approve filing/activating the backend brief for `update-food-price` (B3) or `price_overrides` on confirm / line-id on `update-place-order` (B4).
-
-## Plan status
-CR-561 Gate-3 plan SUPERSEDED — must be re-planned (delete the "price in accept payload" edit; split into FE pre-bill guard + backend-dependent price persistence). See CR-561_IMPLEMENTATION_PLAN.md banner.
+## Status
+CR-561 plan REVALIDATED & corrected → `plans/CR-561_IMPLEMENTATION_PLAN.md`. Gate 3, build-ready; awaiting Gate-4 GO.
