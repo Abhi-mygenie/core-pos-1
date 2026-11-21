@@ -41551,7 +41551,7 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_3_PLAN SUPERSEDED 2026-11-20 — re-plan required. Probe: web-order APS price is BACKEND-BLOCKED (no update-food-price [HTTP 404]; update-place-order cart-update has no line id = add-only; loaded lines placed:true, update sends unplaced-only). FE-only interim = pre-bill guard (OD-561-B). Needs OD-561-A re-confirm + backend brief (OD-561-C). Evidence: evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md.",
+      "status": "GATE_3_UNBLOCKED 2026-11-20 — backend DELIVERED PUT /api/v2/vendoremployee/order/update-food-item-price (targets orderDetails[].id per-line, TBD price=1 items, recalcs order_amount, rejects paid/cancelled, no KOT). CR-561 now FULL FE build — NO LONGER backend-blocked. OD-561-B interim guard superseded.",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",
@@ -41562,7 +41562,7 @@
       "priority": "P0",
       "risk": "HIGH",
       "duplicate_check": "RELATED CR-545 (isAps); DISTINCT from POS-4 KOT",
-      "notes": "FE_GAP. Files: ScanOrderPopOut.jsx, PopoutItemRow.jsx:116-118, OrderEntry.jsx:850/880-928/3038-3101. | ESCALATED TO P0 2026-11-20 (owner): P1->P0.",
+      "notes": "FE_GAP. Files: ScanOrderPopOut.jsx, PopoutItemRow.jsx:116-118, OrderEntry.jsx:850/880-928/3038-3101. | ESCALATED TO P0 2026-11-20 (owner): P1->P0. | BACKEND ENDPOINT DELIVERED 2026-11-20 — validated unblocks CR-561. Spec: contracts/CR-561_UPDATE_FOOD_ITEM_PRICE_API_2026-11-20.md. Moved from backend-blocked to P0 FE build.",
       "severity": "HIGH",
       "rebatch": "",
       "open_decisions": [

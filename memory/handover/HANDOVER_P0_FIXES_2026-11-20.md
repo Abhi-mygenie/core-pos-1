@@ -18,9 +18,11 @@ Likely backend order-save math; FE suspect `src/api/transforms/orderTransform.js
 ## BUG-721 — MOVED TO P1 2026-11-20 (owner re-grade)
 Re-routed to `HANDOVER_P1_FIXES_2026-11-20.md`.
 
-## CR-561 (P0 — escalated by owner 2026-11-20) — APS ₹1 price not enterable from Accept popup  [BACKEND-BLOCKED for full fix]
-Web-order APS ₹1 line price can't be entered from the Accept pop-up / web-order edit.
-FE files: `ScanOrderPopOut.jsx`, `PopoutItemRow.jsx` L116-118, `OrderEntry.jsx` L850 / L880-928 / L3038-3101.
-BACKEND BLOCKER: no `update-food-price` endpoint (HTTP 404); `update-place-order` cart-update is add-only (loaded lines are `placed:true`, update sends unplaced-only, no line id). Full fix needs backend (see BACKEND handover).
-Do NOW (FE-only interim, OD-561-B): pre-bill price-entry guard so APS ₹1 can be set before placement. Re-confirm OD-561-A, do not attempt to edit an already-placed line until backend lands.
-Evidence: `evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md`.
+## CR-561 (P0 — escalated by owner) — APS ₹1 price not enterable from Accept popup  [NOW UNBLOCKED — FULL FE BUILD]
+Web-order APS ₹1 ("Price TBD") line price can't be entered from the Accept pop-up / web-order edit.
+BACKEND DELIVERED 2026-11-20 (validated): `PUT /api/v2/vendoremployee/order/update-food-item-price` — updates a placed line by `item_id` (= `orderDetails[].id`), scoped to TBD price=1 items, returns recalculated `data.order_amount`, rejects paid/cancelled, no KOT. The old blockers (no endpoint / add-only / no line id) are GONE. OD-561-B interim guard is SUPERSEDED — do the full fix.
+FE build:
+- `PopoutItemRow.jsx` L118: swap the "Price TBD" label for a price input on APS/TBD rows (pre-bill only).
+- `ScanOrderPopOut.jsx`: collect edited prices + submit on Accept/update; also `OrderEntry.jsx` L850 / L880-928 / L3038-3101.
+- Add service + `constants.UPDATE_FOOD_ITEM_PRICE`; map response `data.order_amount` into the bill total; refresh via socket `update-order-status`.
+Full contract: `contracts/CR-561_UPDATE_FOOD_ITEM_PRICE_API_2026-11-20.md`. Evidence: `evidence/CR-561/APS_PRICE_PERSIST_PROBE_2026-11-20.md`.
