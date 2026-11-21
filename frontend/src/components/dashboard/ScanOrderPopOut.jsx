@@ -307,7 +307,7 @@ const ScanOrderPopOut = ({
       // If socket is slow, reset after 8s safety cap so buttons don't stay locked.
       setTimeout(() => setIsAccepting(false), 8000);
     },
-    [onAccept, isAccepting]
+    [onAccept, isAccepting, pendingPrices]
   );
 
   const handleRejectClick = useCallback(
@@ -668,6 +668,7 @@ const ScanOrderPopOut = ({
                       onToggleKot={toggleKotItem}
                       showCancel={!!onCancelItem}
                       onCancel={(item) => onCancelItem(activeOrder, item)}
+                      onPriceChange={handlePriceChange}
                     />
                   ))}
                 </ul>

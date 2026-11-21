@@ -1,0 +1,31 @@
+{
+  "summary": "CR-561 Gap A (APS price entry in the Accept pop-up) FAILED on the live test, and I applied a one-line fix that is NOT yet retested. Login worked and the ScanOrderPopOut opened for order #1579043 (t2, Order 1 of 1, ₹102.00). The 'melo fish' row rendered the price input data-testid='popout-item-price-input-3969980' in place of the 'Price TBD' badge (PASS). I typed 250 (input value '250'), waited 1s and clicked popout-accept-btn. Only one write request was sent: PUT /api/v2/vendoremployee/order/waiter-dinein-order-status-update {order_id:'1579043', order_status:'cooking'} -> 200. The PUT /api/v2/vendoremployee/order/update-food-item-price was NEVER sent. The order was accepted and the pop-out closed with no error toast, but the price was lost silently. Persistence check (FAIL): in OrderEntry for t2, both 'melo fish' lines still show ₹1 and Collect Bill is still ₹102. RCA: in ScanOrderPopOut.jsx handleAcceptClick, the useCallback deps were [onAccept, isAccepting] and did not include pendingPrices. Typing only re-renders the pop-out, so the callback kept the stale {} from mount and priceItems was always empty. Fix applied: deps changed to [onAccept, isAccepting, pendingPrices]; it compiles. It could not be retested because #1579043 is now accepted and no other order in the queue has an APS price input (count 0). The 'leave blank -> accept with no price call' path behaved correctly (in effect this is what happened).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Accept pop-up APS price save (CR-561 Gap A)", "issue": "updateFoodItemPrice was never called because handleAcceptClick's useCallback read a stale pendingPrices ({}). The order was accepted with ₹1 and the price was dropped silently. A one-line fix was applied by the testing agent; live retest is pending.", "affected_selectors": ["popout-item-price-input-3969980", "popout-accept-btn-1579043"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "evidence_screenshots": [".screenshots/cr561_initial.jpeg", ".screenshots/cr561_price_entered.jpeg", ".screenshots/cr561_after_accept.jpeg"],
+  "action_items": [
+    "Retest CR-561 on a NEW web-edit order that has an APS/₹1 line, because #1579043 has been consumed (accepted with melo fish still at ₹1). Verify that the PUT update-food-item-price body is {order_id, items:[{item_id:<id>, unit_price:250}]}, and then that the accept call follows.",
+    "Order #1579043 line 3969980 (and the second melo fish line) is still at ₹1 on the live restaurant. It needs a manual reprice (Gap B, or a direct API call) if the owner wants it corrected.",
+    "Consider adding onPriceChange to the Mode A ('full' variant) rows (ScanOrderPopOut ~L663). Right now a brand-new web order with an APS line still shows read-only 'Price TBD' and cannot be priced on Accept.",
+    "Consider showing a toast when updateFoodItemPrice fails. Today it only does console.error, and the Accept button silently resets."
+  ],
+  "critical_code_review_comments": [
+    "ScanOrderPopOut.jsx handleAcceptClick: missing pendingPrices in the useCallback deps caused the bug (the eslint react-hooks warning would have flagged it). Fixed.",
+    "PopoutItemRow priceDraft is local state keyed only by row mount. pendingPrices is cleared on order switch, but if PopoutItemRow instances are reused across orders (key = itemId ?? id) a stale draft value could show. This is low risk because keys differ per line.",
+    "If the price PUT succeeds and onAccept then fails, the user gets no visible error. Clicking again re-sends the price (idempotent, so acceptable).",
+    "The price-save failure path only logs to the console. Add an error toast."
+  ],
+  "updated_files": ["/app/frontend/src/components/dashboard/ScanOrderPopOut.jsx"],
+  "success_rate": {"backend": "N/A", "frontend": "40% (input renders + accept/dismiss OK; price save and persistence FAILED before fix; fix unverified)"},
+  "seed_data_creation": "None. Live write: order #1579043 was ACCEPTED (status cooking) as approved by the owner, but its price was NOT updated (still ₹1).",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login owner@thegoankitchen.com / Qplazm@10. The pop-out opens automatically ~15s after login if any unconfirmed web order exists. #1579043 is consumed. A new web-edit order with an APS (₹1) item is needed. Listen to page 'response' events for PUT preprod.mygenie.online/.../update-food-item-price; the accept call is PUT .../waiter-dinein-order-status-update. To check persistence, open the table card in OrderEntry and read the line price and the Collect Bill amount. Do not click Update Order or Print."
+}

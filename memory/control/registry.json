@@ -41551,7 +41551,7 @@
       "client": "ALL",
       "source": "Owner-reported; investigations/INV-POS-4ISSUES_INVESTIGATION_REPORT_2026-11-20.md (Issue 1)",
       "intake_doc": "change_requests/CR-561_POS1_APS_PRICE_ENTRY_INTAKE.md",
-      "status": "GATE_3_READY 2026-11-20 — plan REVALIDATED line-by-line vs delivered contract (PUT update-food-item-price; item_id=orderDetails[].id; returns data.order_amount; rejects paid/cancelled/non-TBD; no KOT). Decisions locked: pre-bill guard DROPPED (no CollectPaymentPanel edit); prices BATCHED, saved in one items[] call on Accept/Update; entry in BOTH Accept pop-up + OE edit. Edits: constants+service(new), PopoutItemRow price input (onPriceChange), ScanOrderPopOut submit-on-accept, OrderEntry edit reprice. Awaiting Gate-4 GO.",
+      "status": "GATE_5A_IMPLEMENTED 2026-11-20 (Gap A + service; Gap B pending; retest pending) — constants.UPDATE_FOOD_ITEM_PRICE + orderService.updateFoodItemPrice; PopoutItemRow TBD/APS rows show price input (onPriceChange) in BOTH Mode A + Mode B; ScanOrderPopOut batches pendingPrices -> update-food-item-price on Accept. testing_agent (iter14) FOUND + FIXED stale-pendingPrices useCallback dep bug (price was silently dropped); deps now include pendingPrices; Mode A rows also wired. Webpack clean. NOT yet live-retested (test order #1579043 consumed/accepted at R1). TODO: Gap B OrderEntry edit reprice; optional error toast on save failure.",
       "gate": "GATE_3",
       "current_gate": 3,
       "blocked_on": "",
