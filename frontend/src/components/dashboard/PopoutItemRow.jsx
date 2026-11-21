@@ -60,10 +60,12 @@ const PopoutItemRow = ({
   onToggleKot,                 // (itemId) => void
   showCancel = false,
   onCancel,                    // (item) => void
+  onPriceChange,               // CR-561: (itemId, unitPrice) => void — set TBD/APS line price (batched by parent)
 }) => {
   const it = item || {};
   const tid = TID(variant, idx);
   const isReadonly = variant === 'readonly';
+  const [priceDraft, setPriceDraft] = React.useState(''); // CR-561
 
   const qty = Number(it?.qty ?? it?.quantity) || 1;
   const unit = Number(it?.unitPrice ?? it?.price) || 0;
@@ -114,8 +116,29 @@ const PopoutItemRow = ({
             ) : null}
           </div>
           {isCancelled ? null : isAps ? (
-            <span className="text-[11px] font-semibold flex-shrink-0 px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: '#FFF3E0', color: '#E65100' }}>Price TBD</span>
+            (!isReadonly && typeof onPriceChange === 'function') ? (
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="Price"
+                value={priceDraft}
+                data-testid={`popout-item-price-input-${it.id ?? idx}`}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setPriceDraft(v);
+                  const n = parseFloat(v);
+                  onPriceChange(it.id, (v !== '' && !isNaN(n) && n > 0) ? n : null);
+                }}
+                className="w-20 text-[12px] font-mono flex-shrink-0 px-1.5 py-0.5 rounded border text-right"
+                style={{ borderColor: '#E65100', color: '#E65100' }}
+              />
+            ) : (
+              <span className="text-[11px] font-semibold flex-shrink-0 px-1.5 py-0.5 rounded"
+                style={{ backgroundColor: '#FFF3E0', color: '#E65100' }}>Price TBD</span>
+            )
           ) : (
             <span style={{ color: COLORS.grayText }} className="font-mono flex-shrink-0">
               {currencySymbol}{lineTotal.toFixed(2)}

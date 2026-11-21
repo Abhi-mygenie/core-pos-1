@@ -5,6 +5,18 @@ import { API_ENDPOINTS, ORDER_DISCOUNT_ENDPOINTS } from '../constants'; // CR-49
 import { fromAPI, toAPI } from '../transforms/orderTransform';
 import { selectAgentsForBill, selectAgentsForKot } from '../transforms/printerAgentSelector';
 
+// CR-561: Set the final price of TBD/APS (menu price ₹1) lines on a placed order.
+// items: [{ item_id: <orderDetails[].id>, unit_price: <number > 0> }]. All-or-nothing.
+// Returns data.order_amount (new bill total) + data.items[]. No KOT; POS/KDS refresh via socket update-order-status.
+export const updateFoodItemPrice = async (orderId, items) => {
+  const response = await api.put(API_ENDPOINTS.UPDATE_FOOD_ITEM_PRICE, {
+    order_id: Number(orderId),
+    items: (items || []).map((it) => ({ item_id: Number(it.item_id), unit_price: Number(it.unit_price) })),
+  });
+  return response.data; // { success, message, data: { order_amount, subtotal, tax, items } }
+};
+
+
 /**
  * Fetch running orders (includes all - tables and rooms)
  * @param {string} roleName - 'Manager' for all roles except 'Waiter'

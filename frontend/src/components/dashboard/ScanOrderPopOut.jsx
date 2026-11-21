@@ -47,6 +47,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X, Check, Eye, BellOff, Bell, Loader2, Printer } from 'lucide-react'; // CR-545: +Printer (XCircle moved to PopoutItemRow — CR-557)
 import { COLORS } from '../../constants';
 import PopoutItemRow from './PopoutItemRow'; // CR-557
+import { updateFoodItemPrice } from '../../api/services/orderService'; // CR-561
 // CR SNOOZE_SOUND_STOP_AND_DURATION (Jan-2026): Snooze now also stops the
 // in-progress local chime. The original anti-rule above is overridden by
 // owner decision 2026-01-16. Use ONLY soundManager.stop() — no setEnabled,
@@ -213,6 +214,8 @@ const ScanOrderPopOut = ({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAccepting, setIsAccepting] = useState(false);
+  // CR-561: TBD/APS price drafts keyed by orderDetails[].id ({id: unitPrice|null}); saved batched on Accept.
+  const [pendingPrices, setPendingPrices] = useState({});
 
   // CR-547: Selective KOT — set of item.id values for items user wants on KOT
   const [selectedItemIds, setSelectedItemIds] = useState(new Set());
@@ -235,6 +238,7 @@ const ScanOrderPopOut = ({
       : items.filter(it =>
           it.status !== 'cancelled' && Number(it.foodStatus ?? it.food_status) !== 3);
     setSelectedItemIds(new Set(selectable.map(it => it.id).filter(Boolean)));
+    setPendingPrices({}); // CR-561: clear price drafts on order switch
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_kotOrderId]);
 
@@ -245,6 +249,11 @@ const ScanOrderPopOut = ({
       if (next.has(itemId)) next.delete(itemId); else next.add(itemId);
       return next;
     });
+  }, []);
+
+  // CR-561: record a TBD/APS line's entered price (null when cleared/invalid)
+  const handlePriceChange = useCallback((itemId, unitPrice) => {
+    setPendingPrices(prev => ({ ...prev, [itemId]: unitPrice }));
   }, []);
 
   // Clamp currentIndex whenever queue length changes so it stays valid.
@@ -282,6 +291,13 @@ const ScanOrderPopOut = ({
       setIsAccepting(true);
       try {
         const entry = buildTableEntryFromOrder(order);
+        // CR-561: save any entered TBD/APS prices (one batched call) BEFORE accepting.
+        const priceItems = Object.entries(pendingPrices)
+          .filter(([, v]) => typeof v === 'number' && v > 0)
+          .map(([item_id, unit_price]) => ({ item_id, unit_price }));
+        if (priceItems.length > 0) {
+          await updateFoodItemPrice(order.orderId, priceItems);
+        }
         if (typeof onAccept === 'function') await onAccept(entry || order);
       } catch (err) {
         console.error('[ScanOrderPopOut] Accept failed:', err?.message);
@@ -569,6 +585,7 @@ const ScanOrderPopOut = ({
                           onToggleKot={toggleKotItem}
                           showCancel={!!onCancelItem}
                           onCancel={(item) => onCancelItem(activeOrder, item)}
+                          onPriceChange={handlePriceChange}
                         />
                       ))}
                     </ul>
